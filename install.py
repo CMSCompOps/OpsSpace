@@ -9,8 +9,10 @@ File mostly intended to set up working environment for operator as a script.
 import os
 import urllib
 
+from ToolBox.utils import load_env
 
-class CompOpsWorkspaceInstaller:
+
+class Installer:
     """Class the holds the information for installing workspace"""
 
     ValidPackages = ['SiteReadiness', 'TransferTeam', 'WmAgentScripts']
@@ -18,6 +20,7 @@ class CompOpsWorkspaceInstaller:
     InstallDirectory = os.path.dirname(os.path.realpath(__file__))
     apiBaseUrl = 'https://api.github.com/repos/'
     gitHubUrl = 'https://github.com/'
+    possibleProfiles = ['.bashrc', '.bash_profile']
 
     def __init__(self, github_user):
         self.UserName = github_user or self.CentralGitHub
@@ -32,8 +35,6 @@ class CompOpsWorkspaceInstaller:
 
     def install_package(self, package_name):
         """Install a given package into the operator workspace"""
-
-        # First check if the repository exists
 
         user = self.UserName
         installed = False
@@ -86,6 +87,21 @@ class CompOpsWorkspaceInstaller:
         if has_invalid_package:
             self.print_valid_packages()
 
+    def add_pythonpath(self):
+        """Appends modified $PYTHONPATH variable to bash profile"""
+
+        target_dir = '/'.join(self.InstallDirectory.split('/')[:-1])
+
+        for profile_name in self.possibleProfiles:
+            profile_path = os.environ.get('HOME') + '/' + profile_name
+            if os.path.exists(profile_path):
+                load_env(profile_path)
+                if target_dir not in os.environ.get('PYTHONPATH').split(':'):
+                    profile_file = open(profile_path, 'a')
+                    profile_file.write('\n# Python objects in CMSCompOps workspace\n')
+                    profile_file.write('export PYTHONPATH=$PYTHONPATH:' + target_dir + '\n')
+                    profile_file.close()
+
 
 def main():
     """Main functionality of the install script"""
@@ -101,7 +117,7 @@ def main():
 
     args = parser.parse_args()
 
-    installer = CompOpsWorkspaceInstaller(args.gitUser)
+    installer = Installer(args.gitUser)
 
     if len(args.packages) == 0:
         parser.print_help()
@@ -113,6 +129,8 @@ def main():
             'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
         )
         installer.install_packages(args.packages)
+
+    installer.add_pythonpath()
 
 
 if __name__ == '__main__':
