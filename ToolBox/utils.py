@@ -1,14 +1,6 @@
-
 import logging
 import os
 import subprocess
-import sys
-
-#if sys.version_info.major == 2:
-#    if sys.version_info.minor == 6:
-#        from utils_2_6.py import *
-#    elif sys.version_info.minor == 7:
-#        from utils_2_7.py import *
 
 FORMAT = "%(module)s.%(funcName)s(%(lineno)s) => %(message)s (%(asctime)s)"
 DATEFMT = "%Y-%m-%d %H:%M:%S"
@@ -42,6 +34,7 @@ def load_env(configs):
         print('You passed an invalid argument type to utils.load_env()')
         exit()
 
+
 def append_to_file(file_name, lines):
     """Appends lines to a file
 
@@ -50,11 +43,11 @@ def append_to_file(file_name, lines):
     """
 
     if type(lines) is not list:
-        append_to_file(file_name,[lines])
+        append_to_file(file_name, [lines])
 
     else:
-        the_file = open(file_name,'a')
+        the_file = open(file_name, 'a')
         for line in lines:
-            the_file.write(line + '\n')
+            the_file.write(line + '/n')
 
         the_file.close()

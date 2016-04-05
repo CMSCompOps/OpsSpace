@@ -153,42 +153,20 @@ class Installer:
 def main():
     """Main functionality of the install script"""
 
-    packages = []
-    git_user = ''
+    # Using optparse for backwards compatibility with Python 2.6
+    from optparse import OptionParser
 
-    # If argparse available, use it
-    try:
-        from argparse import ArgumentParser
-        parser = ArgumentParser()
-        parser.add_argument('--UserName', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
-                            help='GitHub user name, where the packages will be searched for first (default ' +
-                            os.environ.get('USER') + ')')
-        parser.add_argument('packages', metavar='PACKAGES', nargs='*',
-                            help='List of valid packages to be installed. ' +
-                                 'Giving no package will show list of possible ' +
-                                 'packages to install')
+    usage = 'Usage: %prog [options] package1 package2 ...'
 
-        args = parser.parse_args()
-        packages = args.packages
-        git_user = args.gitUser
+    parser = OptionParser(usage)
+    parser.add_option('--UserName', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
+                      help='GitHub user name, where the packages will be searched for first (default ' +
+                      os.environ.get('USER') + ')')
 
-    # Otherwise, use optparser
-    except ImportError:
-        from optparse import OptionParser
-        parser = OptionParser()
-        parser.add_option('--UserName', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
-                          help='GitHub user name, where the packages will be searched for first (default ' +
-                          os.environ.get('USER') + ')')
-        parser.add_option('-p', '--Packages', metavar = 'PackageNames', dest = 'packages', default = '',
-                          help = 'List of packages to install. Separated by commas, no spaces. ' +
-                                 'Examples:  -p package1,package2 or --Packages=package1,package2')
+    (options, args) = parser.parse_args()
+    packages = args
 
-        (options, args) = parser.parse_args()
-        packages = options.packages.split(',')
-        git_user = options.gitUser
-
-
-    installer = Installer(git_user)
+    installer = Installer(options.gitUser)
 
     if len(packages) == 0 or packages[0] == '':
         parser.print_help()
