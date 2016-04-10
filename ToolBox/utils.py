@@ -67,7 +67,7 @@ def append_to_file(file_name, lines):
     else:
         the_file = open(file_name, 'a')
         for line in lines:
-            the_file.write(line + '/n')
+            the_file.write(line + '\n')
 
         the_file.close()
 
