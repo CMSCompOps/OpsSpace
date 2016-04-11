@@ -15,13 +15,6 @@ from ToolBox.utils import load_env, append_to_file
 class Installer:
     """Class the holds the information for installing workspace"""
 
-    # List of valid packages that can be installed with this script
-    ValidPackages = [
-        'SiteReadiness',
-        'TransferTeam',
-        'WmAgentScripts'
-    ]
-
     # List of profiles searched for in user's home to append to PYTHONPATH
     possibleProfiles = [
         '.bashrc',
@@ -37,9 +30,22 @@ class Installer:
     # Remote repository location
     gitHubUrl = 'https://github.com/'
 
+    # List of valid packages that can be installed with this script
+    ValidPackages = []
+
+    def set_packages(self):
+        """Read from list of valid package and append to valid list."""
+        list_file = open(self.InstallDirectory + '/packagesList.txt', 'r')
+        for package in list_file.readlines():
+            self.ValidPackages.append(package.strip('\n'))
+
+        list_file.close()
+
     def __init__(self, github_user):
         """Initialize with the GitHub username of the operator."""
         self.UserName = github_user or self.CentralGitHub
+
+        self.set_packages()
 
     def print_valid_packages(self):
         """Displays valid packages for the user"""
