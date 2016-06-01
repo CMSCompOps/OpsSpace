@@ -1,9 +1,9 @@
 #! /usr/bin/env python
 
-""" @file install.py
-
+"""
 File mostly intended to set up working environment for operator as a script.
-@author Daniel Abercrombie <dabercro@mit.edu>
+
+:author: Daniel Abercrombie <dabercro@mit.edu>
 """
 
 import os
@@ -15,23 +15,23 @@ from ToolBox.utils import load_env, append_to_file
 class Installer:
     """Class the holds the information for installing workspace"""
 
-    # List of profiles searched for in user's home to append to PYTHONPATH
     possibleProfiles = [
         '.bashrc',
         '.bash_profile'
     ]
+    """List of profiles searched for in user's home to append to PYTHONPATH"""
 
-    # Default GitHub account containing packages that can be installed
     CentralGitHub = 'CMSCompOps'
+    """Default GitHub account containing packages that can be installed"""
 
-    # Location of the OpsSpace
     InstallDirectory = os.path.dirname(os.path.realpath(__file__))
+    """Location of the OpsSpace"""
 
-    # Remote repository location
     gitHubUrl = 'https://github.com/'
+    """Remote repository location"""
 
-    # List of valid packages that can be installed with this script
     ValidPackages = []
+    """List of valid packages that can be installed with this script"""
 
     def set_packages(self):
         """Read from list of valid package and append to valid list."""
@@ -166,8 +166,7 @@ def main():
 
     parser = OptionParser(usage)
     parser.add_option('--UserName', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
-                      help='GitHub user name, where the packages will be searched for first (default ' +
-                      os.environ.get('USER') + ')')
+                      help='GitHub user name, where the packages will be searched for first (default $USER)')
 
     (options, args) = parser.parse_args()
     packages = args
