@@ -151,8 +151,8 @@ class Installer:
                 # If there, source the profile file to get most updated variables
                 load_env(profile_path)
                 # If this directory is not in PYTHON path, append to profile
-                if target_dir not in os.environ.get('PYTHONPATH').split(':'):
-                    append_to_file(profile_path, ['', '# Python objects in CMSCompOps workspace',
+                if target_dir not in os.environ.get('PYTHONPATH','').split(':'):
+                    append_to_file(profile_path, ['', '# Python objects in OpsSpace',
                                                   'export PYTHONPATH=$PYTHONPATH:' + target_dir])
 
 
@@ -175,9 +175,13 @@ def main():
 
     installer = Installer(options.gitUser)
 
+    if options.addPath:
+        installer.add_pythonpath()
+
     if len(packages) == 0 or packages[0] == '':
-        parser.print_help()
-        installer.print_valid_packages()
+        if not options.addPath:
+            parser.print_help()
+            installer.print_valid_packages()
     else:
         print(
             '\n' +
@@ -185,9 +189,6 @@ def main():
             'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
         )
         installer.install_packages(packages)
-
-    if options.addPath:
-        installer.add_pythonpath()
 
 
 if __name__ == '__main__':
