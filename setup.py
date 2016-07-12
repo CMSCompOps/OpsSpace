@@ -9,7 +9,7 @@ File mostly intended to set up working environment for operator as a script.
 import os
 import urllib
 
-from ToolBox.utils import load_env, append_to_file
+from ToolBox.simplefiletools import load_env, append_to_file
 
 
 class Installer:
@@ -35,7 +35,7 @@ class Installer:
 
     def set_packages(self):
         """Read from list of valid package and append to valid list."""
-        list_file = open(self.InstallDirectory + '/packagesList.txt', 'r')
+        list_file = open(self.InstallDirectory + '/config/packagesList.txt', 'r')
         for package in list_file.readlines():
             self.ValidPackages.append(package.strip('\n'))
 
@@ -167,6 +167,8 @@ def main():
     parser = OptionParser(usage)
     parser.add_option('--UserName', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
                       help='GitHub user name, where the packages will be searched for first (default $USER)')
+    parser.add_option('--AddPath', action='store_true', dest='addPath',
+                      help='Add the location of this package to the user\'s PYTHONPATH.')
 
     (options, args) = parser.parse_args()
     packages = args
@@ -184,7 +186,8 @@ def main():
         )
         installer.install_packages(packages)
 
-    installer.add_pythonpath()
+    if options.addPath:
+        installer.add_pythonpath()
 
 
 if __name__ == '__main__':

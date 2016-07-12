@@ -10,3 +10,9 @@ In order to install the operator tools you need, simply run the `install.py`
 script with the list of package names as an argument.
 Running `install.py` without any arguments will cause usage information and
 a list of valid package names to be displayed.
+
+## Documentation
+
+The documentation is generated using Sphinx to document modules, along with
+the sphinxcontrib.programoutput extension to generate scripts' help output.
+If these are installed, documentation can be generated with the `Makefile`.

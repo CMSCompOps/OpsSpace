@@ -12,7 +12,8 @@ Contents:
    :maxdepth: 2
 
    setup
-   utils
+   toolbox
+   workflowwebtools
 
 Indices and tables
 ==================
