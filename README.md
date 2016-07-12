@@ -6,9 +6,9 @@ separate repository where their own tools are
 
 ## Setting Up Workspace
 
-In order to install the operator tools you need, simply run the `install.py` 
+In order to install the operator tools you need, simply run the `setup.py` 
 script with the list of package names as an argument.
-Running `install.py` without any arguments will cause usage information and
+Running `setup.py` without any arguments will cause usage information and
 a list of valid package names to be displayed.
 
 ## Documentation
