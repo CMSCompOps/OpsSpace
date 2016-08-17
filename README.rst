@@ -17,20 +17,6 @@ If you have requirements for a submodule, :file:`setup.py` will add
 these automatically as long as they are listed in :file:`docs/requirements.txt`
 inside of this submodule repository.
 
-For example, the :mod:`WorkflowWebTools` module has the file
-:file:`WorkflowWebTools/docs/requirements.txt` that contains
-
-::
-
-    filler
-
-..
-  ## .. program-output:: cat ../WorkflowWebTools/docs/requirements.txt
-
-These will be installed automatically, if needed, when calling::
-
-  ./setup.py WorkflowWebTools
-
 .. note::
 
   There's a chance you will have to run setup.py as a sudoer when
@@ -40,18 +26,16 @@ Generating Documentation
 ------------------------
 
 To test generating documentation for your new tools,
-you will need a few packages installed.
-This can be easily done from in the :file:`OpsSpace` directory by::
+you will need virtualenv installed.
+Using the :file:`test/test_build_docs.sh` directory, you can then build the documentation from fresh environment.
+This is to mimic the automated documentation building procedure.
+From the OpsSpace directory::
 
-  ./setup.py --add-doc-tools
+  test/test_build_docs.sh
 
 or::
 
-  pip install -r docs/requirements.txt
+  cd test
+  ./test_build_docs.sh
 
-Then you simply have to run::
-
-  make html
-
-and the OpsSpaceDocs homepage will appear at :file:`build/html/index.html`.
-
+and the OpsSpaceDocs homepage will appear at :file:`test/html/index.html`.
