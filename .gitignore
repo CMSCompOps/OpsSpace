@@ -2,5 +2,6 @@
 *.pyc
 *~
 build/*
+ToolBox/bak/*
 WorkflowWebTools/*
 WmAgentScripts/*

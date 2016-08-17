@@ -15,32 +15,35 @@ import time
 import json
 
 
-elastic_search_host = 'cms-elastic-fe.cern.ch:9200'
+ELASTIC_SEARCH_HOST = 'cms-elastic-fe.cern.ch:9200'
 """The default location to send and search for logs"""
 
 
-def send_log(subject, text, wfi=None, host=elastic_search_host):
+def send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
     """Tries :func:`try_send_log` and raises exception if fails
 
-    :param subject: The subject of the log to send
-    :param text: The text of the log to send
+    :param str subject: The subject of the log to send
+    :param str text: The text of the log to send
     :param wfi: Workflow info
-    :param host: The host that the log is sent to
+    :type wfi: :class:WorkFlowInfo
+    :param str host: The host url that the log is sent to
     """
 
     try:
         try_send_log(subject, text, wfi, host)
-    except Exception as e:
+    except (AttributeError, NameError, KeyError)  as message:
         print "failed to send log to elastic search"
-        print str(e)
+        print str(message)
 
 
-def search_logs(q, host=elastic_search_host):
+def search_logs(query, host=ELASTIC_SEARCH_HOST):
     """Use the elastic search at CERN to look through production logs
 
-    :param q: The query string to pass to elastic search
-    :param host: The name of the host to query for logs
-    :returns: A list of logs where each log is a dictionary with ['_source']['text'] and ['_source']['meta']
+    :param str query: The query string to pass to elastic search
+    :param str host: The host url to query for logs
+    :returns: A list of logs where each log is a dictionary with
+              ['_source']['text'] and ['_source']['meta']
+    :rtype: list of dicts
     """
 
     conn = httplib.HTTPConnection(host)
@@ -50,7 +53,7 @@ def search_logs(q, host=elastic_search_host):
                 "must": [
                     {
                         "wildcard": {
-                            "meta": "*%s*" % q
+                            "meta": "*%s*" % query
                             }
                         },
                     ]
@@ -71,17 +74,18 @@ def search_logs(q, host=elastic_search_host):
     conn.request("POST", '/logs/_search?size=1000', json.dumps(goodquery))
     response = conn.getresponse()
     data = response.read()
-    o = json.loads(data)
-    return o['hits']['hits']
+    out = json.loads(data)
+    return out['hits']['hits']
 
 
-def try_send_log(subject, text, wfi=None, host=elastic_search_host):
+def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
     """Tries to send a log to the elastic search host
 
-    :param subject: The subject of the log to send
-    :param text: The text of the log to send
+    :param str subject: The subject of the log to send
+    :param str text: The text of the log to send
     :param wfi: Workflow info
-    :param host: The host that the log is sent to
+    :type wfi: :class:WorkFlowInfo
+    :param str host: The host url that the log is sent to
     """
 
     # import pdb
@@ -89,36 +93,42 @@ def try_send_log(subject, text, wfi=None, host=elastic_search_host):
     conn = httplib.HTTPConnection(host)
 
     meta_text = ""
+
     if wfi:
         # add a few markers automatically
-        meta_text += '\n\n' + '\n'.join(map(lambda i: 'id: %s' % i, wfi.getPrepIDs()))
+        meta_text += '\n\n' + '\n'.join(['id: %s' % i for i in wfi.getPrepIDs()])
         _, prim, _, sec = wfi.getIO()
+
         if prim:
-            meta_text += '\n\n' + '\n'.join(map(lambda i: 'in:%s' % i, prim))
+            meta_text += '\n\n' + '\n'.join(['in:%s' % i for i in prim])
+
         if sec:
-            meta_text += '\n\n' + '\n'.join(map(lambda i: 'pu:%s' % i, sec))
-        out = filter(lambda d: not any([c in d for c in ['FAKE', 'None']]), wfi.request['OutputDatasets'])
+            meta_text += '\n\n' + '\n'.join(['pu:%s' % i for i in sec])
+
+        out = [i for i in wfi.request['OutputDatasets'] if i not in ['FAKE', 'None']]
+
         if out:
-            meta_text += '\n\n' + '\n'.join(map(lambda i: 'out:%s' % i, out))
+            meta_text += '\n\n' + '\n'.join(['out:%s' % i for i in out])
+
         meta_text += '\n\n' + wfi.request['RequestName']
 
     now_ = time.gmtime()
-    now = time.mktime(now_)
-    now_d = time.asctime(now_)
-    doc = {"author": os.getenv('USER'),
-           "subject": subject,
-           "text": text,
-           "meta": meta_text,
-           "timestamp": now,
-           "date": now_d}
 
-    conn.request("POST", '/logs/log/', json.dumps(doc))
-    response = conn.getresponse()
-    data = response.read()
+    conn.request("POST", '/logs/log/',
+                 json.dumps({"author": os.getenv('USER'),
+                             "subject": subject,
+                             "text": text,
+                             "meta": meta_text,
+                             "timestamp": time.mktime(now_),
+                             "date": time.asctime(now_)}
+                           )
+                )
+
+    data = conn.getresponse().read()
+
     try:
         res = json.loads(data)
         print 'log:', res['_id'], "was created"
-    except Exception as e:
+    except (AttributeError, NameError, KeyError)  as message:
         print "failed"
-        print str(e)
-        pass
+        print str(message)
