@@ -11,9 +11,11 @@ Contents:
 
    setup
    toolbox
-   workflowwebtools
    developer
    todo
+
+..
+   workflowwebtools should be added too
 
 Indices and tables
 ==================
