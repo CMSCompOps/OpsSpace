@@ -1,1 +1,0 @@
-../WorkflowWebTools/docs/workflowwebtools.rst
