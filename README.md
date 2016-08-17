@@ -11,8 +11,10 @@ script with the list of package names as an argument.
 Running `setup.py` without any arguments will cause usage information and
 a list of valid package names to be displayed.
 
+The only external dependency should be `pip` to install other dependencies.
+
 ## Documentation
 
-The documentation is generated using Sphinx to document modules, along with
-the sphinxcontrib.programoutput extension to generate scripts' help output.
-If these are installed, documentation can be generated with the `Makefile`.
+Much more information is available at:
+
+<https://dabercro.web.cern.ch/dabercro/OpsSpaceDocs/>

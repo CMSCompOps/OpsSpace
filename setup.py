@@ -9,6 +9,16 @@ File mostly intended to set up working environment for operator as a script.
 import os
 import urllib
 
+try:
+    # noinspection PyUnresolvedReferences
+    import pip
+except ImportError:
+    print('\nIt does not look like you have pip installed.')
+    print('That is the one dependency I need to install other dependencies.')
+    print('Try running the following script:\n')
+    print('https://bootstrap.pypa.io/get-pip.py\n')
+    exit()
+
 from ToolBox.simplefiletools import load_env, append_to_file
 
 
@@ -56,7 +66,13 @@ class Installer:
         print('')
 
     def install_package(self, package_name):
-        """Install a given package into the operator workspace"""
+        """
+        Install a given package into the operator workspace.
+        If the file docs/requirements.txt exists inside of the package,
+        the requirements are installed through pip.
+
+        :param package_name: must match the repository name in the valid packages list and GitHub
+        """
 
         user = self.UserName
         installed = False
@@ -110,7 +126,7 @@ class Installer:
 
         # Check the .gitignore for the package name and add it, if needed
         # .gitignore location
-        git_ignore = self.InstallDirectory + '/.gitignore'
+        git_ignore = os.path.join(self.InstallDirectory, '.gitignore')
         # Line to write to .gitignore
         git_ignore_line = package_name + '/*'
 
@@ -122,6 +138,11 @@ class Installer:
         # Check for line
         if git_ignore_line + '\n' not in git_ignore_list:
             append_to_file(git_ignore, git_ignore_line)
+
+        # Look for requirements.txt and install requirements, if needed
+        requirements_location = os.path.join(self.InstallDirectory, package_name, 'docs/requirements.txt')
+        if os.path.exists(requirements_location):
+            pip.main(['install', '-q', '-r', requirements_location])
 
     def install_packages(self, package_list):
         """Calls install_package for a list of packages"""
@@ -151,24 +172,39 @@ class Installer:
                 # If there, source the profile file to get most updated variables
                 load_env(profile_path)
                 # If this directory is not in PYTHON path, append to profile
-                if target_dir not in os.environ.get('PYTHONPATH','').split(':'):
+                if target_dir not in os.environ.get('PYTHONPATH', '').split(':'):
                     append_to_file(profile_path, ['', '# Python objects in OpsSpace',
                                                   'export PYTHONPATH=$PYTHONPATH:' + target_dir])
 
+    def add_doc_tools(self):
+        """Uses pip to install the tools to generate the OpsSpace documentation"""
+
+        print('Adding documentation tools.')
+        pip.main(['install', '-r', os.path.join(self.InstallDirectory, 'docs/requirements.txt')])
+
 
 def main():
-    """Main functionality of the install script"""
+    """
+    Main functionality of the install script.
+    Uses system arguments to determine which packages to install.
+    """
 
-    # Using optparse for backwards compatibility with Python 2.6
+    # Using optparse for compatibility with Python 2.6
     from optparse import OptionParser
 
     usage = 'Usage: %prog [options] package1 package2 ...'
 
     parser = OptionParser(usage)
-    parser.add_option('--UserName', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
+    parser.add_option('--user-name', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
                       help='GitHub user name, where the packages will be searched for first (default $USER)')
-    parser.add_option('--AddPath', action='store_true', dest='addPath',
-                      help='Add the location of this package to the user\'s PYTHONPATH.')
+    parser.add_option('--add-path', '-p', action='store_true', dest='addPath',
+                      help='Add the location of this package to the user\'s PYTHONPATH '
+                           'in their .bashrc or .bash_profile. '
+                           'The default behavior is to let the user adjust PYTHONPATH on their own. '
+                           'This option can be run without selecting any packages.')
+    parser.add_option('--add-doc-tools', '-d', action='store_true', dest='addDocTools',
+                      help='Use pip to install the tools necessary to generate the OpsSpace documentation. '
+                           'This option can be run without selecting any packages.')
 
     (options, args) = parser.parse_args()
     packages = args
@@ -178,8 +214,11 @@ def main():
     if options.addPath:
         installer.add_pythonpath()
 
+    if options.addDocTools:
+        installer.add_doc_tools()
+
     if len(packages) == 0 or packages[0] == '':
-        if not options.addPath:
+        if not options.addPath and not options.addDocTools:
             parser.print_help()
             installer.print_valid_packages()
     else:

@@ -1,6 +1,10 @@
 """
 Contains tools for interacting with elastic search
 
+.. todo::
+
+  Add workflowinfo class in ToolBox somewhere, since it's used here
+
 :author: Jean-Roch Vlimant <jean-roch.vlimant@cern.ch>
 """
 
@@ -16,11 +20,11 @@ elastic_search_host = 'cms-elastic-fe.cern.ch:9200'
 
 
 def send_log(subject, text, wfi=None, host=elastic_search_host):
-    """Tries :py:func:try_send_log and outputs exception if fails
+    """Tries :func:`try_send_log` and raises exception if fails
 
     :param subject: The subject of the log to send
     :param text: The text of the log to send
-    :param wfi: Don't actually know. Learn this
+    :param wfi: Workflow info
     :param host: The host that the log is sent to
     """
 
@@ -72,7 +76,13 @@ def search_logs(q, host=elastic_search_host):
 
 
 def try_send_log(subject, text, wfi=None, host=elastic_search_host):
-    """Tries to send a log to the elastic search host"""
+    """Tries to send a log to the elastic search host
+
+    :param subject: The subject of the log to send
+    :param text: The text of the log to send
+    :param wfi: Workflow info
+    :param host: The host that the log is sent to
+    """
 
     # import pdb
     # pdb.set_trace()
