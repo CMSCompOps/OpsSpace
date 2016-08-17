@@ -15,11 +15,11 @@ that are maintained by the experts and used by the masses.
 Simple File Manipulation
 ------------------------
 
-.. automodule:: OpsSpace.ToolBox.simplefiletools
+.. automodule:: CMSToolBox.simplefiletools
    :members:
 
 Elastic Search Tools
 --------------------
 
-.. automodule:: OpsSpace.ToolBox.elasticsearch
+.. automodule:: CMSToolBox.elasticsearch
    :members:

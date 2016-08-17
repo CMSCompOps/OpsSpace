@@ -8,6 +8,7 @@ File mostly intended to set up working environment for operator as a script.
 
 import os
 import urllib
+from distutils.core import setup
 
 try:
     # noinspection PyUnresolvedReferences
@@ -19,7 +20,7 @@ except ImportError:
     print('https://bootstrap.pypa.io/get-pip.py\n')
     exit()
 
-from ToolBox.simplefiletools import load_env, append_to_file
+from CMSToolBox.simplefiletools import load_env, append_to_file
 
 
 class Installer:
@@ -163,7 +164,7 @@ class Installer:
         """Appends modified $PYTHONPATH variable to bash profile"""
 
         # Location to add to PYTHONPATH
-        target_dir = '/'.join(self.InstallDirectory.split('/')[:-1])
+        target_dir = self.InstallDirectory
 
         for profile_name in self.possibleProfiles:
             profile_path = os.environ.get('HOME') + '/' + profile_name
@@ -205,29 +206,44 @@ def main():
     parser.add_option('--add-doc-tools', '-d', action='store_true', dest='addDocTools',
                       help='Use pip to install the tools necessary to generate the OpsSpace documentation. '
                            'This option can be run without selecting any packages.')
+    parser.add_option('--force', action='store_true', dest='installAll',
+                      help='Install all possible packages with ./setup.py install. '
+                           'Used since readthedocs tries it.')
 
     (options, args) = parser.parse_args()
     packages = args
 
-    installer = Installer(options.gitUser)
+    if len(packages) == 1 and packages[0] in ['install', 'help', 'sdist']:
+        packages = ['CMSToolBox']
+        if options.installAll:
+            installer = Installer('dabercro')
+            installer.install_packages(installer.ValidPackages)
+            packages += installer.ValidPackages
 
-    if options.addPath:
-        installer.add_pythonpath()
+        setup(name='OpsSpace',
+              version='0.1',
+              packages=packages)
 
-    if options.addDocTools:
-        installer.add_doc_tools()
-
-    if len(packages) == 0 or packages[0] == '':
-        if not options.addPath and not options.addDocTools:
-            parser.print_help()
-            installer.print_valid_packages()
     else:
-        print(
-            '\n' +
-            'I will now search for packages in ' + installer.UserName + '\'s repositories. ' +
-            'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
-        )
-        installer.install_packages(packages)
+        installer = Installer(options.gitUser)
+
+        if options.addPath:
+            installer.add_pythonpath()
+
+        if options.addDocTools:
+            installer.add_doc_tools()
+
+        if len(packages) == 0 or packages[0] == '':
+            if not options.addPath and not options.addDocTools:
+                parser.print_help()
+                installer.print_valid_packages()
+        else:
+            print(
+                '\n' +
+                'I will now search for packages in ' + installer.UserName + '\'s repositories. ' +
+                'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
+            )
+            installer.install_packages(packages)
 
 
 if __name__ == '__main__':
