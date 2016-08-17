@@ -55,5 +55,5 @@ but that is an unlikely use case.
 However, I will add this so that :file:`OpsSpace/docs/setup.rst` can be used as an example
 for someone documenting their own scripts or modules.
 
-.. automodule:: OpsSpace.setup
+.. automodule:: setup
    :members:
