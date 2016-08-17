@@ -20,7 +20,12 @@ inside of this submodule repository.
 For example, the :mod:`WorkflowWebTools` module has the file
 :file:`WorkflowWebTools/docs/requirements.txt` that contains
 
-.. program-output:: cat ../WorkflowWebTools/docs/requirements.txt
+::
+
+    filler
+
+..
+  ## .. program-output:: cat ../WorkflowWebTools/docs/requirements.txt
 
 These will be installed automatically, if needed, when calling::
 
