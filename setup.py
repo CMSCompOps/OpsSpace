@@ -143,7 +143,7 @@ class Installer:
         # Look for requirements.txt and install requirements, if needed
         requirements_location = os.path.join(self.InstallDirectory, package_name, 'docs/requirements.txt')
         if os.path.exists(requirements_location):
-            pip.main(['install', '-q', '-r', requirements_location])
+            pip.main(['install', '-r', requirements_location])
 
     def install_packages(self, package_list):
         """Calls install_package for a list of packages"""
@@ -213,7 +213,7 @@ def main():
     (options, args) = parser.parse_args()
     packages = args
 
-    if len(packages) == 1 and packages[0] in ['install', 'help', 'sdist']:
+    if len(packages) == 1 and packages[0] in ['install', 'sdist']:
         packages = ['CMSToolBox']
         if options.installAll:
             installer = Installer('dabercro')

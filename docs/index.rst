@@ -1,9 +1,6 @@
 Welcome to OpsSpace's documentation!
 ====================================
 
-For Users
----------
-
 Contents:
 
 .. toctree::
