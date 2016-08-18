@@ -43,11 +43,9 @@ or::
 and the OpsSpaceDocs homepage will appear at :file:`test/html/index.html`.
 
 .. |build-status| image:: https://travis-ci.org/dabercro/OpsSpace.svg?branch=master
-    :alt: build status
-    :scale: 100%
     :target: https://travis-ci.org/dabercro/OpsSpace
+    :alt: build status
 
 .. |docs| image:: https://readthedocs.org/projects/cms-comp-ops-tools/badge/?version=latest
     :target: http://cms-comp-ops-tools.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
-    :scale: 100%

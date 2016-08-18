@@ -17,6 +17,9 @@ virtualenv -p python2.7 venv
 # Put virtualenv in your path
 PATH=$testdir/venv/bin:$PATH
 
+# Get rid of PYTHONPATH
+PYTHONPATH=""
+
 # Install documentation requirements
 cd $opsdir
 pip install -r docs/requirements.txt
