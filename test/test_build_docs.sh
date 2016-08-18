@@ -8,17 +8,21 @@ testdir=${0%%`basename $0`}
 cd $testdir
 testdir=`pwd`
 
+if [ "$OPSFULLTEST" != "true" ]
+then
+    # Create a virtualenv with your python2.7
+    # Full test already creates one for you
+    virtualenv -p python2.7 venv
+
+    # Put virtualenv in your path
+    PATH=$testdir/venv/bin:$PATH
+
+    # Get rid of PYTHONPATH
+    PYTHONPATH=""
+fi
+
 # Get directory or package
 opsdir=${testdir%%"/test"}
-
-# Create a virtualenv with your python2.7
-virtualenv -p python2.7 venv
-
-# Put virtualenv in your path
-PATH=$testdir/venv/bin:$PATH
-
-# Get rid of PYTHONPATH
-PYTHONPATH=""
 
 # Install documentation requirements
 cd $opsdir
@@ -34,7 +38,10 @@ pip install -r docs/requirements.txt
 sphinx-build -b html -E docs test/html
 cd $testdir
 
-# Remove the virtualenv
-rm -rf venv
+if [ "$OPSFULLTEST" != "true" ]
+then
+    # Remove the virtualenv
+    rm -rf venv
+fi
 
 cd $here

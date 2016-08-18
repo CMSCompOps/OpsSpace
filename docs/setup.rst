@@ -1,7 +1,10 @@
 Installation
 ============
 
-Installation is done by using the :file:`setup.py` script.
+Installation is done by using the ``setup.py`` script.
+Since users of these tools are often also developing scripts inside,
+this setup script (optionally) does not behave exactly like a typical ``setup.py``.
+
 The current list of valid packages are shown by running with
 no arguments::
 
@@ -12,7 +15,7 @@ You can see the output of this action under `Example Setup`_.
 To install another package as a submodule of OpsSpace,
 Make sure that the package is in either the CMSCompOps or your
 own GitHub account (preferably both).
-Add that repository name to :file:`OpsSpace/config/packagesList.txt`.
+Add that repository name to ``OpsSpace/config/packagesList.txt``.
 Now your repository will be considered a valid package.
 Then continue with the setup.
 
@@ -52,7 +55,7 @@ Members
 
 The setup script can also be imported to gain access to the following members,
 but that is an unlikely use case.
-However, I will add this so that :file:`OpsSpace/docs/setup.rst` can be used as an example
+However, I will add this so that ``OpsSpace/docs/setup.rst`` can be used as an example
 for someone documenting their own scripts or modules.
 
 .. automodule:: setup

@@ -188,17 +188,17 @@ class Installer(object):
 
 
 def main():
-    """
-    Main functionality of the install script.
+    """Main functionality of the install script.
+
     Uses system arguments to determine which packages to install.
     """
 
     # Using optparse for compatibility with Python 2.6
     from optparse import OptionParser
 
-    usage = 'Usage: ./%prog [options] package1 package2 ... \n' \
-            '         --or-- \n' \
-            '       ./%prog install [--force]'
+    usage = ('Usage: ./%prog [options] package1 package2 ... \n'
+             '         --or-- \n'
+             '       ./%prog install [--force]')
 
     parser = OptionParser(usage)
 
@@ -220,20 +220,21 @@ def main():
     (options, args) = parser.parse_args()
     packages = args
 
+    if options.installAll:
+        installer = Installer('dabercro')
+        installer.install_packages(installer.ValidPackages)
+    else:
+        installer = Installer(options.gitUser)
+
     if len(packages) == 1 and packages[0] in ['install', 'sdist']:
-        packages = ['CMSToolBox']
-        if options.installAll:
-            installer = Installer('dabercro')
-            installer.install_packages(installer.ValidPackages)
-            packages += installer.ValidPackages
+        packages = ['CMSToolBox'] + [pack for pack in installer.ValidPackages
+                                     if pack in os.listdir('.')]
 
         setup(name='OpsSpace',
               version='0.1',
               packages=packages)
 
     else:
-        installer = Installer(options.gitUser)
-
         if options.addPath:
             installer.add_pythonpath()
 

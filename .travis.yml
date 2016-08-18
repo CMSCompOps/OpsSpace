@@ -3,6 +3,4 @@ python:
   - 2.6
   - 2.7
 install: ./setup.py install --force
-script:
-  - test/test_build_docs.sh
-  - test/test_style.sh travis
+script: test/run_tests.sh
