@@ -14,16 +14,16 @@ try:
     # noinspection PyUnresolvedReferences
     import pip
 except ImportError:
-    print('\nIt does not look like you have pip installed.')
-    print('That is the one dependency I need to install other dependencies.')
-    print('Try running the following script:\n')
-    print('https://bootstrap.pypa.io/get-pip.py\n')
+    print '\nIt does not look like you have pip installed.'
+    print 'That is the one dependency I need to install other dependencies.'
+    print 'Try running the following script:\n'
+    print 'https://bootstrap.pypa.io/get-pip.py\n'
     exit()
 
 from CMSToolBox.simplefiletools import load_env, append_to_file
 
 
-class Installer:
+class Installer(object):
     """Class the holds the information for installing workspace"""
 
     possibleProfiles = [
@@ -42,40 +42,41 @@ class Installer:
     """Remote repository location"""
 
     ValidPackages = []
-    """List of valid packages that can be installed with this script"""
+    """List of valid packages that can be installed with this script.
+    Set in :func:set_packages().
+    """
 
     def set_packages(self):
         """Read from list of valid package and append to valid list."""
-        list_file = open(self.InstallDirectory + '/config/packagesList.txt', 'r')
-        for package in list_file.readlines():
-            self.ValidPackages.append(package.strip('\n'))
-
-        list_file.close()
+        with open(os.path.join(self.InstallDirectory, 'PackageList.txt'), 'r') as list_file:
+            for package in list_file.readlines():
+                self.ValidPackages.append(package.strip('\n'))
 
     def __init__(self, github_user):
         """Initialize with the GitHub username of the operator."""
-        self.UserName = github_user or self.CentralGitHub
+        self.user_name = github_user or self.CentralGitHub
 
         self.set_packages()
 
     def print_valid_packages(self):
         """Displays valid packages for the user"""
 
-        print('\nValid package names:\n')
+        print '\nValid package names:\n'
         for package in self.ValidPackages:
-            print('  ' + package)
-        print('')
+            print '  ' + package
+        print ''
 
     def install_package(self, package_name):
-        """
-        Install a given package into the operator workspace.
+        """Install a given package into the operator workspace.
+
         If the file docs/requirements.txt exists inside of the package,
         the requirements are installed through pip.
 
-        :param package_name: must match the repository name in the valid packages list and GitHub
+        :param str package_name: must match the repository name in
+                                 the valid packages list and GitHub
         """
 
-        user = self.UserName
+        user = self.user_name
         installed = False
 
         # Location to install the package
@@ -91,10 +92,11 @@ class Installer:
                     # If checking central repository and getting 404, something is wrong
                     if user == self.CentralGitHub:
                         error_string = 'Cannot find package ' + package_name
-                        if user != self.UserName:
-                            error_string += ' in ' + self.UserName + ' or'
-                        error_string += ' in ' + user + ' repository! Check again for package location.'
-                        print(error_string)
+                        if user != self.user_name:
+                            error_string += ' in ' + self.user_name + ' or'
+                        error_string += (' in ' + user +
+                                         ' repository! Check again for package location.')
+                        print error_string
                         exit(1)
 
                     # If not checking central repository, check that next
@@ -105,8 +107,9 @@ class Installer:
                 else:
 
                     # Clone the repository inside the OpsSpace package
-                    command = 'git clone ' + self.gitHubUrl + user + '/' + package_name + '.git ' + target_install
-                    print(command)
+                    command = ('git clone ' + self.gitHubUrl + user + '/' +
+                               package_name + '.git ' + target_install)
+                    print command
                     os.system(command)
 
                     # If operator username, add the central location to remotes
@@ -114,16 +117,19 @@ class Installer:
                         # Lines to write to config
                         to_write = [
                             '[remote "' + self.CentralGitHub + '"]',
-                            '\turl = ' + self.gitHubUrl + self.CentralGitHub + '/' + package_name + '.git',
+                            ('\turl = ' + self.gitHubUrl + self.CentralGitHub + '/' +
+                             package_name + '.git'),
                             '\tfetch = +refs/heads/*:refs/remotes/' + self.CentralGitHub + '/*'
                         ]
 
                         # Append to the config file
-                        append_to_file(self.InstallDirectory + '/' + package_name + '/.git/config', to_write)
+                        append_to_file(os.path.join(self.InstallDirectory,
+                                                    package_name, '.git/config'),
+                                       to_write)
 
                     installed = True
         else:
-            print(package_name + ' already installed at ' + target_install + '!')
+            print package_name + ' already installed at ' + target_install + '!'
 
         # Check the .gitignore for the package name and add it, if needed
         # .gitignore location
@@ -132,16 +138,16 @@ class Installer:
         git_ignore_line = package_name + '/*'
 
         # Get contents
-        git_ignore_file = open(git_ignore, 'r')
-        git_ignore_list = git_ignore_file.readlines()
-        git_ignore_file.close()
+        with open(git_ignore, 'r') as git_ignore_file:
+            git_ignore_list = git_ignore_file.readlines()
 
         # Check for line
         if git_ignore_line + '\n' not in git_ignore_list:
             append_to_file(git_ignore, git_ignore_line)
 
         # Look for requirements.txt and install requirements, if needed
-        requirements_location = os.path.join(self.InstallDirectory, package_name, 'docs/requirements.txt')
+        requirements_location = os.path.join(self.InstallDirectory, package_name,
+                                             'docs/requirements.txt')
         if os.path.exists(requirements_location):
             pip.main(['install', '-r', requirements_location])
 
@@ -153,7 +159,7 @@ class Installer:
             if package in self.ValidPackages:
                 self.install_package(package)
             else:
-                print(package + ' is an invalid package!!!')
+                print package + ' is an invalid package!!!'
                 has_invalid_package = True
 
         # If user tried to install any invalid package, give list of valid packages
@@ -168,20 +174,17 @@ class Installer:
 
         for profile_name in self.possibleProfiles:
             profile_path = os.environ.get('HOME') + '/' + profile_name
+
             # Search for profile files
             if os.path.exists(profile_path):
+
                 # If there, source the profile file to get most updated variables
                 load_env(profile_path)
+
                 # If this directory is not in PYTHON path, append to profile
                 if target_dir not in os.environ.get('PYTHONPATH', '').split(':'):
                     append_to_file(profile_path, ['', '# Python objects in OpsSpace',
                                                   'export PYTHONPATH=$PYTHONPATH:' + target_dir])
-
-    def add_doc_tools(self):
-        """Uses pip to install the tools to generate the OpsSpace documentation"""
-
-        print('Adding documentation tools.')
-        pip.main(['install', '-r', os.path.join(self.InstallDirectory, 'docs/requirements.txt')])
 
 
 def main():
@@ -193,22 +196,26 @@ def main():
     # Using optparse for compatibility with Python 2.6
     from optparse import OptionParser
 
-    usage = 'Usage: %prog [options] package1 package2 ...'
+    usage = 'Usage: ./%prog [options] package1 package2 ... \n' \
+            '         --or-- \n' \
+            '       ./%prog install [--all, --force]'
 
     parser = OptionParser(usage)
-    parser.add_option('--user-name', '-u', metavar='UserName', dest='gitUser', default=os.environ.get('USER'),
-                      help='GitHub user name, where the packages will be searched for first (default $USER)')
+
+    parser.add_option('--user-name', '-u', metavar='UserName', dest='gitUser',
+                      default=os.environ.get('USER'),
+                      help='GitHub user name, where the packages will be '
+                           'searched for first (default $USER)')
+
     parser.add_option('--add-path', '-p', action='store_true', dest='addPath',
                       help='Add the location of this package to the user\'s PYTHONPATH '
-                           'in their .bashrc or .bash_profile. '
-                           'The default behavior is to let the user adjust PYTHONPATH on their own. '
+                           'in their .bashrc or .bash_profile. The default '
+                           'behavior is to let the user adjust PYTHONPATH on their own. '
                            'This option can be run without selecting any packages.')
-    parser.add_option('--add-doc-tools', '-d', action='store_true', dest='addDocTools',
-                      help='Use pip to install the tools necessary to generate the OpsSpace documentation. '
-                           'This option can be run without selecting any packages.')
-    parser.add_option('--force', action='store_true', dest='installAll',
-                      help='Install all possible packages with ./setup.py install. '
-                           'Used since readthedocs tries it.')
+
+    parser.add_option('--all', '--force', action='store_true', dest='installAll',
+                      help='Install all possible packages when running ./setup.py install. '
+                           '--force used since readthedocs tries it.')
 
     (options, args) = parser.parse_args()
     packages = args
@@ -230,17 +237,14 @@ def main():
         if options.addPath:
             installer.add_pythonpath()
 
-        if options.addDocTools:
-            installer.add_doc_tools()
-
         if len(packages) == 0 or packages[0] == '':
-            if not options.addPath and not options.addDocTools:
+            if not options.addPath:
                 parser.print_help()
                 installer.print_valid_packages()
         else:
             print(
                 '\n' +
-                'I will now search for packages in ' + installer.UserName + '\'s repositories. ' +
+                'I will now search for packages in ' + installer.user_name + '\'s repositories. ' +
                 'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
             )
             installer.install_packages(packages)
