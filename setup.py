@@ -198,7 +198,7 @@ def main():
 
     usage = 'Usage: ./%prog [options] package1 package2 ... \n' \
             '         --or-- \n' \
-            '       ./%prog install [--all, --force]'
+            '       ./%prog install [--force]'
 
     parser = OptionParser(usage)
 
@@ -213,7 +213,7 @@ def main():
                            'behavior is to let the user adjust PYTHONPATH on their own. '
                            'This option can be run without selecting any packages.')
 
-    parser.add_option('--all', '--force', action='store_true', dest='installAll',
+    parser.add_option('--force', action='store_true', dest='installAll',
                       help='Install all possible packages when running ./setup.py install. '
                            '--force used since readthedocs tries it.')
 
