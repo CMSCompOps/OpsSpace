@@ -5,10 +5,14 @@ install=$1
 # Check for pylint
 if [ "`which pylint 2> /dev/null`" = "" ]
 then
-    if [ "$install" = "install" ]
+
+    if [ "$install" = "install" -o "$install" = "travis" ]
     then
+
         pip install pylint
+
     else
+
         echo "pylint not installed on this machine. Run:"
         echo ""
         echo "pip install pylint"
@@ -18,7 +22,9 @@ then
         echo "./test_style.sh install"
         echo ""
         exit 1
+
     fi
+
 fi
 
 # Save here, in case user is not in test dir
@@ -59,16 +65,27 @@ cd $testdir
 
 for f in $outputdir/*.txt
 do
+
     if grep "Your code has been rated at 10" $f > /dev/null
     then
-        tput setaf 2 2> /dev/null
-        echo $f" passed the check."
+
+        tput setaf 2 2> /dev/null; echo $f" passed the check."
+
     else
-        tput setaf 1 2> /dev/null
-        echo $f" failed the check:"
-        cat $f | tail -n5
-        echo "Check full file for more details."
+
+        tput setaf 1 2> /dev/null; echo $f" failed the check:"
+
+        if [ "$install" = "travis" ]
+        then
+            tput sgr0 2> /dev/null
+            cat $f
+        else
+            tput setaf 1 2> /dev/null; cat $f | tail -n5
+            tput setaf 1 2> /dev/null; echo "Check full file for more details."
+        fi
+
     fi
+
 done
 
 tput sgr0 2> /dev/null
