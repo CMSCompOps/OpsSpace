@@ -1,13 +1,24 @@
 #!/bin/bash
 
+install=$1
+
 # Check for pylint
 if [ "`which pylint 2> /dev/null`" = "" ]
 then
-    echo "pylint not installed on this machine. Run:"
-    echo ""
-    echo "pip install pylint"
-    echo ""
-    exit 1
+    if [ "$install" = "install" ]
+    then
+        pip install pylint
+    else
+        echo "pylint not installed on this machine. Run:"
+        echo ""
+        echo "pip install pylint"
+        echo ""
+        echo "Or rerun this script as"
+        echo ""
+        echo "./test_style.sh install"
+        echo ""
+        exit 1
+    fi
 fi
 
 # Save here, in case user is not in test dir

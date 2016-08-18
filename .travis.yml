@@ -5,4 +5,4 @@ python:
 install: ./setup.py install --force
 script:
   - test/test_build_docs.sh
-  - test/test_style.sh
+  - test/test_style.sh install
