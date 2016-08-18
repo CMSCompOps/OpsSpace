@@ -69,7 +69,7 @@ class Installer(object):
     def install_package(self, package_name):
         """Install a given package into the operator workspace.
 
-        If the file docs/requirements.txt exists inside of the package,
+        If the file requirements.txt exists inside of the package,
         the requirements are installed through pip.
 
         :param str package_name: must match the repository name in
@@ -147,7 +147,7 @@ class Installer(object):
 
         # Look for requirements.txt and install requirements, if needed
         requirements_location = os.path.join(self.InstallDirectory, package_name,
-                                             'docs/requirements.txt')
+                                             'requirements.txt')
         if os.path.exists(requirements_location):
             pip.main(['install', '-r', requirements_location])
 

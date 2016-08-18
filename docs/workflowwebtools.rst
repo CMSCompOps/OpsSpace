@@ -1,1 +1,1 @@
-../WorkflowWebTools/docs/workflowwebtools.rst
+../WorkflowWebTools/README.rst

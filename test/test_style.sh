@@ -79,8 +79,8 @@ do
 
         tput setaf 1 2> /dev/null; echo $f" failed the check:"
 
-        # Travis check has trouble importing distutils.core for some reason
-        if [ "${f##*/}" != "setup.txt" -o "$TRAVIS" != "true" ]
+        # In continuous integration tests, only check MUSTWORK
+        if [ "$TRAVIS" != "true" -o "${MUSTWORK}.txt" = "${f##*/}" ]
         then
             ERRORSFOUND=`expr $ERRORSFOUND + 1`
         fi
@@ -102,4 +102,4 @@ tput sgr0 2> /dev/null               # Reset terminal colors
 
 cd $here                             # Return to original location
 
-# exit $ERRORSFOUND  # I'm a bad sport that doesn't want travis to see for now.
+exit $ERRORSFOUND

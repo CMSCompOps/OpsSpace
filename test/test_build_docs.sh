@@ -21,7 +21,7 @@ then
     PYTHONPATH=""
 fi
 
-# Get directory or package
+# Get directory of package
 opsdir=${testdir%%"/test"}
 
 # Install documentation requirements

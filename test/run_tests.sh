@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Use this environment variable to denote
+# which package is being tested in continuous integration
+export MUSTWORK=$1
+
 export OPSFULLTEST="true"
 
 if [ "$TRAVIS" != "true" ]
@@ -16,7 +20,7 @@ fi
 
 testdir=${0%%/`basename $0`}              # Get the test dir
 
-ERRORFOUND=0                              # Track errors
+ERRORSFOUND=0                              # Track errors
 
 for f in $testdir/test_*.??               # Run tests in the testdir
 do
@@ -29,7 +33,7 @@ do
 
         tput setaf 1 2> /dev/null
         echo "$f exited with error code $errcode!"
-        ERRORFOUND=`expr $ERRORFOUND + 1`
+        ERRORSFOUND=`expr $ERRORSFOUND + 1`
 
     else                                  # Otherwise, note success
 
@@ -47,22 +51,22 @@ then
     rm -rf venv
 fi
 
-if [ $ERRORFOUND -eq 1 ]                  # Setting plural correctly
+if [ $ERRORSFOUND -eq 1 ]                 # Setting plural correctly
 then                                      #   looks impressive to some
     errstr="error"
 else
     errstr="errors"
 fi
 
-if [ $ERRORFOUND -eq 0 ]                  # Set terminal text color depending on result
+if [ $ERRORSFOUND -eq 0 ]                 # Set terminal text color depending on result
 then
     tput setaf 2 2> /dev/null             # Green: Passed test
 else
     tput setaf 1 2> /dev/null             # Red: Did not pass test
 fi
 
-echo "$ERRORFOUND $errstr found"
+echo "$ERRORSFOUND $errstr found"
 
 tput sgr0 2> /dev/null                    # Reset color
 
-exit $ERRORFOUND                          # Loud exit for travis
+exit $ERRORSFOUND                         # Loud exit for travis
