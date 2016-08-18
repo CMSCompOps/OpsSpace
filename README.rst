@@ -1,3 +1,5 @@
+|build-status| |docs|
+
 Developer Guidelines
 ====================
 
@@ -39,3 +41,20 @@ or::
   ./test_build_docs.sh
 
 and the OpsSpaceDocs homepage will appear at :file:`test/html/index.html`.
+
+Automated Testing
+-----------------
+
+dabercro: |build-status-dabercro|
+
+.. |build-status-dabercro| image:: https://travis-ci.org/dabercro/OpsSpace.svg?branch=master
+    :target: https://travis-ci.org/dabercro/OpsSpace
+    :alt: Build Status
+
+.. |build-status| image:: https://travis-ci.org/CMSCompOps/OpsSpace.svg?branch=master
+    :target: https://travis-ci.org/CMSCompOps/OpsSpace
+    :alt: Build Status
+
+.. |docs| image:: https://readthedocs.org/projects/cms-comp-ops-tools/badge/?version=latest
+    :target: http://cms-comp-ops-tools.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status

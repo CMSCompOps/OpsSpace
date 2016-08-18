@@ -2,6 +2,6 @@
 *.pyc
 *~
 build/*
-test/html/*
+test/*/*
 CMSToolBox/bak/*
 WorkflowWebTools/*
