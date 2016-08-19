@@ -52,7 +52,7 @@ cd OpsSpace                               # Setup package as a user normally wou
 ERRORSFOUND=0                             # Start tracking errors
 
 # Run all scripts starting with test_
-for packagetest in $package/test/test_* 2> /dev/null
+for packagetest in `ls $package/test/test_* 2> /dev/null`
 do
 
     _do_test $ERRORSFOUND $packagetest
