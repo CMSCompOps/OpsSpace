@@ -8,6 +8,7 @@ File mostly intended to set up working environment for operator as a script.
 
 import os
 import urllib
+import glob
 from distutils.core import setup
 
 try:
@@ -150,6 +151,13 @@ class Installer(object):
                                              'requirements.txt')
         if os.path.exists(requirements_location):
             pip.main(['install', '-r', requirements_location])
+
+        # Next, search for an additional installation script
+        install_script_location = glob.glob(
+            os.path.join(self.InstallDirectory, package_name, 'install.??'))
+        # Make sure there's only one script to match to
+        if len(install_script_location) == 1:
+            os.system(install_script_location[0])
 
     def install_packages(self, package_list):
         """Calls install_package for a list of packages"""
