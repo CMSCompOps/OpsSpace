@@ -20,9 +20,9 @@ fi
 
 testdir=${0%%/`basename $0`}              # Get the test dir
 
-ERRORSFOUND=0                              # Track errors
+ERRORSFOUND=0                             # Track errors
 
-for f in $testdir/test_*.??               # Run tests in the testdir
+for f in $testdir/test_*                  # Run tests in the testdir
 do
 
     $f                                    # Run test script

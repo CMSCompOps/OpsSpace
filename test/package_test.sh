@@ -51,15 +51,14 @@ cd OpsSpace                               # Setup package as a user normally wou
 
 ERRORSFOUND=0                             # Start tracking errors
 
-packagetest=$package/test/run_tests.sh
-
-if [ -f $packagetest ]                    # If the default test script exists, run it
-then
+# Run all scripts starting with test_
+for packagetest in $package/test/test_* 2> /dev/null
+do
 
     _do_test $ERRORSFOUND $packagetest
     ERRORSFOUND=$?
 
-fi
+done
 
 # Run main test, with this package required to succeed
 _do_test $ERRORSFOUND test/run_tests.sh $package
