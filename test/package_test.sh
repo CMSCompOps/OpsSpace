@@ -15,7 +15,7 @@ _do_test () {
 
 
     errors=$1                             # Track how many errors found so far
-    thetest="$2 $3"                       # Setup the test to be done
+    packagetest="$2 $3"                   # Setup the test to be done
 
     $packagetest                          # Do the test
     errorcode=$?                          # Get the error code
