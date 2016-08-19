@@ -5,9 +5,15 @@
 
 if [ "$TRAVIS" != "true" ]
 then
+
     echo "This script is designed to be run by travis-ci.org for package tests."
-    echo "There should be no need to run it interactively."
+    echo "There should be no need to run it interactively, except for debugging."
+    echo "If that is really necessary, do:"
+    echo ""
+    echo " $ export \$TRAVIS=\"true\""
+    echo ""
     exit 1
+
 fi
 
 # Function to do the test for us
