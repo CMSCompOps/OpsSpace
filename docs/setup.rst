@@ -1,3 +1,5 @@
+.. _setup-ref:
+
 Installation
 ============
 
@@ -8,7 +10,7 @@ this setup script (optionally) does not behave exactly like a typical ``setup.py
 The current list of valid packages are shown by running with
 no arguments::
 
-  $ ./setup.py
+  ./setup.py
 
 You can see the output of this action under `Example Setup`_.
 
@@ -33,17 +35,18 @@ Each option is documented in the output above as well.
 If I want to freshly install the WorkflowWebTools from dabercro's GitHub on a new machine,
 I simply do the following::
 
-  $ ./setup -u dabercro WorkflowWebTools
+  ./setup -u dabercro WorkflowWebTools
 
 The origin repository will be set to ``https://github.com/dabercro/WorkflowWebTools.git``
 and the remote repository CMSCompOps assumes a centralized version
 exists and will be added::
 
-  $ cd WorkflowWebTools && git remote -v
-  CMSCompOps      https://github.com/CMSCompOps/WorkflowWebTools.git (fetch)
-  CMSCompOps      https://github.com/CMSCompOps/WorkflowWebTools.git (push)
-  origin          https://github.com/dabercro/WorkflowWebTools.git (fetch)
-  origin          https://github.com/dabercro/WorkflowWebTools.git (push)
+  cd WorkflowWebTools && git remote -v
+
+  CMSCompOps  https://github.com/CMSCompOps/WorkflowWebTools.git (fetch)
+  CMSCompOps  https://github.com/CMSCompOps/WorkflowWebTools.git (push)
+  origin      https://github.com/dabercro/WorkflowWebTools.git (fetch)
+  origin      https://github.com/dabercro/WorkflowWebTools.git (push)
 
 .. note::
 

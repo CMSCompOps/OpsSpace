@@ -211,9 +211,9 @@ def main():
     parser = OptionParser(usage)
 
     parser.add_option('--user-name', '-u', metavar='UserName', dest='gitUser',
-                      default=os.environ.get('USER'),
+                      default='CMSCompOps',
                       help='GitHub user name, where the packages will be '
-                           'searched for first (default $USER)')
+                           'searched for first (default CMSCompOps)')
 
     parser.add_option('--add-path', '-p', action='store_true', dest='addPath',
                       help='Add the location of this package to the user\'s PYTHONPATH '
@@ -228,11 +228,10 @@ def main():
     (options, args) = parser.parse_args()
     packages = args
 
+    installer = Installer(options.gitUser)
+
     if options.installAll:
-        installer = Installer('dabercro')
         installer.install_packages(installer.ValidPackages)
-    else:
-        installer = Installer(options.gitUser)
 
     if len(packages) == 1 and packages[0] in ['install', 'sdist']:
         packages = ['CMSToolBox'] + [pack for pack in installer.ValidPackages
