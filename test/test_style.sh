@@ -79,6 +79,22 @@ do
 
         tput setaf 1 2> /dev/null; echo $f" failed the check:"
 
+        # pylint does not import distutils from inside a virtualenv
+        if [ "$f" = "$outputdir/setup.txt" -a "$OPSFULLTEST"="true" ]
+        then
+
+            tput setaf 1 2> /dev/null
+            echo "But it always fails in a virtual environment."
+            tput setaf 1 2> /dev/null
+            echo "Please run test/test_style.sh separately if you made changes to it."
+
+            if [ "$TRAVIS" != "true" ]    # Allow Travis CI to dump the result just in case,
+            then                          #   otherwise, continue onto the next module
+                continue
+            fi
+
+        fi
+
         # In continuous integration tests, only check MUSTWORK
         if [ "$TRAVIS" != "true" -o "${MUSTWORK}.txt" = "${f##*/}" ]
         then

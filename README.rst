@@ -84,6 +84,16 @@ This may clash with many people's existing coding styles,
 but the Tools & Integration Team has already seen that refactoring code to pass these tests
 results in code that is significantly easier to follow and better documented.
 
+.. note::
+
+  If you run tests over ``setup.py`` inside of a virtual environment,
+  pylint will not import distutils, resulting in a failed test.
+  If you changed ``setup.py``, please run::
+
+    test/test_style.sh
+
+  separately to ensure good documentation practice.
+
 Ensuring an Easy Installation
 ------------------------------
 

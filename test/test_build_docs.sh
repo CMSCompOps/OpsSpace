@@ -4,12 +4,12 @@
 here=`pwd`
 
 # Get the test dir
-testdir=${0%%`basename $0`}
-cd $testdir
+cd ${0%%`basename $0`}
 testdir=`pwd`
 
 if [ "$OPSFULLTEST" != "true" ]
 then
+
     # Create a virtualenv with your python2.7
     # Full test already creates one for you
     virtualenv -p python2.7 venv
@@ -19,6 +19,7 @@ then
 
     # Get rid of PYTHONPATH
     PYTHONPATH=""
+
 fi
 
 # Get directory of package
@@ -40,8 +41,10 @@ cd $testdir
 
 if [ "$OPSFULLTEST" != "true" ]
 then
+
     # Remove the virtualenv
     rm -rf venv
+
 fi
 
 cd $here

@@ -4,7 +4,10 @@
 # which package is being tested in continuous integration
 export MUSTWORK=$1
 
-export OPSFULLTEST="true"
+export OPSFULLTEST="true"                 # Let other scripts know there's a full test
+
+cd ${0%%/`basename $0`}                   # Get the test dir
+testdir=`pwd`
 
 if [ "$TRAVIS" != "true" ]
 then
@@ -14,11 +17,9 @@ then
 
     virtualenv -p python2.7 venv          # Create a virtualenv with your python2.7
     export PATH=$testdir/venv/bin:$PATH   # Put virtualenv in your path
-    PYTHONPATH=""                         # Get rid of PYTHONPATH
+    export PYTHONPATH=""                  # Get rid of PYTHONPATH
 
 fi
-
-testdir=${0%%/`basename $0`}              # Get the test dir
 
 ERRORSFOUND=0                             # Track errors
 
