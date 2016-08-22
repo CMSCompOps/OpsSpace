@@ -54,21 +54,26 @@ If the ``-u`` option is left blank, then only the CMSCompOps repository is check
 
 After downloading desired repositories in this way, you can either install by adding
 ``<path/to/inside>/OpsSpace`` to your ``$PYTHONPATH``,
-or through standard ``distutils`` behavior under::
-
-  python setup.py install
-
+or through standard distutils behavior under the ``install`` subcommand.
 If you are okay with editing your ``~/.bashrc`` or ``~/.bash_profile``,
-then you can automatically add to ``$PYTHONPATH`` by running::
+then you can automatically add to ``$PYTHONPATH`` by running with the ``-d`` option.
+The distutils method installs an OpsSpace ``.egg`` file containing CMSToolBox and any other
+present repository as modules.
+
+Explicitly, here are the two different commands you could run::
 
   ./setup.py -d
 
-This is the recommended method of installation since most users will also be developing
+or::
+
+  ./setup.py install
+
+This first is the recommended method of installation since most users will also be developing
 or adjusting their tools.
 
 .. todo::
 
-  Handle updating (git pull) inside ``setup.py`` properly.
+  Handle updating (git pull, etc.) inside ``setup.py`` properly.
 
 Members
 -------
