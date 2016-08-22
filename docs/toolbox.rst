@@ -1,5 +1,7 @@
-ToolBox Modules
-===============
+.. _tool-ref:
+
+CMSToolBox Modules
+==================
 
 The CompOps tool box contains a number of modules that may be useful for
 multiple projects and tools.
@@ -10,7 +12,7 @@ that are maintained by the experts and used by the masses.
 
   At the moment, we just have some basic tools that are used
   by the setup script and WorkflowWebTools.
-  Edit :file:`OpsSpace/docs/toolbox.rst` to add your module to this page!.
+  Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!
 
 Simple File Manipulation
 ------------------------

@@ -8,6 +8,7 @@ File mostly intended to set up working environment for operator as a script.
 
 import os
 import urllib
+import glob
 from distutils.core import setup
 
 try:
@@ -69,7 +70,7 @@ class Installer(object):
     def install_package(self, package_name):
         """Install a given package into the operator workspace.
 
-        If the file docs/requirements.txt exists inside of the package,
+        If the file requirements.txt exists inside of the package,
         the requirements are installed through pip.
 
         :param str package_name: must match the repository name in
@@ -147,9 +148,16 @@ class Installer(object):
 
         # Look for requirements.txt and install requirements, if needed
         requirements_location = os.path.join(self.InstallDirectory, package_name,
-                                             'docs/requirements.txt')
+                                             'requirements.txt')
         if os.path.exists(requirements_location):
             pip.main(['install', '-r', requirements_location])
+
+        # Next, search for an additional installation script
+        install_script_location = glob.glob(
+            os.path.join(self.InstallDirectory, package_name, 'install.??'))
+        # Make sure there's only one script to match to
+        if len(install_script_location) == 1:
+            os.system(install_script_location[0])
 
     def install_packages(self, package_list):
         """Calls install_package for a list of packages"""
@@ -188,24 +196,24 @@ class Installer(object):
 
 
 def main():
-    """
-    Main functionality of the install script.
+    """Main functionality of the install script.
+
     Uses system arguments to determine which packages to install.
     """
 
     # Using optparse for compatibility with Python 2.6
     from optparse import OptionParser
 
-    usage = 'Usage: ./%prog [options] package1 package2 ... \n' \
-            '         --or-- \n' \
-            '       ./%prog install [--force]'
+    usage = ('Usage: ./%prog [options] package1 package2 ... \n'
+             '         --or-- \n'
+             '       ./%prog install [--force]')
 
     parser = OptionParser(usage)
 
     parser.add_option('--user-name', '-u', metavar='UserName', dest='gitUser',
-                      default=os.environ.get('USER'),
+                      default='CMSCompOps',
                       help='GitHub user name, where the packages will be '
-                           'searched for first (default $USER)')
+                           'searched for first (default CMSCompOps)')
 
     parser.add_option('--add-path', '-p', action='store_true', dest='addPath',
                       help='Add the location of this package to the user\'s PYTHONPATH '
@@ -220,20 +228,20 @@ def main():
     (options, args) = parser.parse_args()
     packages = args
 
+    installer = Installer(options.gitUser)
+
+    if options.installAll:
+        installer.install_packages(installer.ValidPackages)
+
     if len(packages) == 1 and packages[0] in ['install', 'sdist']:
-        packages = ['CMSToolBox']
-        if options.installAll:
-            installer = Installer('dabercro')
-            installer.install_packages(installer.ValidPackages)
-            packages += installer.ValidPackages
+        packages = ['CMSToolBox'] + [pack for pack in installer.ValidPackages
+                                     if pack in os.listdir('.')]
 
         setup(name='OpsSpace',
               version='0.1',
               packages=packages)
 
     else:
-        installer = Installer(options.gitUser)
-
         if options.addPath:
             installer.add_pythonpath()
 

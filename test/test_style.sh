@@ -6,13 +6,15 @@ install=$1
 if [ "`which pylint 2> /dev/null`" = "" ]
 then
 
-    if [ "$install" = "install" -o "$install" = "travis" ]
+    # Full test is in virtualenv that needs pylint
+    if [ "$install" = "install" -o "$OPSFULLTEST" = "true" ]
     then
 
         pip install pylint
 
     else
 
+        # Instruct on how to install, if not available
         echo "pylint not installed on this machine. Run:"
         echo ""
         echo "pip install pylint"
@@ -44,28 +46,30 @@ fi
 
 # Get directory or package
 opsdir=${testdir%%"/test"}
-
-# Dump some pylint stores
-
 cd $opsdir
 
+# Define configuration for pylint
 pylintCall="pylint --rcfile docs/pylint.cfg"
 
+# Call default OpsSpace tools
 $pylintCall setup.py > $outputdir/setup.txt
 $pylintCall CMSToolBox > $outputdir/CMSToolBox.txt
 
+# Check installed packages
 for d in `cat PackageList.txt`
 do
     test -d $d && $pylintCall $d > $outputdir/$d.txt
 done
 
 # Check the output
-
 cd $testdir
+
+ERRORSFOUND=0
 
 for f in $outputdir/*.txt
 do
 
+    # Look for a perfect score
     if grep "Your code has been rated at 10" $f > /dev/null
     then
 
@@ -75,11 +79,33 @@ do
 
         tput setaf 1 2> /dev/null; echo $f" failed the check:"
 
-        if [ "$install" = "travis" ]
+        # pylint does not import distutils from inside a virtualenv
+        if [ "$f" = "$outputdir/setup.txt" -a "$OPSFULLTEST"="true" ]
+        then
+
+            tput setaf 1 2> /dev/null
+            echo "But it always fails in a virtual environment."
+            tput setaf 1 2> /dev/null
+            echo "Please run test/test_style.sh separately if you made changes to it."
+
+            if [ "$TRAVIS" != "true" ]    # Allow Travis CI to dump the result just in case,
+            then                          #   otherwise, continue onto the next module
+                continue
+            fi
+
+        fi
+
+        # In continuous integration tests, only check MUSTWORK
+        if [ "$TRAVIS" != "true" -o "${MUSTWORK}.txt" = "${f##*/}" ]
+        then
+            ERRORSFOUND=`expr $ERRORSFOUND + 1`
+        fi
+
+        if [ "$TRAVIS" = "true" ]    # For travis test, dump the output directly
         then
             tput sgr0 2> /dev/null
             cat $f
-        else
+        else                         # Otherwise, show score and tell user to look
             tput setaf 1 2> /dev/null; cat $f | tail -n5
             tput setaf 1 2> /dev/null; echo "Check full file for more details."
         fi
@@ -88,6 +114,8 @@ do
 
 done
 
-tput sgr0 2> /dev/null
+tput sgr0 2> /dev/null               # Reset terminal colors
 
-cd $here
+cd $here                             # Return to original location
+
+exit $ERRORSFOUND
