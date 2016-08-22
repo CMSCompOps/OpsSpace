@@ -28,7 +28,7 @@ We have decided to keep the code on GitHub to avoid
 a false sense of security offered by private provided by private repositories.
 GitHub is also supported by a range of useful third-party applications.
 (There will be more on that in `Generating Documentation`_ and 
-`Automated Testing`_.)
+`Writing Automated Tests`_.)
 
 Since we are using this open source model,
 care should be taken that passwords are not placed in the repository.
@@ -214,12 +214,9 @@ If using the ``test/test_build_docs.sh`` file to generate documentation, all of 
 in ``PackageList.txt`` will be downloaded from the CMSCompOps GitHub,
 so the page will be where it belongs.
 This way, viewers on GitHub can also see your package's documentation on the package homepage.
-
-.. note::
-
-  The autodoc feature of Sphinx does not work on GitHub.
-  If all of your README.rst is autodoc, then it will be blank on GitHub.
-  Try to test your document generation with sphinx.
+Just remember, the autodoc feature of Sphinx does not work on GitHub.
+If all of your README.rst is autodoc, then it will be blank on GitHub.
+Try to test your document generation with sphinx.
 
 .. _tests-ref:
 
@@ -238,7 +235,7 @@ a third-party tool available to GitHub users.
   Right now, only the documentation build and style tests exist.
 
 Any executable script added to the ``test`` directory of OpsSpace or your package
-that matches the pattern ``test_*`` will be run as part of this automated test.
+that matches the pattern ``test/test_*`` will be run as part of this automated test.
 Any non-zero exit code of this script will cause Travis CI to report the build as failed.
 The test is triggered by each push, pull request, and merge.
 
@@ -248,7 +245,7 @@ The most basic example of this file would have the following contents::
 
     language: python
     python: 2.7
-    install: git clone https://github.com/dabercro/OpsSpace.git
+    install: git clone https://github.com/CMSCompOps/OpsSpace.git
     script: OpsSpace/test/package_test.sh
 
 CMS Comp Ops has agreed to support Python 2.7, but you can also run tests using Python 2.6 by replacing
@@ -270,6 +267,7 @@ To run the test on Ubuntu 14.04 (which is considered stable for now), add the fo
   Test packages on other distros and MacOSX, if available on Travis CI.
 
 Then activate your repository as briefly described in the `OpsSpaces Forks' Build Statuses` below.
+
 For more information on the configuration, see the `Travis CI documentation <https://docs.travis-ci.com/>`_.
 We ask that you do not change the ``install`` or ``script`` steps though.
 These will install your package through the ``setup.py`` method for `Ensuring an Easy Installation`_.
@@ -280,7 +278,7 @@ OpsSpace Forks' Build Statuses
 
 It is easy to run the OpsSpace build tests on your own forks.
 The only thing used to configure the tests is the ``.travis.yml`` file that is already in OpsSpace.
-After that, connect your GitHub account at `Travis CI<https://travis-ci.org/>`_ and activate your fork.
+After that, connect your GitHub account at `Travis CI <https://travis-ci.org/>`_ and activate your fork.
 Feel free to link to your status badge below so that you can easily see your own build status
 on the rendering of the GitHub README.
 This way, you can check the automatic build results before making a pull request.

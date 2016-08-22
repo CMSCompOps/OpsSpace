@@ -12,7 +12,7 @@ that are maintained by the experts and used by the masses.
 
   At the moment, we just have some basic tools that are used
   by the setup script and WorkflowWebTools.
-  Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!.
+  Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!
 
 Simple File Manipulation
 ------------------------
