@@ -30,10 +30,10 @@ GitHub is also supported by a range of useful third-party applications.
 (There will be more on that in `Generating Documentation`_ and 
 `Writing Automated Tests`_.)
 
-Since we are using this open source model,
-care should be taken that passwords are not placed in the repository.
+Since we are using this open source model, care should be taken that usernames and
+passwords are not placed in the repository.
 Also, when developing code for services running on certain machines,
-the specific machine name should not be given.
+the specific machine hostname or IP address should not be given.
 
 Style
 -----
