@@ -27,16 +27,18 @@ Since we are hosting our code on GitHub, anyone can look at our code.
 We have decided to keep the code on GitHub to avoid
 a false sense of security offered by private provided by private repositories.
 GitHub is also supported by a range of useful third-party applications.
-(There will be more on that in `Generating Documentation`_ and 
-`Writing Automated Tests`_.)
+(There will be more on that in :ref:`gen-docs-ref` and 
+:ref:`tests-ref`.)
 
 Since we are using this open source model, care should be taken that usernames and
 passwords are not placed in the repository.
 Also, when developing code for services running on certain machines,
 the specific machine hostname or IP address should not be given.
 
-Style
------
+.. _style-ref:
+
+Style Guidelines
+----------------
 
 In order to make the code more readable for future users, we encourage everyone to try to follow
 the `PEP 8 Style Guide <https://www.python.org/dev/peps/pep-0008/>`_ for any code written in Python.
@@ -74,7 +76,7 @@ Sphinx can show your module to users as the following:
 You can read more about the
 `autodocumentation features <http://www.sphinx-doc.org/en/stable/ext/autodoc.html>`_
 of Sphinx here.
-There will also be more details under `Generating Documentation`_.
+There will also be more details under :ref:`gen-docs-ref`.
 
 Last but not least, there is also a test for code complexity.
 These tests ensure that there are not too many variables floating around in a fuction or method.
@@ -155,6 +157,8 @@ There are details about how to use the install script on the
 
 Make sure that these steps do everything needed to pass a package's :ref:`tests <tests-ref>`.
 
+.. _gen-docs-ref:
+
 Generating Documentation
 ------------------------
 
@@ -199,7 +203,7 @@ To add a new page to our documentation, create a new ``.rst`` file (or softlink 
 and list the file as Contents inside of ``index.rst``.
 If adding a module to ``CMSToolBox``, edit the ``toolbox.rst`` to autodocument your modules.
 Examples of this are contained in ``toolbox.rst``,
-but let's quickly return to the example under the `Style`_ guidelines.
+but let's quickly return to the example under :ref:`style-ref`.
 The module, that is written this way:
 
 .. program-output:: cat example.py
