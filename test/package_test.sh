@@ -52,7 +52,8 @@ package=${HOME##*/}
 touch ~/.bashrc                           # Make .bashrc
 
 cd OpsSpace                               # Setup package as a user normally would
-./setup.py -u dabercro -p $package
+git clone ../../$package                  # Except use the tested package
+./setup.py -p $package
 . ~/.bashrc
 
 ERRORSFOUND=0                             # Start tracking errors
