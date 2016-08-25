@@ -10,7 +10,7 @@ then
     echo "There should be no need to run it interactively, except for debugging."
     echo "If that is really necessary, do:"
     echo ""
-    echo " $ export \$TRAVIS=\"true\""
+    echo " $ export TRAVIS=\"true\""
     echo ""
     exit 1
 
