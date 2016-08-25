@@ -49,7 +49,7 @@ opsdir=${testdir%%"/test"}
 cd $opsdir
 
 # Define configuration for pylint
-pylintCall="pylint --rcfile docs/pylint.cfg"
+pylintCall="pylint --rcfile test/pylint.cfg"
 
 # Call default OpsSpace tools
 $pylintCall setup.py > $outputdir/setup.txt
