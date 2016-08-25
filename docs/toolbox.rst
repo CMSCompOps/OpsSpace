@@ -25,3 +25,9 @@ Elastic Search Tools
 
 .. automodule:: CMSToolBox.elasticsearch
    :members:
+
+E-mail Tools
+------------
+
+.. automodule:: CMSToolBox.emailtools
+   :members:

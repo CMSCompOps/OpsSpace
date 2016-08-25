@@ -3,5 +3,7 @@
 *~
 build/*
 test/*/*
+dist/*
+OpsSpace*
 CMSToolBox/bak/*
 WorkflowWebTools/*

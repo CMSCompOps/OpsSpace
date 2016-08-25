@@ -10,7 +10,7 @@ then
     echo "There should be no need to run it interactively, except for debugging."
     echo "If that is really necessary, do:"
     echo ""
-    echo " $ export \$TRAVIS=\"true\""
+    echo " $ export TRAVIS=\"true\""
     echo ""
     exit 1
 
@@ -52,7 +52,8 @@ package=${HOME##*/}
 touch ~/.bashrc                           # Make .bashrc
 
 cd OpsSpace                               # Setup package as a user normally would
-./setup.py -u dabercro -p $package
+git clone ../../$package                  # Except use the tested package
+./setup.py -p $package
 . ~/.bashrc
 
 ERRORSFOUND=0                             # Start tracking errors
