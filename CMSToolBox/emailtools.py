@@ -23,16 +23,13 @@ def send_email(sender, recipients, subject, message_text,
     :param str message_html: The html version of the message
     :param str method: Method of sending email, based on
                        utilities available. Valid entries are:
-
                          - 'smtplib': uses the default  stplib.SMTP()
                          - 'sendmail': uses the system ``sendmail`` command
 
     :param kwargs: Keyword arguments for setting additional values
-                   depending on the email method.
-
-                     - 'smtplib': Keyword arguments can be host and port
-                                  to specify where to connect the
-                                  smtplib.SMTP object
+                   depending on the email method:
+                     - 'smtplib': Keyword arguments can be 'host' and 'port'
+                     - 'sendmail': No keyword arguments are supported
     """
 
     msg = MIMEMultipart('alternative')
