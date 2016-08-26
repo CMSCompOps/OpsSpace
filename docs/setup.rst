@@ -56,13 +56,13 @@ After downloading desired repositories in this way, you can either install by ad
 ``<path/to/inside>/OpsSpace`` to your ``$PYTHONPATH``,
 or through standard distutils behavior under the ``install`` subcommand.
 If you are okay with editing your ``~/.bashrc`` or ``~/.bash_profile``,
-then you can automatically add to ``$PYTHONPATH`` by running with the ``-d`` option.
+then you can automatically add to ``$PYTHONPATH`` by running with the ``-p`` option.
 The distutils method installs an OpsSpace ``.egg`` file containing CMSToolBox and any other
 present repository as modules.
 
 Explicitly, here are the two different commands you could run::
 
-  ./setup.py -d
+  ./setup.py -p
 
 or::
 
