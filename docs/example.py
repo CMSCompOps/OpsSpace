@@ -1,4 +1,5 @@
-"""An example module
+"""
+An example module
 
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
@@ -17,6 +18,6 @@ def example_function(an_integer, a_string, int_or_str):
 
     if not (isinstance(an_integer, int) and isinstance(a_string, str)
             and (isinstance(int_or_str, int) or isinstance(int_or_str, str))):
-        raise TypeError('One of the input variables are of the wrong type.')
+        raise TypeError('At least one of the input variables is the wrong type.')
 
     return 0
