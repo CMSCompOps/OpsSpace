@@ -20,7 +20,7 @@
 ##!
 
 usage () {
-    echo "Usage: $0 [-h]" 1>&2 
+    echo "Usage: $0 [-h]"
 }
 
 while getopts ":h" opt
@@ -30,7 +30,7 @@ do
             usage
             ;;
         *)
-            echo "That's not an option I recognize."
+            echo "That's not an option I recognize." 1>&2 
             usage
             exit 1
             ;;
