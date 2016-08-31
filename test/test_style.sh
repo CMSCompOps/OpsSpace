@@ -101,7 +101,8 @@ do
             ERRORSFOUND=`expr $ERRORSFOUND + 1`
         fi
 
-        if [ "$TRAVIS" = "true" ]    # For travis test, dump the output directly
+        # For travis test, or $install = "dump" dump the output directly
+        if [ "$TRAVIS" = "true" -o "$install" = "dump" ]
         then
             tput sgr0 2> /dev/null
             cat $f

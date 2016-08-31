@@ -8,8 +8,8 @@ Contents:
 
    setup
    toolbox
-   workflowwebtools
    developer
+   workflowwebtools
    todo
 
 Indices and tables

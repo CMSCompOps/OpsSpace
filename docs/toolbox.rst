@@ -14,17 +14,23 @@ that are maintained by the experts and used by the masses.
   by the setup script and WorkflowWebTools.
   Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!
 
+.. _file-manip-ref:
+
 Simple File Manipulation
 ------------------------
 
 .. automodule:: CMSToolBox.simplefiletools
    :members:
 
+.. _elastic-search-ref:
+
 Elastic Search Tools
 --------------------
 
 .. automodule:: CMSToolBox.elasticsearch
    :members:
+
+.. _email-tool-ref:
 
 E-mail Tools
 ------------
