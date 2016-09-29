@@ -39,9 +39,12 @@ testdir=`pwd`
 
 # Set text output location
 outputdir=$testdir"/pylint_output"
+
 if [ ! -d $outputdir ]
 then
+
     mkdir $outputdir
+
 fi
 
 # Get directory or package
@@ -58,7 +61,9 @@ $pylintCall CMSToolBox > $outputdir/CMSToolBox.txt
 # Check installed packages
 for d in `cat PackageList.txt`
 do
-    test -d $d && $pylintCall $d > $outputdir/$d.txt
+
+    test -f $d/__init__.py && $pylintCall $d > $outputdir/$d.txt
+
 done
 
 # Check the output
@@ -90,7 +95,9 @@ do
 
             if [ "$TRAVIS" != "true" ]    # Allow Travis CI to dump the result just in case,
             then                          #   otherwise, continue onto the next module
+
                 continue
+
             fi
 
         fi
@@ -98,17 +105,23 @@ do
         # In continuous integration tests, only check MUSTWORK
         if [ "$TRAVIS" != "true" -o "${MUSTWORK}.txt" = "${f##*/}" ]
         then
+
             ERRORSFOUND=`expr $ERRORSFOUND + 1`
+
         fi
 
         # For travis test, or $install = "dump" dump the output directly
         if [ "$TRAVIS" = "true" -o "$install" = "dump" ]
         then
+
             tput sgr0 2> /dev/null
             cat $f
+
         else                         # Otherwise, show score and tell user to look
+
             tput setaf 1 2> /dev/null; cat $f | tail -n5
             tput setaf 1 2> /dev/null; echo "Check full file for more details."
+
         fi
 
     fi
