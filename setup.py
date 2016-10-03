@@ -53,7 +53,7 @@ class Installer(object):
             for package in list_file.readlines():
                 self.ValidPackages.append(package.strip('\n'))
 
-    def __init__(self, github_user):
+    def __init__(self, github_user=None):
         """Initialize with the GitHub username of the operator."""
         self.user_name = github_user or self.CentralGitHub
 
