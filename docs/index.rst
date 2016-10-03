@@ -10,6 +10,7 @@ Contents:
    toolbox
    developer
    workflowwebtools
+   siteadmintoolkit
    todo
 
 Indices and tables

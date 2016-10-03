@@ -39,6 +39,7 @@ def setup(app):
 sys.path.insert(0, os.path.abspath('../.'))
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../WorkflowWebTools/runserver'))
+sys.path.insert(0, os.path.abspath('../SiteAdminToolkit/unmerged-cleaner'))
 
 
 # put analyzer to the autonaysrc setting
