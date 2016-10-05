@@ -26,8 +26,7 @@ def get_node_usage(url, node):
     :param str url: is the URL of the reporting service
     :param str node: is the site name to check
     :returns: The disk usage at the site in TB, or None if node info is not found
-              as a function that takes no arguments
-    :rtype: function
+    :rtype: int
     """
 
     conn = httplib.HTTPSConnection(
@@ -52,7 +51,7 @@ def get_node_usage(url, node):
             )
 
     # in TB
-    return lambda: (int(usage / (1024. ** 4)) or None)
+    return int(usage / (1024. ** 4)) or None
 
 
 class DocCache(object):
@@ -85,7 +84,7 @@ class DocCache(object):
             """
             curl_call = 'curl -s --retry 5 "{0}"'.format(url)
             if key:
-                return lambda: json.loads(os.popen(curl_call).read())[key]
+                return lambda: load_json(url)()[key]
             else:
                 return lambda: json.loads(os.popen(curl_call).read())
 
@@ -153,9 +152,22 @@ class DocCache(object):
             'T1_DE_KIT_MSS', 'T1_US_FNAL_MSS', 'T1_ES_PIC_MSS', 'T1_UK_RAL_MSS',
             'T1_IT_CNAF_MSS', 'T1_FR_CCIN2P3_MSS', 'T1_RU_JINR_MSS', 'T0_CH_CERN_MSS'
             ]
+
+        def node_wrapper(site):
+            """
+            A wrapper to return a lambda that will not change with the reference over a loop.
+            Placing the returned lambda into the loop that follows will lead to the referenced
+            site changing over each iteration.
+
+            :param str site: is the site to make the function for
+            :returns: a function that takes no arguments
+            :rtype: function
+            """
+            return lambda: get_node_usage(phedex_url, site)
+
         for site in sites:
             self.cache['{0}_usage'.format(site)] = make_cache_entry(
-                get_node_usage(phedex_url, site), ""
+                node_wrapper(site), ""
                 )
 
         self.cache['mss_usage'] = make_cache_entry(

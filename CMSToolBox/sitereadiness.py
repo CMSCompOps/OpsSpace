@@ -8,18 +8,6 @@ Module the caches and holds the Site Readiness status
 import time
 
 
-class SiteInfo():
-
-    def __init__(self):
-        """Initialization does not need any parameters"""
-        self.get_info()
-
-    def get_info(self):
-        """Fills members of the SiteInfo class"""
-        self.info = expensive http call
-        self.timestamp = time.time()
-
-
 SITE_INFO = SiteInfo()
 """Cache of SiteInfo for each instance"""
 
