@@ -16,6 +16,18 @@ that are maintained by the experts and used by the masses.
 
 .. _file-manip-ref:
 
+E-mail Tools
+------------
+
+.. automodule:: CMSToolBox.emailtools
+   :members:
+
+Cached Dashboard Information
+----------------------------
+
+.. automodule:: CMSToolBox.dashboard
+   :members:
+
 Simple File Manipulation
 ------------------------
 
@@ -31,9 +43,3 @@ Elastic Search Tools
    :members:
 
 .. _email-tool-ref:
-
-E-mail Tools
-------------
-
-.. automodule:: CMSToolBox.emailtools
-   :members:

@@ -16,6 +16,13 @@ def get_node_usage(url, node):
     """
     Get the disk function useage at a given site.
 
+    .. Note::
+
+       This function only works on systems that have the environment variable
+       ``X509_USER_PROXY`` defined.
+       Without this function, the cached labels that are formed like ``<site>_usage``
+       cannot be refreshed.
+
     :param str url: is the URL of the reporting service
     :param str node: is the site name to check
     :returns: The disk usage at the site in TB, or None if node info is not found
@@ -166,6 +173,12 @@ class DocCache(object):
 
     def get(self, label, fresh=False):
         """
+        .. todo::
+
+           Make a list of valid labels here.
+           Somehow have it automatically read from the columns and sites
+           variables currently inside the __init__.
+
         :param str label: dictionary key of self.cache for the information desired
         :param bool fresh: forces the cache to be refreshed if true.
                            Otherwise, the cache timestamp is checked.
