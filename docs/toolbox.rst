@@ -28,6 +28,12 @@ Cached Dashboard Information
 .. automodule:: CMSToolBox.dashboard
    :members:
 
+Site Readiness Metric
+---------------------
+
+.. automodule:: CMSToolBox.sitereadiness
+   :members:
+
 Simple File Manipulation
 ------------------------
 
