@@ -248,6 +248,8 @@ Linking to the ``README.rst`` will allow viewers on GitHub can also see your ``R
 Just remember, the autodoc feature of Sphinx does not work on GitHub.
 If all of your ``README.rst`` is autodoc, then it will be blank on GitHub.
 
+.. _example-ref:
+
 Python Documentation
 ~~~~~~~~~~~~~~~~~~~~
 

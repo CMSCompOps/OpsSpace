@@ -7,25 +7,7 @@ Module the caches and holds the Site Readiness status
 
 import time
 
-
-SITE_INFO = SiteInfo()
-"""Cache of SiteInfo for each instance"""
-
-CACHE_TIMEOUT = 60 * 60
-"""Time between cache refreshing in seconds"""
-
-
-def get_info():
-    """
-    Maybe add a parameter to specify what info you'd like
-    :returns: info of sites after checking cache.
-    :rtype: dict?, tuple? 
-    """
-
-    if site_info.timestamp is old:
-        site_info.get_info()
-
-    return site_info.info
+from .dashboard import GLOBAL_CACHE
 
 
 def site_readiness(site_name):
