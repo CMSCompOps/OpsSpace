@@ -32,6 +32,7 @@ def site_readiness(site_name):
               - 'yellow': Waiting Room
               - 'red': Morgue
               - 'none': Site not found
+
     :rtype: str
     """
     for site, output in i_site_readiness():
