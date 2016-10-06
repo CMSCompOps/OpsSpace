@@ -1,10 +1,10 @@
 language: python
-sudo: required
-dist:
-  - precise
-  - trusty
-python:
-  - 2.6
-  - 2.7
+matrix:
+  include:
+    - python: 2.6
+    - python: 2.7
+    - dist: trusty
+      sudo: required
+      python: 2.7
 install: ./setup.py install --force
 script: test/run_tests.sh CMSToolBox
