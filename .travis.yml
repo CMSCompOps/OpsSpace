@@ -9,6 +9,6 @@ matrix:
       sudo: required
       python: 2.7
 install:
-  - test "$PYLINTER" = "old" && pip install pylint<1.4
+  - test "$PYLINTER" = "old" && pip install pylint==1.3.1
   - ./setup.py install --force
 script: test/run_tests.sh CMSToolBox
