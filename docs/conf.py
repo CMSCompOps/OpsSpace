@@ -37,9 +37,16 @@ def setup(app):
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('../.'))
-sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../WorkflowWebTools/runserver'))
-sys.path.insert(0, os.path.abspath('../SiteAdminToolkit/unmerged-cleaner'))
+
+from setup import Installer
+
+# Import additional configuration from each package automatically
+for package in Installer().ValidPackages + ['.']:
+    path_file_name = '../{0}/test/path.txt'.format(package)
+    if os.path.exists(path_file_name):
+        with open(path_file_name, 'r') as path_file:
+            for directory in path_file.readlines():
+                sys.path.insert(0, os.path.abspath('../{0}/{1}'.format(package, directory.strip('\n'))))
 
 
 # put analyzer to the autonaysrc setting
