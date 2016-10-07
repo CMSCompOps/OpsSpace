@@ -1,10 +1,14 @@
 language: python
+cache: pip
 matrix:
   include:
     - python: 2.6
+      env: PYLINTER=old
     - python: 2.7
     - dist: trusty
       sudo: required
       python: 2.7
-install: ./setup.py install --force
+install:
+  - test "$PYLINTER" = "old" && pip install pylint<1.4
+  - ./setup.py install --force
 script: test/run_tests.sh CMSToolBox

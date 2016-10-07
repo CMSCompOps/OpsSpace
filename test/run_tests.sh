@@ -15,7 +15,7 @@ then
     # If not in travis-ci, create a virtualenv
     # to simulate a fresh python installation
 
-    virtualenv -p python2.7 venv          # Create a virtualenv with your python2.7
+    virtualenv -p python$PY venv          # Create a virtualenv with your chosen python
     export PATH=$testdir/venv/bin:$PATH   # Put virtualenv in your path
     export PYTHONPATH=""                  # Get rid of PYTHONPATH
 

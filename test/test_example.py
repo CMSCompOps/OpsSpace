@@ -17,8 +17,8 @@ class TestExample(unittest.TestCase):
                          'returns wrong value')
 
     def test_example_function_exception(self):
-        with self.assertRaises(TypeError):
-            example.example_function('test', 'test', 0)
+        self.assertRaises(TypeError, example.example_function,
+                          'test', 'test', 0)
 
 if __name__ == '__main__':
     unittest.main()
