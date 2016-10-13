@@ -20,7 +20,7 @@ def i_site_readiness():
     info = GLOBAL_CACHE.get('ssb_237')
 
     for site_info in info:
-        yield site_info['VONAME'], site_info['COLORNAME']
+        yield site_info['VOName'], site_info['COLORNAME']
 
 
 def site_readiness(site_name):
