@@ -8,3 +8,4 @@ OpsSpace*
 CMSToolBox/bak/*
 WorkflowWebTools/*
 SiteAdminToolkit/*
+test/*.cache.json
