@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 
-import os
-import sys
 import unittest
 
 import CMSToolBox.sitereadiness as sr
+
 
 class TestSiteReadiness(unittest.TestCase):
 
@@ -20,6 +19,7 @@ class TestSiteReadiness(unittest.TestCase):
     def test_bad_site(self):
         self.assertEqual(sr.site_readiness('not_a_site'), 'none',
                          'Bad return on fake site')
+
 
 if __name__ == '__main__':
     unittest.main()
