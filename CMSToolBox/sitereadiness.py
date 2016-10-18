@@ -23,6 +23,22 @@ def i_site_readiness():
         yield site_info['VOName'], site_info['COLORNAME']
 
 
+def site_list():
+    """Returns the list of sites
+
+    :returns: The sorted list of site names
+    :rtype: list
+    """
+
+    output = []
+
+    for site, _ in i_site_readiness():
+        output.append(site)
+
+    output.sort()
+    return output
+
+
 def site_readiness(site_name):
     """Returns the readiness status for a given site
     :param str site_name: Name of the site

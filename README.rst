@@ -345,11 +345,6 @@ Tools & Intergration has set up automatic tests through
 `Travis Continuous Integration <https://travis-ci.org/>`_,
 a third-party tool available to GitHub users.
 
-.. todo::
-
-  Write unit tests for the existing modules.
-  Right now, only the documentation build and style tests exist.
-
 Any executable script added to the ``test`` directory of OpsSpace or your package
 that matches the pattern ``test/test_*`` will be run as part of this automated test.
 Any non-zero exit code of this script will cause Travis CI to report the build as failed.
