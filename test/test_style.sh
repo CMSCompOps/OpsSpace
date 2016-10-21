@@ -107,7 +107,7 @@ do
         tput setaf 1 2> /dev/null; echo $f" failed the check:"
 
         # pylint does not import distutils from inside a virtualenv
-        if [ "$f" = "$outputdir/setup.txt" -a "$OPSFULLTEST"="true" ]
+        if [ "$f" = "$outputdir/setup.txt" -a "$OPSFULLTEST" = "true" ]
         then
 
             tput setaf 1 2> /dev/null

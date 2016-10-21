@@ -3,8 +3,9 @@
 *~
 build/*
 test/*/*
+test/*.cache.json
 dist/*
-OpsSpace*
+OpsSpace.egg-info/*
 CMSToolBox/bak/*
 WorkflowWebTools/*
 SiteAdminToolkit/*

@@ -12,7 +12,6 @@ import glob
 from distutils.core import setup
 
 try:
-    # noinspection PyUnresolvedReferences
     import pip
 except ImportError:
     print '\nIt does not look like you have pip installed.'
@@ -67,6 +66,17 @@ class Installer(object):
             print '  ' + package
         print ''
 
+    def install_requirements(self, package_name):
+        """Look for requirements.txt and install requirements, if needed
+
+        :param str package_name: is the directory that will be searched
+                                 for the requirements.txt file
+        """
+        requirements_location = os.path.join(self.InstallDirectory, package_name,
+                                             'requirements.txt')
+        if os.path.exists(requirements_location):
+            pip.main(['install', '-r', requirements_location])
+
     def install_package(self, package_name):
         """Install a given package into the operator workspace.
 
@@ -76,7 +86,6 @@ class Installer(object):
         :param str package_name: must match the repository name in
                                  the valid packages list and GitHub
         """
-
         user = self.user_name
         installed = False
 
@@ -146,11 +155,7 @@ class Installer(object):
         if git_ignore_line + '\n' not in git_ignore_list:
             append_to_file(git_ignore, git_ignore_line)
 
-        # Look for requirements.txt and install requirements, if needed
-        requirements_location = os.path.join(self.InstallDirectory, package_name,
-                                             'requirements.txt')
-        if os.path.exists(requirements_location):
-            pip.main(['install', '-r', requirements_location])
+        self.install_requirements(package_name)
 
         # Next, search for an additional installation script
         install_script_location = glob.glob(
@@ -249,6 +254,7 @@ def main():
             if not options.addPath:
                 parser.print_help()
                 installer.print_valid_packages()
+                exit()
         else:
             print(
                 '\n' +
@@ -256,6 +262,8 @@ def main():
                 'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
             )
             installer.install_packages(packages)
+
+    installer.install_requirements('.')
 
 
 if __name__ == '__main__':

@@ -20,7 +20,23 @@ def i_site_readiness():
     info = GLOBAL_CACHE.get('ssb_237')
 
     for site_info in info:
-        yield site_info['VONAME'], site_info['COLORNAME']
+        yield site_info['VOName'], site_info['COLORNAME']
+
+
+def site_list():
+    """Returns the list of sites
+
+    :returns: The sorted list of site names
+    :rtype: list
+    """
+
+    output = []
+
+    for site, _ in i_site_readiness():
+        output.append(site)
+
+    output.sort()
+    return output
 
 
 def site_readiness(site_name):

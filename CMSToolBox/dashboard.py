@@ -198,7 +198,7 @@ class DocCache(object):
 
         # create the cache files from the labels
         for src in self.cache:
-            self.cache[src]['cachefile'] = '.' + src + '.cache.json'
+            self.cache[src]['cachefile'] = os.path.join('/tmp/', src + '.cache.json')
 
     def get(self, label, fresh=False):
         """
