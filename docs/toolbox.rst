@@ -1,4 +1,4 @@
-.. _tool-ref:
+.. _toolbox-ref:
 
 CMSToolBox Modules
 ==================
