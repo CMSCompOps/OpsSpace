@@ -1,3 +1,5 @@
+.. _index-ref:
+
 Welcome to OpsSpace's documentation!
 ====================================
 

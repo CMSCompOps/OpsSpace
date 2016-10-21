@@ -8,6 +8,8 @@
     :target: http://cms-comp-ops-tools.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. _developer-ref:
+
 Developer Guidelines
 ====================
 
