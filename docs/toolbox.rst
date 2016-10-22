@@ -14,7 +14,7 @@ that are maintained by the experts and used by the masses.
   by the setup script and WorkflowWebTools.
   Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!
 
-.. _file-manip-ref:
+.. _email-tools-ref:
 
 E-mail Tools
 ------------
@@ -22,17 +22,23 @@ E-mail Tools
 .. automodule:: CMSToolBox.emailtools
    :members:
 
+.. _dashboard-info-ref:
+
 Cached Dashboard Information
 ----------------------------
 
 .. automodule:: CMSToolBox.dashboard
    :members:
 
+.. _site-readiness-ref:
+
 Site Readiness Metric
 ---------------------
 
 .. automodule:: CMSToolBox.sitereadiness
    :members:
+
+.. _file-manip-ref:
 
 Simple File Manipulation
 ------------------------
@@ -48,4 +54,10 @@ Elastic Search Tools
 .. automodule:: CMSToolBox.elasticsearch
    :members:
 
-.. _email-tool-ref:
+.. _add-path-ref:
+
+Loading Test Paths
+------------------
+
+.. automodule:: CMSToolBox._loadtestpath
+   :members:

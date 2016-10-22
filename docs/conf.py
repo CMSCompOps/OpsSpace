@@ -39,15 +39,11 @@ def setup(app):
 sys.path.insert(0, os.path.abspath('../.'))
 
 from setup import Installer
+from CMSToolBox._loadtestpath import add_path
 
 # Import additional configuration from each package automatically
 for package in Installer().ValidPackages + ['.']:
-    path_file_name = '../{0}/test/path.txt'.format(package)
-    if os.path.exists(path_file_name):
-        with open(path_file_name, 'r') as path_file:
-            for directory in path_file.readlines():
-                sys.path.insert(0, os.path.abspath('../{0}/{1}'.format(package, directory.strip('\n'))))
-
+    add_path(package)
 
 # put analyzer to the autonaysrc setting
 autoanysrc_analyzers = {
