@@ -63,8 +63,8 @@ exists and will be added::
 
 .. note::
 
-  Both remote repositories will clone over https, so you will need to manually convert the
-  remote origin to ssh, if desired.
+  Both remote repositories will fetch and push over https, so you will need to manually convert
+  the remote origin to ssh, if desired.
 
 If the dabercro repository did not exist, then the repository would be cloned from CMSCompOps.
 If the ``-u`` option is left blank, then only the CMSCompOps repository is checked.
@@ -73,20 +73,16 @@ After downloading desired repositories in this way, you can either install by ad
 ``<path/to/inside>/OpsSpace`` to your ``$PYTHONPATH``,
 or through standard distutils behavior under the ``install`` subcommand.
 If you are okay with editing your ``~/.bashrc`` or ``~/.bash_profile``,
-then you can automatically add to ``$PYTHONPATH`` by running with the ``-p`` option.
-The distutils method installs an OpsSpace ``.egg`` file containing CMSToolBox and any other
-present repository as modules.
-
-Explicitly, here are the two different commands you could run::
+then you can automatically add to ``$PYTHONPATH`` by running with the ``-p`` option::
 
   ./setup.py -p
 
-or::
+Or you can run the following, which uses the standard ``distutils`` package::
 
   ./setup.py install
 
 This first is the recommended method of installation since most users will also be developing
-or adjusting their tools.
+or adjusting their tools as they use them.
 
 .. todo::
 
