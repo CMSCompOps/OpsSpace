@@ -3,12 +3,26 @@
 Installation
 ============
 
-Installation is done by using the ``setup.py`` script.
-Since users of these tools are often also developing scripts inside,
-this setup script (optionally) does not behave exactly like a typical ``setup.py``.
+The installation of Comp Ops tools and scripts can be facilitated by the OpsSpace repository::
 
-The current list of valid packages are shown by running with
-no arguments::
+    git clone https://github.com/CMSCompOps/OpsSpace.git
+    cd OpsSpace
+
+Full installation is done by using the ``setup.py`` script.
+Since users of these tools are often also developing scripts inside,
+this setup script (optionally) does not compile and install packages like a typical ``setup.py``.
+The other method of installation follows these basic steps,
+which can also be done by hand, or by running ``setup.py`` with various options described below:
+
+#. The package is downloaded through a given user's repository on GitHub or 
+   through the CMSCompOps repository if no user is given.
+#. ``setup.py`` searches for ``requirements.txt`` immediately inside any package
+   and tries to install the contents through ``pip``.
+#. Any script that matches the pattern ``install.??`` inside the package is then run.
+#. The script appends the ``OpsSpace`` directory to the user's ``$PYTHONPATH``
+   if the appropriate flag is passed.
+
+The current list of valid packages and options are shown by running with no arguments::
 
   ./setup.py
 
@@ -16,12 +30,15 @@ This gives:
 
 .. program-output:: ../setup.py
 
-To install another package as a submodule of OpsSpace,
+To install a non-listed package as a submodule of OpsSpace,
 Make sure that the package is in either the CMSCompOps or your
 own GitHub account (preferably both).
 Add that repository name to the file ``PackageList.txt`` in the OpsSpace root directory.
 Now your repository will be considered a valid package.
 Then continue with the setup.
+Sending a pull request to the ``CMSOpsSpace/OpsSpace`` repository will place your
+repository on the Tools & Integration radar, and they will help you to
+standardize, document, and test your code.
 
 Example Setup
 -------------
@@ -75,8 +92,8 @@ or adjusting their tools.
 
   Handle updating (git pull, etc.) inside ``setup.py`` properly.
 
-Members
--------
+Reference
+---------
 
 The setup script can also be imported to gain access to the following members,
 but that is an unlikely use case.
