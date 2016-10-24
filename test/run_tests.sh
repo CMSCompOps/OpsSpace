@@ -6,6 +6,8 @@ export MUSTWORK=$1
 
 export OPSFULLTEST="true"                 # Let other scripts know there's a full test
 
+env
+
 cd ${0%%/`basename $0`}                   # Get the test dir
 testdir=`pwd`
 

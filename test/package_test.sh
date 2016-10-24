@@ -3,6 +3,8 @@
 # This test should only be used
 # by a package continuous integration test
 
+env
+
 if [ "$TRAVIS" != "true" ]
 then
 
