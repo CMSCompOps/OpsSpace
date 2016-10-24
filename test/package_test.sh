@@ -14,6 +14,10 @@ then
     echo ""
     exit 1
 
+else
+
+    env
+
 fi
 
 # Function to do the test for us

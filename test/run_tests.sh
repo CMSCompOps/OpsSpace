@@ -6,9 +6,6 @@ export MUSTWORK=$1
 
 export OPSFULLTEST="true"                 # Let other scripts know there's a full test
 
-cd ${0%%/`basename $0`}                   # Get the test dir
-testdir=`pwd`
-
 if [ "$TRAVIS" != "true" ]
 then
 
@@ -19,7 +16,14 @@ then
     export PATH=$testdir/venv/bin:$PATH   # Put virtualenv in your path
     export PYTHONPATH=""                  # Get rid of PYTHONPATH
 
+else
+
+    env
+
 fi
+
+cd ${0%%/`basename $0`}                   # Get the test dir
+testdir=`pwd`
 
 ERRORSFOUND=0                             # Track errors
 

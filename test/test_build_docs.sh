@@ -35,8 +35,18 @@ pip install -r docs/requirements.txt
 # That's how readthedocs.org calls setup.py.
 ./setup.py install --force
 
-# Build the documentation
-sphinx-build -b html -E docs test/html
+# Make a directory for output of build log.
+outputdir=$testdir/build_out
+output=$outputdir/build_out.txt
+if [ ! -d $outputdir ]
+then
+
+    mkdir $outputdir
+
+fi
+
+# Build the documentation and redirect errors for analysis
+sphinx-build -b html -E docs test/html 2> $output
 cd $testdir
 
 if [ "$OPSFULLTEST" != "true" ]
@@ -47,4 +57,37 @@ then
 
 fi
 
+errorcode=0
+
+if [ "$TRAVIS" = "true" ]
+then
+
+    cat $output
+
+fi
+
+if grep "autodoc: failed to import" $output
+then
+
+    tput setaf 1 2> /dev/null
+    echo "Import failed in documentation build!"
+
+    if  [ "$CHECKDOC" = "true" ]
+    then
+
+        errorcode=1
+
+    else
+
+        tput setaf 1 2> /dev/null
+        echo "Will only result in failed test if CHECKDOC=true is set."
+
+    fi
+
+fi
+
+tput sgr0 2> /dev/null
+
 cd $here
+
+exit $errorcode
