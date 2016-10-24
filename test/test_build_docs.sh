@@ -45,8 +45,8 @@ then
 
 fi
 
-# Build the documentation
-sphinx-build -b html -E docs test/html > $output
+# Build the documentation and redirect errors for analysis
+sphinx-build -b html -E docs test/html 2> $output
 cd $testdir
 
 if [ "$OPSFULLTEST" != "true" ]
