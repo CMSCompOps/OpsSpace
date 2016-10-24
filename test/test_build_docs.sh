@@ -69,9 +69,24 @@ fi
 if grep "autodoc: failed to import" $output
 then
 
-    errorcode=1
+    tput setaf 1 2> /dev/null
+    echo "Import failed in documentation build!"
+
+    if  [ "$CHECKDOC" = "true" ]
+    then
+
+        errorcode=1
+
+    else
+
+        tput setaf 1 2> /dev/null
+        echo "Will only result in failed test if CHECKDOC=true is set."
+
+    fi
 
 fi
+
+tput sgr0 2> /dev/null
 
 cd $here
 
