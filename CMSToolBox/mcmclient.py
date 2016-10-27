@@ -1,3 +1,5 @@
+# pylint: disable=redefined-variable-type
+
 """
 Defines the McMClient object.
 I (Dan) do not know what it does at the moment.

@@ -1,3 +1,5 @@
+# pylint: disable=protected-access, unexpected-keyword-arg
+
 """
 Module containing and returning information about workflows.
 

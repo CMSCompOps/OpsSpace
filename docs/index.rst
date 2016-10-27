@@ -9,8 +9,8 @@ Contents:
    :maxdepth: 2
 
    setup
-   toolbox
    developer
+   toolbox
    workflowwebtools
    siteadmintoolkit
    todo

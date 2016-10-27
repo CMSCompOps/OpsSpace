@@ -103,6 +103,24 @@ results in code that is significantly easier to follow and better documented.
 
   separately to ensure good documentation practice.
 
+If you have a good reason that your code does not pass the style test,
+you can disable a certain kind of check for a file.
+For example, the :ref:`workflow-info-ref` module makes an HTTPS connection,
+and CMS certificates are not considered valid.
+Python 2.6 doesn't make this check, but in Python 2.7,
+there is a workaround that includes a new keyword and accessing a private member of the ssl module.
+The log file of the check will include warnings that end with ``(protected-access)`` and
+``(unexpected-keyword-arg)`` (for Python 2.6 tests).
+To tell ``pylint`` to ignore these shortcomings and
+to warn future developers of what might pop up in the code,
+place a line like the following at the top of the script or module::
+
+    # pylint: disable=protected-access, unexpected-keyword-arg
+
+See this
+`Pylint FAQ <https://pylint.readthedocs.io/en/1.6.0/faq.html#is-there-a-way-to-disable-a-message-for-a-particular-module-only>`_
+for more details.
+
 JavaScript Comments
 ~~~~~~~~~~~~~~~~~~~
 
@@ -178,7 +196,7 @@ as long as they are listed in ``requirements.txt`` inside the root of the submod
   Properly propagate and test the ``--user`` installation option through ``setup.py``.
 
 If your repository require special CMS tools that are not installable through ``pip``,
-the ``setup.py`` script also looks for any ``instal.??`` file in the root directory
+the ``setup.py`` script also looks for any ``install.??`` file in the root directory
 of the repository and runs the first one it finds.
 This happens after attempting to install the contents of the ``requirements.txt``.
 Make sure that your ``install.??`` file is executable::
