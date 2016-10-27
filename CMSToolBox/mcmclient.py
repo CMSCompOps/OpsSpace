@@ -1,4 +1,4 @@
-# pylint: disable=redefined-variable-type
+# pylint: disable=bad-option-value, redefined-variable-type
 
 """
 Defines the McMClient object.
