@@ -189,6 +189,7 @@ class McMClient(object):
     def response(self):
         """
         I have no idea what this might be used for.
+
         :returns: A response
         :rtype: str
         """

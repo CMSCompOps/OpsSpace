@@ -27,6 +27,10 @@ def add_path(package):
     be added to the system path.
     The reason for the leading ``..`` is that the module is designed to be called
     from within the ``OpsSpace/docs`` directory or a package's ``test`` directory.
+    Paths are appended to the front of the path, so directories at the bottom
+    of the ``test/path.txt`` will be loaded first.
+
+    :param str package: Is the name of the package to load the test path for.
     """
 
     path_file_name = '../{0}/test/path.txt'.format(package)

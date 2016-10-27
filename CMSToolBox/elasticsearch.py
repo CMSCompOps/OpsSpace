@@ -19,18 +19,21 @@ ELASTIC_SEARCH_HOST = 'cms-elastic-fe.cern.ch:9200'
 """The default location to send and search for logs"""
 
 
-def send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
+def send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST,
+             show=False, level='info'):
     """Tries :func:`try_send_log` and raises exception if fails
 
     :param str subject: The subject of the log to send
     :param str text: The text of the log to send
     :param wfi: Workflow info
-    :type wfi: :class:WorkFlowInfo
+    :type wfi: :py:class:`CMSToolBox.workflowinfo.WorkflowInfo`
     :param str host: The host url that the log is sent to
+    :param bool show: Determines if the log should be printed or not
+    :param str level: Level displayed in Meta information
     """
 
     try:
-        try_send_log(subject, text, wfi, host)
+        try_send_log(subject, text, wfi, host, show, level)
     except (AttributeError, NameError, KeyError)  as message:
         print "failed to send log to elastic search"
         print str(message)
@@ -78,7 +81,8 @@ def search_logs(query, host=ELASTIC_SEARCH_HOST):
     return out['hits']['hits']
 
 
-def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
+def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST,
+                 show=False, level='info'):
     """Tries to send a log to the elastic search host
 
     :param str subject: The subject of the log to send
@@ -86,13 +90,18 @@ def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
     :param wfi: Workflow info
     :type wfi: :class:WorkFlowInfo
     :param str host: The host url that the log is sent to
+    :param bool show: Determines if the log should be printed or not
+    :param str level: Level displayed in Meta information
     """
+
+    if show:
+        print text
 
     # import pdb
     # pdb.set_trace()
     conn = httplib.HTTPConnection(host)
 
-    meta_text = ""
+    meta_text = 'level:%s\n' % level
 
     if wfi:
         # add a few markers automatically
@@ -114,13 +123,13 @@ def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
 
     now_ = time.gmtime()
 
-    conn.request("POST", '/logs/log/',
-                 json.dumps({"author": os.getenv('USER'),
-                             "subject": subject,
-                             "text": text,
-                             "meta": meta_text,
-                             "timestamp": time.mktime(now_),
-                             "date": time.asctime(now_)}
+    conn.request('POST', '/logs/log/',
+                 json.dumps({'author': os.getenv('USER'),
+                             'subject': subject,
+                             'text': text,
+                             'meta': meta_text,
+                             'timestamp': time.mktime(now_),
+                             'date': time.asctime(now_)}
                            )
                 )
 
@@ -128,7 +137,7 @@ def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST):
 
     try:
         res = json.loads(data)
-        print 'log:', res['_id'], "was created"
+        print 'log:', res['_id'], 'was created'
     except (AttributeError, NameError, KeyError)  as message:
-        print "failed"
+        print 'failed'
         print str(message)

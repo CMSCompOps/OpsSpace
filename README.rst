@@ -352,6 +352,11 @@ that matches the pattern ``test/test_*`` will be run as part of this automated t
 Any non-zero exit code of this script will cause Travis CI to report the build as failed.
 The test is triggered by each push, pull request, and merge.
 
+The style guide for the tests is not so strict.
+Good tests should be written and forgotten.
+In the event of a failure though, it should be possible for
+someone else to figure out what went wrong from the log files.
+
 The CMSCompOps group's OpsSpace is already set up to run these tests automatically.
 To run tests in another package, a file called ``.travis.yml`` should be created in the repository's root directory.
 The most basic example of this file would have the following contents::
@@ -374,6 +379,16 @@ To run the test on Ubuntu 14.04 (which is considered stable for now), add the fo
 
     sudo: required
     dist: trusty
+
+To confirm that your package is being documented correctly, you should have the settings
+
+    dist: trusty
+    sudo: required
+    python: 2.7
+    env: CHECKDOC=true
+
+Even if you don't run the documentation check, any failed documentation builds will break
+all other repository's tests, so someone will probably offer to help you fix it.
 
 Then activate your repository as briefly described in the `OpsSpaces Forks' Build Statuses` below.
 

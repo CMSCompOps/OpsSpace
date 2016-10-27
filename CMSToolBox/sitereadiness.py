@@ -41,6 +41,7 @@ def site_list():
 
 def site_readiness(site_name):
     """Returns the readiness status for a given site
+
     :param str site_name: Name of the site
     :returns: Readiness status. Possibilities and their meanings are:
 
