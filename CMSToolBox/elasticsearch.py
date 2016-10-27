@@ -19,21 +19,19 @@ ELASTIC_SEARCH_HOST = 'cms-elastic-fe.cern.ch:9200'
 """The default location to send and search for logs"""
 
 
-def send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST,
+def send_log(subject, text, host=ELASTIC_SEARCH_HOST,
              show=False, level='info'):
     """Tries :func:`try_send_log` and raises exception if fails
 
     :param str subject: The subject of the log to send
     :param str text: The text of the log to send
-    :param wfi: Workflow info
-    :type wfi: :py:class:`CMSToolBox.workflowinfo.WorkflowInfo`
     :param str host: The host url that the log is sent to
     :param bool show: Determines if the log should be printed or not
     :param str level: Level displayed in Meta information
     """
 
     try:
-        try_send_log(subject, text, wfi, host, show, level)
+        try_send_log(subject, text, host, show, level)
     except (AttributeError, NameError, KeyError)  as message:
         print "failed to send log to elastic search"
         print str(message)
@@ -81,14 +79,12 @@ def search_logs(query, host=ELASTIC_SEARCH_HOST):
     return out['hits']['hits']
 
 
-def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST,
+def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
                  show=False, level='info'):
     """Tries to send a log to the elastic search host
 
     :param str subject: The subject of the log to send
     :param str text: The text of the log to send
-    :param wfi: Workflow info
-    :type wfi: :class:WorkFlowInfo
     :param str host: The host url that the log is sent to
     :param bool show: Determines if the log should be printed or not
     :param str level: Level displayed in Meta information
@@ -102,24 +98,6 @@ def try_send_log(subject, text, wfi=None, host=ELASTIC_SEARCH_HOST,
     conn = httplib.HTTPConnection(host)
 
     meta_text = 'level:%s\n' % level
-
-    if wfi:
-        # add a few markers automatically
-        meta_text += '\n\n' + '\n'.join(['id: %s' % i for i in wfi.getPrepIDs()])
-        _, prim, _, sec = wfi.getIO()
-
-        if prim:
-            meta_text += '\n\n' + '\n'.join(['in:%s' % i for i in prim])
-
-        if sec:
-            meta_text += '\n\n' + '\n'.join(['pu:%s' % i for i in sec])
-
-        out = [i for i in wfi.request['OutputDatasets'] if i not in ['FAKE', 'None']]
-
-        if out:
-            meta_text += '\n\n' + '\n'.join(['out:%s' % i for i in out])
-
-        meta_text += '\n\n' + wfi.request['RequestName']
 
     now_ = time.gmtime()
 
