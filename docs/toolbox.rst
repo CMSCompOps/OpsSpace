@@ -46,6 +46,22 @@ Simple File Manipulation
 .. automodule:: CMSToolBox.simplefiletools
    :members:
 
+.. _workflow-info-ref:
+
+Workflow Information
+--------------------
+
+.. automodule:: CMSToolBox.workflowinfo
+   :members:
+
+.. _mcmclient-ref:
+
+McM Client
+----------
+
+.. automodule:: CMSToolBox.mcmclient
+   :members:
+
 .. _elastic-search-ref:
 
 Elastic Search Tools

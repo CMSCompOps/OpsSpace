@@ -78,6 +78,28 @@ do
 
     test -f $d/__init__.py && $pylintCall $d > $outputdir/$d.txt
 
+    if [ -f $d/test/path.txt ]
+    then
+
+        for dir in `cat $d/test/path.txt`
+        do
+
+            if [ "$dir" = "test" ]
+            then
+                continue
+            fi
+
+            for f in $d/$dir/*.py
+            do
+
+                $pylintCall $f > $outputdir/$d\_$dir\_$(basename $f).txt
+
+            done
+
+        done
+
+    fi
+
 done
 
 # Clean up Python 2.6 pylint config if it's there
@@ -125,7 +147,7 @@ do
         fi
 
         # In continuous integration tests, only check MUSTWORK
-        if [ "$TRAVIS" != "true" -o "${MUSTWORK}.txt" = "${f##*/}" ]
+        if [ "$TRAVIS" != "true" ] || [[ "${f##*/}" == $MUSTWORK* ]]
         then
 
             ERRORSFOUND=`expr $ERRORSFOUND + 1`
