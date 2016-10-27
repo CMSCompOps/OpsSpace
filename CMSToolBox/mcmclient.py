@@ -36,19 +36,21 @@ class McMClient(object):
 
         if dev:
             self.server = 'cms-pdmv-dev.cern.ch/mcm/'
+        elif is_int:
+            self.server = 'cms-pdmv-int.cern.ch/mcm/'
         else:
-            if is_int:
-                self.server = 'cms-pdmv-int.cern.ch/mcm/'
-            else:
-                self.server = 'cms-pdmv.cern.ch/mcm/'
+            self.server = 'cms-pdmv.cern.ch/mcm/'
 
         ## once secured
         self._response = ''
-        self.output = ''
         self.headers = {}
         self.identity = identity
         self.debug = debug
-        self.connect(cookie)
+        self.cookie_filename = cookie
+        self.curl = None
+        self.output = None
+        self.__http = None
+        self.connect()
 
     def connect(self, cookie=None):
         """
