@@ -43,7 +43,7 @@ class Installer(object):
 
     ValidPackages = []
     """List of valid packages that can be installed with this script.
-    Set in :func:set_packages().
+    Set in :py:func:`set_packages`.
     """
 
     def set_packages(self):

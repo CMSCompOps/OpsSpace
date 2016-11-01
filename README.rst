@@ -398,7 +398,7 @@ To run the test on Ubuntu 14.04 (which is considered stable for now), add the fo
     sudo: required
     dist: trusty
 
-To confirm that your package is being documented correctly, you should have the settings
+To confirm that your package is being documented correctly, you should have the settings::
 
     dist: trusty
     sudo: required
