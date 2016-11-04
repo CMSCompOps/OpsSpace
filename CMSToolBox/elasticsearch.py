@@ -1,10 +1,6 @@
 """
 Contains tools for interacting with elastic search
 
-.. todo::
-
-  Add workflowinfo class in ToolBox somewhere, since it's used here
-
 :author: Jean-Roch Vlimant <jean-roch.vlimant@cern.ch>
 """
 
@@ -14,9 +10,10 @@ import os
 import time
 import json
 
+from ._webtools import get_json
+
 
 ELASTIC_SEARCH_HOST = 'cms-elastic-fe.cern.ch:9200'
-"""The default location to send and search for logs"""
 
 
 def send_log(subject, text, host=ELASTIC_SEARCH_HOST,
@@ -47,7 +44,6 @@ def search_logs(query, host=ELASTIC_SEARCH_HOST):
     :rtype: list of dicts
     """
 
-    conn = httplib.HTTPConnection(host)
     goodquery = {
         "query": {
             "bool": {
@@ -72,11 +68,14 @@ def search_logs(query, host=ELASTIC_SEARCH_HOST):
             "meta"
             ]
         }
-    conn.request("POST", '/logs/_search?size=1000', json.dumps(goodquery))
-    response = conn.getresponse()
-    data = response.read()
-    out = json.loads(data)
-    return out['hits']['hits']
+
+    out = get_json(host, '/logs/_search', params={'size': 1000},
+                   body=goodquery)
+
+    try:
+        return out['hits']['hits']
+    except KeyError:
+        return 'KeyError'
 
 
 def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
@@ -93,29 +92,22 @@ def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
     if show:
         print text
 
-    # import pdb
-    # pdb.set_trace()
-    conn = httplib.HTTPConnection(host)
-
     meta_text = 'level:%s\n' % level
-
     now_ = time.gmtime()
 
-    conn.request('POST', '/logs/log/',
-                 json.dumps({'author': os.getenv('USER'),
-                             'subject': subject,
-                             'text': text,
-                             'meta': meta_text,
-                             'timestamp': time.mktime(now_),
-                             'date': time.asctime(now_)}
-                           )
-                )
-
-    data = conn.getresponse().read()
-
     try:
-        res = json.loads(data)
+
+        res = get_json(host, '/logs/log',
+                       body=json.dumps({'author': os.getenv('USER'),
+                                        'subject': subject,
+                                        'text': text,
+                                        'meta': meta_text,
+                                        'timestamp': time.mktime(now_),
+                                        'date': time.asctime(now_)}
+                                       ))
+
         print 'log:', res['_id'], 'was created'
+
     except (AttributeError, NameError, KeyError)  as message:
         print 'failed'
         print str(message)
