@@ -9,7 +9,6 @@ import copy
 import time
 import json
 import random
-import httplib
 
 from ._webtools import get_json
 

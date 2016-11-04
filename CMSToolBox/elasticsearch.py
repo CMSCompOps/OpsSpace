@@ -5,7 +5,6 @@ Contains tools for interacting with elastic search
 """
 
 
-import httplib
 import os
 import time
 import json
@@ -104,7 +103,7 @@ def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
                                         'meta': meta_text,
                                         'timestamp': time.mktime(now_),
                                         'date': time.asctime(now_)}
-                                       ))
+                                      ))
 
         print 'log:', res['_id'], 'was created'
 
