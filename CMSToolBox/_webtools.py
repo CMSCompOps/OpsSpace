@@ -1,4 +1,4 @@
-# pylint: disable=protected-access, unexpected-keyword-arg, redefined-variable-type
+# pylint: disable=protected-access, unexpected-keyword-arg, bad-option-value, redefined-variable-type
 
 """
 A high-level module for getting JSON information from web services.
