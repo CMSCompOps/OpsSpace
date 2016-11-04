@@ -15,7 +15,8 @@ import ssl
 import urllib
 
 
-def get_json(host, request, params='', body='', headers=None,
+def get_json(host, request, params='', body='',
+             headers={'Accept': 'application/json'},
              port='', **kwargs):
     """
     Function for getting JSON from a URL that handles the connection
@@ -70,7 +71,7 @@ def get_json(host, request, params='', body='', headers=None,
     full_request = '%s?%s' % (request, urllib.urlencode(params)) if params else request
 
     conn.request(
-        method, full_request, json.dumps(body), headers or {})
+        method, full_request, json.dumps(body), headers)
 
     res = conn.getresponse()
 
