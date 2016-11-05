@@ -55,6 +55,13 @@ check_package () {
 
     fi
 
+    if [ "$TRAVIS" = "true" ]
+    then
+
+        cat "$outputdir/$location.txt"
+
+    fi
+
 }
 
 # Check OpsSpace
