@@ -134,8 +134,32 @@ For example, you would write JavaScript comment blocks in the following way.
 
 See :ref:`gen-docs-ref` to see how those comments are rendered.
 
-Shell Script Comments
-~~~~~~~~~~~~~~~~~~~~~
+.. _shell-style-ref:
+
+Shell Style
+~~~~~~~~~~~
+
+The third-party tool ShellCheck (https://github.com/koalaman/shellcheck) has been chosen as the standard to hold ``.sh`` scripts to.
+The repository's README describes how to install and run ShellCheck.
+When running, the tool will give an error number and short description for each line that is potentially problematic.
+For example, if I have a line like the following in a shell script::
+
+    shellcheck $(git ls-files | grep "\.sh")
+
+I will get a message from ShellCheck when running on that script like the following.
+
+    shellcheck $(git ls-files | grep "\.sh")
+               ^-- SC2046: Quote this to prevent word splitting.
+
+Details of each error can be found in the repository's Wiki.
+For example, the error ``SC2046`` is described at https://github.com/koalaman/shellcheck/wiki/SC2046.
+In the example above, I actually want word splitting, so to disable the message for this line, the ``.sh`` file would be edited to contain::
+
+    # shellcheck disable=SC2046
+    shellcheck $(git ls-files | grep "\.sh")
+
+Shell Comments for Documentation
+++++++++++++++++++++++++++++++++
 
 Sphinx has also been configured to handle shell script block comments.
 For these comment blocks to show up automatically in the documentation,
@@ -398,7 +422,7 @@ To run the test on Ubuntu 14.04 (which is considered stable for now), add the fo
     sudo: required
     dist: trusty
 
-To confirm that your package is being documented correctly, you should have the settings::
+To confirm that your package is being documented correctly (i.e. Sphinx can import everything correctly), you should have the settings::
 
     dist: trusty
     sudo: required
@@ -407,6 +431,14 @@ To confirm that your package is being documented correctly, you should have the 
 
 Even if you don't run the documentation check, any failed documentation builds will break
 all other repository's tests, so someone will probably offer to help you fix it.
+
+If you have shell scripts in your repository, you should also install shellcheck during the build test.
+Place the following lines anywhere in your ``.travis.yml`` file anywhere to do that::
+
+    addons:
+      apt:
+        sources: debian-sid
+        packages: shellcheck
 
 Then activate your repository as briefly described in the `OpsSpaces Forks' Build Statuses` below.
 
