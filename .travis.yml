@@ -9,6 +9,9 @@ matrix:
       sudo: required
       python: 2.7
       env: CHECKDOC=true
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y shellcheck
 install:
   - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4"; fi
   - ./setup.py install --force

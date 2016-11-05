@@ -5,17 +5,8 @@
 if [ "$(which shellcheck 2> /dev/null)" = "" ]
 then
 
-    if [ "$TRAVIS" = "true" ]
-    then
-
-        apt-get install shellcheck
-
-    else
-
-        echo "Please install shellcheck: https://github.com/koalaman/shellcheck" 1>&2
-        exit 1
-
-    fi
+    echo "Please install shellcheck: https://github.com/koalaman/shellcheck" 1>&2
+    exit 1
 
 fi
 
