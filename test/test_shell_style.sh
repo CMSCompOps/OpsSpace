@@ -33,10 +33,14 @@ check_package () {
     location=$(pwd)
     location=${location##*/}
 
+    # shellcheck disable=SC2046
     shellcheck $(git ls-files | grep "\.sh") > "$outputdir/$location.txt"
 
-    if [ $? -eq 0 ]
+    if [ "$(wc -l < "$outputdir/$location.txt")" -eq 0 ]
     then
+        tput setaf 2 2> /dev/null
+        echo "$outputdir/$location.txt passed the check."
+        tput sgr0 2> /dev/null
         return
     fi
 
@@ -44,7 +48,7 @@ check_package () {
     echo "$outputdir/$location.txt failed the check."
     tput sgr0 2> /dev/null
 
-    if [ "$TRAVIS" != "true" ] || [ "$location" = "$MUSTWORK" ]
+    if [ "$TRAVIS" != "true" ] || [ "$location" = "$MUSTWORK" ] || [ "$location" = "OpsSpace" ]
     then
 
         ERRORSFOUND=$((ERRORSFOUND + 1))
@@ -70,6 +74,8 @@ do
     fi
 
 done < PackageList.txt
+
+cd "$here" || exit 1
 
 echo "$ERRORSFOUND errors found"
 
