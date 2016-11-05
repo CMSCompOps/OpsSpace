@@ -12,7 +12,7 @@ then
     # If not in travis-ci, create a virtualenv
     # to simulate a fresh python installation
 
-    virtualenv -p python$PY venv          # Create a virtualenv with your chosen python
+    virtualenv -p python"$PY" venv        # Create a virtualenv with your chosen python
     export PATH=$testdir/venv/bin:$PATH   # Put virtualenv in your path
     export PYTHONPATH=""                  # Get rid of PYTHONPATH
 
@@ -22,8 +22,8 @@ else
 
 fi
 
-cd ${0%%/`basename $0`}                   # Get the test dir
-testdir=`pwd`
+cd "${0%%/$(basename "$0")}" || exit 1    # Get the test dir
+testdir=$(pwd)
 
 ERRORSFOUND=0                             # Track errors
 
@@ -38,7 +38,7 @@ do
 
         tput setaf 1 2> /dev/null
         echo "$f exited with error code $errcode!"
-        ERRORSFOUND=`expr $ERRORSFOUND + 1`
+        ERRORSFOUND=$((ERRORSFOUND + 1))
 
     else                                  # Otherwise, note success
 
@@ -51,19 +51,19 @@ do
 
 done
 
-if [ "$TRAVIS" != "true" -a -d venv ]     # Clean up virtualenv, if necessary
+if [ "$TRAVIS" != "true" ] && [ -d venv ] # Clean up virtualenv, if necessary
 then
     rm -rf venv
 fi
 
-if [ $ERRORSFOUND -eq 1 ]                 # Setting plural correctly
+if [ "$ERRORSFOUND" -eq 1 ]               # Setting plural correctly
 then                                      #   looks impressive to some
     errstr="error"
 else
     errstr="errors"
 fi
 
-if [ $ERRORSFOUND -eq 0 ]                 # Set terminal text color depending on result
+if [ "$ERRORSFOUND" -eq 0 ]               # Set terminal text color depending on result
 then
     tput setaf 2 2> /dev/null             # Green: Passed test
 else
@@ -74,4 +74,4 @@ echo "$ERRORSFOUND $errstr found"
 
 tput sgr0 2> /dev/null                    # Reset color
 
-exit $ERRORSFOUND                         # Loud exit for travis
+exit "$ERRORSFOUND"                       # Loud exit for travis

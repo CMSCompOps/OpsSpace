@@ -35,7 +35,7 @@ _do_test () {
 
         tput setaf 1 2> /dev/null
         echo "$packagetest exited with error code $errorcode!"
-        errors=`expr $errors + 1`
+        errors=$((errors + 1))
 
     else                                  # If passed, tell for fun too
 
@@ -46,33 +46,35 @@ _do_test () {
 
     tput sgr0 2> /dev/null                # Reset colors
 
-    return $errors                        # Return total number of errors
+    return "$errors"                      # Return total number of errors
 
 }
 
-export HOME=`pwd`                         # Get the package you are testing from location and change HOME
+HOME=$(pwd)                               # Get the package you are testing from location and change HOME
+export HOME
 package=${HOME##*/}
 
 touch ~/.bashrc                           # Make .bashrc
 
-cd OpsSpace                               # Setup package as a user normally would
-git clone ../../$package                  # Except use the tested package
-./setup.py -p $package
+cd OpsSpace || exit 1                     # Setup package as a user normally would
+git clone ../../"$package"                # Except use the tested package
+./setup.py -p "$package"
+# shellcheck source=/dev/null
 . ~/.bashrc
 
 ERRORSFOUND=0                             # Start tracking errors
 
 # Run all scripts starting with test_
-for packagetest in `ls $package/test/test_* 2> /dev/null`
+for packagetest in $package/test/test_*
 do
 
-    _do_test $ERRORSFOUND $packagetest
+    _do_test $ERRORSFOUND "$packagetest"
     ERRORSFOUND=$?
 
 done
 
 # Run main test, with this package required to succeed
-_do_test $ERRORSFOUND test/run_tests.sh $package
+_do_test $ERRORSFOUND test/run_tests.sh "$package"
 ERRORSFOUND=$?
 
 if [ $ERRORSFOUND -eq 1 ]                 # Setting plural correctly
