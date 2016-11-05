@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Save here, in case user is not in test dir
-here=`pwd`
+here=$(pwd)
 
 # Get the test dir
-cd ${0%%`basename $0`}
-testdir=`pwd`
+cd "${0%%$(basename "$0")}" || exit 1
+testdir=$(pwd)
 
 if [ "$OPSFULLTEST" != "true" ]
 then
@@ -19,6 +19,7 @@ then
 
     # Get rid of PYTHONPATH
     PYTHONPATH=""
+    echo "PYTHONPATH: $PYTHONPATH"
 
 fi
 
@@ -26,7 +27,7 @@ fi
 opsdir=${testdir%%"/test"}
 
 # Install documentation requirements
-cd $opsdir
+cd "$opsdir" || exit 1
 pip install -r docs/requirements.txt
 
 # Install all packages.
@@ -36,18 +37,15 @@ pip install -r docs/requirements.txt
 ./setup.py install --force
 
 # Make a directory for output of build log.
-outputdir=$testdir/build_out
-output=$outputdir/build_out.txt
-if [ ! -d $outputdir ]
-then
+outputdir="$testdir/build_out"
+output="$outputdir/build_out.txt"
 
-    mkdir $outputdir
+test -d "$outputdir" || mkdir "$outputdir"
 
-fi
 
 # Build the documentation and redirect errors for analysis
-sphinx-build -b html -E docs test/html 2> $output
-cd $testdir
+sphinx-build -b html -E docs test/html 2> "$output"
+cd "$testdir" || exit 1
 
 if [ "$OPSFULLTEST" != "true" ]
 then
@@ -62,11 +60,11 @@ errorcode=0
 if [ "$TRAVIS" = "true" ]
 then
 
-    cat $output
+    cat "$output"
 
 fi
 
-if grep "autodoc: failed to import" $output
+if grep "autodoc: failed to import" "$output"
 then
 
     tput setaf 1 2> /dev/null
@@ -88,6 +86,6 @@ fi
 
 tput sgr0 2> /dev/null
 
-cd $here
+cd "$here" || exit 1
 
-exit $errorcode
+exit "$errorcode"

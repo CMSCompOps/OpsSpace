@@ -7,10 +7,8 @@ Module containing and returning information about workflows.
           Daniel Abercrombie <dabercro@mit.edu>
 """
 
-import httplib
-import os
-import json
-import ssl
+
+from ._webtools import get_json
 
 
 def list_workflows(status):
@@ -24,15 +22,8 @@ def list_workflows(status):
     :rtype: list
     """
 
-    conn = httplib.HTTPSConnection('cmsweb.cern.ch',
-                                   cert_file=os.getenv('X509_USER_PROXY'),
-                                   key_file=os.getenv('X509_USER_PROXY'),
-                                   context=ssl._create_unverified_context()
-                                  )
-    conn.request("GET", '/reqmgr2/data/request?status=' + status,
-                 headers={'accept': 'application/json'})
-
-    request = json.loads(conn.getresponse().read())
-    conn.close()
+    request = get_json('cmsweb.cern.ch', '/reqmgr2/data/request',
+                       params={'status': status}, use_cert=True,
+                       headers={'accept': 'application/json'})
 
     return [wf for wf in request['result'][0].keys()]

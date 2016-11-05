@@ -9,7 +9,8 @@ import copy
 import time
 import json
 import random
-import httplib
+
+from ._webtools import get_json
 
 
 def get_node_usage(url, node):
@@ -29,18 +30,8 @@ def get_node_usage(url, node):
     :rtype: int
     """
 
-    conn = httplib.HTTPSConnection(
-        url,
-        cert_file=os.getenv('X509_USER_PROXY'),
-        key_file=os.getenv('X509_USER_PROXY')
-        )
-    conn.request(
-        "GET", '/phedex/datasvc/json/prod/nodeusage?node=%s' % node
-        )
-    res = conn.getresponse()
-    result = json.loads(res.read())
-
-    conn.close()
+    result = get_json(url, '/phedex/datasvc/json/prod/nodeusage',
+                      params={'node': node}, use_cert=True)
 
     usage = 0
 
