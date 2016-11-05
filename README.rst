@@ -132,7 +132,7 @@ For example, you would write JavaScript comment blocks in the following way.
 
 .. program-output:: cat example.js
 
-See :ref:`gen-docs-ref` to see how those comments are rendered.
+See :ref:`js-docs-ref` to see how those comments are rendered.
 
 .. _shell-style-ref:
 
@@ -146,7 +146,7 @@ For example, if I have a line like the following in a shell script::
 
     shellcheck $(git ls-files | grep "\.sh")
 
-I will get a message from ShellCheck when running on that script like the following.
+I will get a message from ShellCheck when running on that script like the following::
 
     shellcheck $(git ls-files | grep "\.sh")
                ^-- SC2046: Quote this to prevent word splitting.
@@ -158,8 +158,8 @@ In the example above, I actually want word splitting, so to disable the message 
     # shellcheck disable=SC2046
     shellcheck $(git ls-files | grep "\.sh")
 
-Shell Comments for Documentation
-++++++++++++++++++++++++++++++++
+Comment Blocks
+++++++++++++++
 
 Sphinx has also been configured to handle shell script block comments.
 For these comment blocks to show up automatically in the documentation,
@@ -171,7 +171,7 @@ For example, you would want a block comment to look like the comment in the foll
 
 .. program-output:: cat example.sh
 
-See :ref:`gen-docs-ref` to see how that comment block is rendered.
+See :ref:`shell-docs-ref` to see how that comment block is rendered.
 
 Ensuring an Easy Installation
 ------------------------------
@@ -338,6 +338,8 @@ Sphinx is set up to update its path automatically to import this.
   All other scripts must use one of the custom documenters,
   which require paths relative to ``OpsSpace/docs``.
 
+.. _js-docs-ref:
+
 JavaScript Documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -357,6 +359,8 @@ This will be inserted into your documentation as follows:
 .. autoanysrc:: phony
    :src: example.js
    :analyzer: js
+
+.. _shell-docs-ref:
 
 Shell Script Documentation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -433,19 +437,22 @@ Even if you don't run the documentation check, any failed documentation builds w
 all other repository's tests, so someone will probably offer to help you fix it.
 
 If you have shell scripts in your repository, you should also install shellcheck during the build test.
-Place the following lines anywhere in your ``.travis.yml`` file anywhere to do that::
+See :ref:`shell-style-ref` for more details.
+Place the following lines anywhere in your ``.travis.yml`` file to do that::
 
     addons:
       apt:
         sources: debian-sid
         packages: shellcheck
 
-Then activate your repository as briefly described in the `OpsSpaces Forks' Build Statuses` below.
+Then activate your repository as briefly described in the :ref:`fork-status-ref` below.
 
 For more information on the configuration, see the `Travis CI documentation <https://docs.travis-ci.com/>`_.
 We ask that you do not change the ``install`` or ``script`` steps though.
 These will install your package through the ``setup.py`` method for `Ensuring an Easy Installation`_.
 The ``package_test.sh`` file will run all tests matching the pattern ``test/test_*`` inside your repository.
+
+.. _fork-status-ref:
 
 OpsSpace Forks' Build Statuses
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
