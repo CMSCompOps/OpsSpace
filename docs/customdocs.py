@@ -35,7 +35,6 @@ class CustomAnalyzer(analyzers.BaseAnalyzer):
                 in_comment_block = True
 
 
-
 class ShellScriptAnalyzer(CustomAnalyzer):
     """
     Processes shell scripts
