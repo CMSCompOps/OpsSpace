@@ -23,6 +23,7 @@ that does not follow these standards, but be aware that one of our goals is to c
 If you hope to contribute complex code, please write good tests to ensure it doesn't break.
 
 .. contents:: :local:
+   :depth: 2
 
 Security
 --------
@@ -158,6 +159,8 @@ In the example above, I actually want word splitting, so to disable the message 
     # shellcheck disable=SC2046
     shellcheck $(git ls-files | grep "\.sh")
 
+.. _shell-comment-ref:
+
 Comment Blocks
 ++++++++++++++
 
@@ -172,6 +175,35 @@ For example, you would want a block comment to look like the comment in the foll
 .. program-output:: cat example.sh
 
 See :ref:`shell-docs-ref` to see how that comment block is rendered.
+
+.. _perl-style-ref:
+
+Perl Style
+~~~~~~~~~~
+
+.. todo::
+
+   Impliment a generic Perl::Critic script that will run over all Perl scripts in the repository.
+   Briefly document its standards and use here.
+
+.. _perl-comment-ref:
+
+Comment Blocks
+++++++++++++++
+
+Sphinx has also been configured to handle Perl's POD documentation format.
+This will take any comments in a POD block, and directly render them as ``.rst`` file contents.
+The only exception to this is that the header tags will be replaced with the appropriate reStruturedText header style.
+
+.. Note::
+
+   To support more tags, edit the :py:class:`PODAnalyzer` class in ``docs/customdocs.py``.
+
+This means, a Perl script written like the following can be rendered in Sphinx.
+
+.. program-output:: cat example.pl
+
+See :ref:`perl-docs-ref` to see how that comment block is rendered.
 
 Ensuring an Easy Installation
 ------------------------------
@@ -381,6 +413,31 @@ This will be inserted into your documentation as follows:
 .. autoanysrc:: phony
    :src: example.sh
    :analyzer: shell-script
+
+.. _perl-docs-ref:
+
+Perl Script Documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To document perl scripts written this way:
+
+.. program-output:: cat example.pl
+
+you would add the following to your ``.rst`` pages::
+
+    .. autoanysrc:: phony
+       :src: example.pl
+       :analyzer: perl-script
+
+Again, the ``:src:`` must be the full path relative to the ``docs`` directory.
+This will be inserted into your documentation as follows:
+
+.. autoanysrc:: phony
+   :src: example.pl
+   :analyzer: perl-script
+
+Note that writing your comment blocks with ``##!``, leading lines with ``# ``, and using the ``shell-script`` analyzer would work too.
+However, this is not recommended so that users can also run ``perldoc`` on your script.
 
 .. _tests-ref:
 

@@ -60,7 +60,7 @@ class PODAnalyzer(CustomAnalyzer):
     comment_starts_with = '=pod'
     comment_ends_with = '=cut'
 
-    headers = ['=', '~', '+']
+    headers = ['=', '~', '+', '^', '*', '-', '#']
 
     def process_line(self, line):
         if line.startswith('=head'):
