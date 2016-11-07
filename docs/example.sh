@@ -1,7 +1,8 @@
 #! /bin/bash
 
 ##!
-# .. describe:: example.sh
+# example.sh
+# ++++++++++
 #
 # This is an example script that does nothing or can display help messages.
 # The output of::

@@ -48,6 +48,7 @@ for package in Installer().ValidPackages + ['.']:
 # put analyzer to the autonaysrc setting
 autoanysrc_analyzers = {
     'shell-script': 'customdocs.ShellScriptAnalyzer',
+    'perl-script': 'customdocs.PODAnalyzer',
 }
 
 
