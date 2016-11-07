@@ -66,5 +66,7 @@ class PODAnalyzer(CustomAnalyzer):
             output = ' '.join(line.split()[1:])
             for final in [output, self.headers[int(line[5]) - 1] * len(output)]:
                 yield final
+        elif line.endswith(':') and not line.endswith('::'):
+            yield line + ':'
         else:
             yield line

@@ -438,6 +438,9 @@ This will be inserted into your documentation as follows:
 
 Note that writing your comment blocks with ``##!``, leading lines with ``# ``, and using the ``shell-script`` analyzer would work too.
 However, this is not recommended so that users can also run ``perldoc`` on your script.
+Also, the ``perl-script`` analyzer adds another ``:`` to the end of the line if ``:`` is already there.
+You do not need to put ``::`` to then show code examples, like in normal reStruturedText.
+This is to keep the POD clean.
 
 .. _tests-ref:
 
