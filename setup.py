@@ -242,7 +242,10 @@ def main():
         installer.install_packages(installer.ValidPackages)
 
     if len(packages) == 1 and packages[0] in ['install', 'sdist']:
+        dirs = lambda pack: [os.path.join(pack, dir) for dir in os.listdir(pack) \
+                                 if os.path.isdir(os.path.join(pack,dir))]
         packages = ['CMSToolBox', 'dbs', 'RestClient'] + \
+            dirs('dbs') + dirs('RestClient') + \
             [pack for pack in installer.ValidPackages if pack in os.listdir('.')]
 
         setup(name='OpsSpace',
