@@ -11,6 +11,7 @@ Contents:
    setup
    developer
    toolbox
+   dbs
    workflowwebtools
    siteadmintoolkit
    todo

@@ -1,0 +1,25 @@
+82a83
+> 
+89d89
+< 
+138a139
+>     """DbsApi class"""
+1189,1191c1190,1193
+<                 The number of files which have data (lumis) for that run number;
+<                 The total number of events in those files;
+<                 The total number of lumis for that run_number. Note that in general this is different from the total 
+---
+> 
+>               - The number of files which have data (lumis) for that run number;
+>               - The total number of events in those files;
+>               - The total number of lumis for that run_number. Note that in general this is different from the total 
+1194c1196
+<                 The total num blocks that have the run_num;
+---
+>               - The total num blocks that have the run_num;
+1202,1203c1204,1205
+<         :param run_num: Run number (Optional). Possible format: run_num, "run_min-run_max", or ["run_min-run_max", run1, run2, ...]. run_num=1 is MC data and it will cause almost whole table scan, so run_num=1 will
+<                         cause an input error.
+---
+>         :param run_num: Run number (Optional). Possible format: run_num, "run_min-run_max", or ["run_min-run_max", run1, run2, ...]. 
+>                         run_num=1 is MC data and it will cause almost whole table scan, so run_num=1 will cause an input error.
