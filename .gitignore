@@ -9,5 +9,6 @@ OpsSpace.egg-info/*
 CMSToolBox/bak/*
 WorkflowWebTools/*
 SiteAdminToolkit/*
-dbs*
+dbs/*
+dbs_src/*
 RestClient/*
