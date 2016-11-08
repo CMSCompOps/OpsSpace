@@ -242,15 +242,28 @@ def main():
         installer.install_packages(installer.ValidPackages)
 
     if len(packages) == 1 and packages[0] in ['install', 'sdist']:
-        dirs = lambda pack: [os.path.join(pack, dir) for dir in os.listdir(pack) \
-                                 if os.path.isdir(os.path.join(pack,dir))]
+
+        def full_dirs(packages):
+            """
+            Get the full list of packages from the base packages list.
+
+            :param list packages: The list of base packages to install
+            :returns: The list of packages and sub-packages that are valid python modules
+            :rtype: list
+            """
+            output = []
+            for package in packages:
+                output.extend([direct for direct, _, files in \
+                                   os.walk(package) if '__init__.py' in files])
+
+            return output
+
         packages = ['CMSToolBox', 'dbs', 'RestClient'] + \
-            dirs('dbs') + dirs('RestClient') + \
-            [pack for pack in installer.ValidPackages if pack in os.listdir('.')]
+            [pack for pack in installer.ValidPackages if os.path.exists(pack)]
 
         setup(name='OpsSpace',
               version='0.1',
-              packages=packages)
+              packages=full_dirs(packages))
 
     else:
         if options.addPath:
