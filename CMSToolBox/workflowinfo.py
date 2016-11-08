@@ -54,11 +54,14 @@ def errors_for_workflow(workflow):
         for code, codedata in stepdata.get('jobfailed', {}).iteritems():
             sites = {}
             for site, sitedata in codedata.iteritems():
-                sites[site] = sitedata['errorCount']
+                if sitedata['errorCount']:
+                    sites[site] = sitedata['errorCount']
 
-            errors[code] = sites
+            if sites:
+                errors[code] = sites
 
-        output[step] = errors
+        if errors:
+            output[step] = errors
 
     return output
 
