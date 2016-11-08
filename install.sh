@@ -17,6 +17,6 @@ then
     rm -rf dbs_src/doc
 
     # Patch dbsClient for documentation
-    patch dbs/apis/dbsClient.py patch_dbs.txt
+    patch dbs/apis/dbsClient.py dbsClient.patch
 
 fi
