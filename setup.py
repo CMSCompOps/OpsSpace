@@ -236,6 +236,7 @@ def main():
     packages = args
 
     installer = Installer(options.gitUser)
+    installer.install_requirements('.')
 
     if options.installAll:
         installer.install_packages(installer.ValidPackages)
@@ -264,8 +265,6 @@ def main():
                 'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
             )
             installer.install_packages(packages)
-
-    installer.install_requirements('.')
 
 
 if __name__ == '__main__':
