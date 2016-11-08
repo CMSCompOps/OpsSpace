@@ -67,15 +67,24 @@ class Installer(object):
         print ''
 
     def install_requirements(self, package_name):
-        """Look for requirements.txt and install requirements, if needed
+        """Look for requirements.txt and install requirements, if needed.
+        Also runs any install.?? script in the package
 
         :param str package_name: is the directory that will be searched
-                                 for the requirements.txt file
+                                 for the requirements.txt and install.?? file
         """
         requirements_location = os.path.join(self.InstallDirectory, package_name,
                                              'requirements.txt')
         if os.path.exists(requirements_location):
             pip.main(['install', '-r', requirements_location])
+
+        # Next, search for an additional installation script
+        install_script_location = glob.glob(
+            os.path.join(self.InstallDirectory, package_name, 'install.??'))
+        # Make sure there's only one script to match to
+        if len(install_script_location) == 1:
+            os.system(install_script_location[0])
+
 
     def install_package(self, package_name):
         """Install a given package into the operator workspace.
@@ -157,13 +166,6 @@ class Installer(object):
 
         self.install_requirements(package_name)
 
-        # Next, search for an additional installation script
-        install_script_location = glob.glob(
-            os.path.join(self.InstallDirectory, package_name, 'install.??'))
-        # Make sure there's only one script to match to
-        if len(install_script_location) == 1:
-            os.system(install_script_location[0])
-
     def install_packages(self, package_list):
         """Calls install_package for a list of packages"""
 
@@ -234,17 +236,34 @@ def main():
     packages = args
 
     installer = Installer(options.gitUser)
+    installer.install_requirements('.')
 
     if options.installAll:
         installer.install_packages(installer.ValidPackages)
 
     if len(packages) == 1 and packages[0] in ['install', 'sdist']:
-        packages = ['CMSToolBox'] + [pack for pack in installer.ValidPackages
-                                     if pack in os.listdir('.')]
+
+        def full_dirs(packages):
+            """
+            Get the full list of packages from the base packages list.
+
+            :param list packages: The list of base packages to install
+            :returns: The list of packages and sub-packages that are valid python modules
+            :rtype: list
+            """
+            output = []
+            for package in packages:
+                output.extend([direct for direct, _, files in \
+                                   os.walk(package) if '__init__.py' in files])
+
+            return output
+
+        packages = ['CMSToolBox', 'dbs', 'RestClient'] + \
+            [pack for pack in installer.ValidPackages if os.path.exists(pack)]
 
         setup(name='OpsSpace',
               version='0.1',
-              packages=packages)
+              packages=full_dirs(packages))
 
     else:
         if options.addPath:
@@ -262,8 +281,6 @@ def main():
                 'If not found, will fall back on ' + installer.CentralGitHub + '.\n'
             )
             installer.install_packages(packages)
-
-    installer.install_requirements('.')
 
 
 if __name__ == '__main__':

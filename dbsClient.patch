@@ -1,0 +1,56 @@
+82a83
+> 
+89d89
+< 
+138a139
+>     """DbsApi class"""
+928,929d928
+<         listFiles(**kwargs)
+< 
+933c932
+<         * For lumi_list the following two json formats are supported:
+---
+>         - For lumi_list the following two json formats are supported:
+936,943c935,942
+<         * lumi_list can be either a list of lumi section numbers as [a1, a2, a3,] or a list of lumi section range as [[a,b], [c, d],]. Thay cannot be mixed.
+<         * If lumi_list is provided run only run_num=single-run-number is allowed
+<         * When lfn list is present, no run or lumi list is allowed.  
+<         * There are five dataset access types: VALID, INVALID, PRODUCTION, DEPRECATED and DELETED.
+<         * One file status: IS_FILE_VALID: 1 or 0.
+<         * There are five dataset access types: VALID, INVALID, PRODUCTION, DEPRECATED and DELETED.
+<         * One file status: IS_FILE_VALID: 1 or 0.
+<         * When a dataset is INVALID/ DEPRECATED/ DELETED, DBS will consider all the files under it is invalid not matter what value is_file_valid has. 
+---
+>         - lumi_list can be either a list of lumi section numbers as [a1, a2, a3,] or a list of lumi section range as [[a,b], [c, d],]. Thay cannot be mixed.
+>         - If lumi_list is provided run only run_num=single-run-number is allowed
+>         - When lfn list is present, no run or lumi list is allowed.  
+>         - There are five dataset access types: VALID, INVALID, PRODUCTION, DEPRECATED and DELETED.
+>         - One file status: IS_FILE_VALID: 1 or 0.
+>         - There are five dataset access types: VALID, INVALID, PRODUCTION, DEPRECATED and DELETED.
+>         - One file status: IS_FILE_VALID: 1 or 0.
+>         - When a dataset is INVALID/ DEPRECATED/ DELETED, DBS will consider all the files under it is invalid not matter what value is_file_valid has. 
+945,946c944,945
+<         * When Dataset is VALID/PRODUCTION, by default is_file_valid is all 1. But if individual file is invalid, then the file's is_file_valid is set to 0.
+<         * DBS use this logical in its APIs that have validFileOnly variable.
+---
+>         - When Dataset is VALID/PRODUCTION, by default is_file_valid is all 1. But if individual file is invalid, then the file's is_file_valid is set to 0.
+>         - DBS use this logical in its APIs that have validFileOnly variable.
+1189,1191c1188,1191
+<                 The number of files which have data (lumis) for that run number;
+<                 The total number of events in those files;
+<                 The total number of lumis for that run_number. Note that in general this is different from the total 
+---
+> 
+>               - The number of files which have data (lumis) for that run number;
+>               - The total number of events in those files;
+>               - The total number of lumis for that run_number. Note that in general this is different from the total 
+1194c1194
+<                 The total num blocks that have the run_num;
+---
+>               - The total num blocks that have the run_num;
+1202,1203c1202,1203
+<         :param run_num: Run number (Optional). Possible format: run_num, "run_min-run_max", or ["run_min-run_max", run1, run2, ...]. run_num=1 is MC data and it will cause almost whole table scan, so run_num=1 will
+<                         cause an input error.
+---
+>         :param run_num: Run number (Optional). Possible format: run_num, "run_min-run_max", or ["run_min-run_max", run1, run2, ...]. 
+>                         run_num=1 is MC data and it will cause almost whole table scan, so run_num=1 will cause an input error.
