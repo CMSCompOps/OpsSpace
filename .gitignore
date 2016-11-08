@@ -12,3 +12,4 @@ SiteAdminToolkit/*
 dbs/*
 dbs_src/*
 RestClient/*
+docs/*/*
