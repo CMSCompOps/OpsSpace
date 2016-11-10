@@ -1,6 +1,7 @@
 #!/bin/bash
 
-install=$1
+install="$1"
+shift
 
 # Check for pylint
 if [ "$(which pylint 2> /dev/null)" = "" ]
