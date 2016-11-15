@@ -48,9 +48,10 @@ class Installer(object):
 
     def set_packages(self):
         """Read from list of valid package and append to valid list."""
-        with open(os.path.join(self.InstallDirectory, 'PackageList.txt'), 'r') as list_file:
-            for package in list_file.readlines():
-                self.ValidPackages.append(package.strip('\n'))
+        if len(self.ValidPackages) == 0:
+            with open(os.path.join(self.InstallDirectory, 'PackageList.txt'), 'r') as list_file:
+                for package in list_file.readlines():
+                    self.ValidPackages.append(package.strip('\n'))
 
     def __init__(self, github_user=None):
         """Initialize with the GitHub username of the operator."""

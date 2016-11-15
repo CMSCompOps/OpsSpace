@@ -14,23 +14,6 @@
 
 import sys
 import os
-from sphinx.ext import autodoc
-
-
-# Method to include just the docstring of a file or method, and not its signature
-# See: http://stackoverflow.com/questions/7825263/including-docstring-in-sphinx-documentation
-class SimpleDocumenter(autodoc.MethodDocumenter):
-    objtype = "simple"
-
-    #do not indent the content
-    content_indent = ""
-
-    #do not add a header to the docstring
-    def add_directive_header(self, sig):
-        pass
-
-def setup(app):
-    app.add_autodocumenter(SimpleDocumenter)
 
 
 # If extensions (or modules to document with autodoc) are in another directory,

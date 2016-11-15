@@ -64,11 +64,11 @@ then
 
 fi
 
-if grep "autodoc: failed to import" "$output"
+if grep "autodoc: failed to import" "$output" -o grep "WARNING: undefined label:"
 then
 
     tput setaf 1 2> /dev/null
-    echo "Import failed in documentation build!"
+    echo "Problem in documentation build!"
 
     if  [ "$CHECKDOC" = "true" ]
     then
