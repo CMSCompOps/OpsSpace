@@ -5,10 +5,7 @@
 if [ ! -d dbs_src ]
 then
 
-    git clone --depth=1 https://github.com/dmwm/DBS.git dbs_src
-    cd dbs_src || exit 1
-    git checkout DBS_3_3_150
-    cd .. || exit 1
+    git clone --branch DBS_3_3_150 --depth 1 https://github.com/dmwm/DBS.git dbs_src
 
     mv dbs_src/PycurlClient/src/python/RestClient RestClient
     mv dbs_src/Client/src/python/dbs dbs
