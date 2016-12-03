@@ -9,7 +9,7 @@ then
     then
 
         # Install shellcheck
-        apt-get install shellcheck
+        sudo apt-get install shellcheck
 
     else
 
