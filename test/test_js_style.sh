@@ -5,8 +5,17 @@
 if [ "$(which eslint 2> /dev/null)" = "" ]
 then
 
-    echo "Please install eslint: https://github.com/eslint/eslint" 1>&2
-    exit 0
+    if [ "$TRAVIS" = "true" ]
+    then
+
+        npm install -g eslint
+
+    else
+
+        echo "Please install ESLint: https://github.com/eslint/eslint" 1>&2
+        exit 0
+
+    fi
 
 fi
 

@@ -122,10 +122,26 @@ See this
 `Pylint FAQ <https://pylint.readthedocs.io/en/1.6.0/faq.html#is-there-a-way-to-disable-a-message-for-a-particular-module-only>`_
 for more details.
 
-JavaScript Comments
-~~~~~~~~~~~~~~~~~~~
+.. _js-style-ref:
 
-Comments can be pull from JavaScript if you start a comment block with ``/*"""`` and end with ``/*``.
+Javascript Style
+~~~~~~~~~~~~~~~~
+
+JavaScript is checked using the ESLint tool (https://github.com/eslint/eslint).
+The tool can be installed through npm (https://www.npmjs.com/), as described on the ESLint README page.
+From the ``OpsSpace`` directory, you can check all of the JavaScript in a given package with the following call::
+
+    eslint -c test/eslintrc.yml <package>
+
+.. Note::
+
+   The configuration for ESLint, located at ``test/eslintrc.yml`` is a work in progress.
+   I certainly do not consider myself an expert at JavaScript, so contributions to the standards for this check are welcome.
+
+Comment Blocks
+++++++++++++++
+
+Comments can be pulled from JavaScript if you start a comment block with ``/*"""`` and end with ``/*``.
 The indentation of the comments must line up with the first ``/`` starting the comment block,
 or Sphinx will refuse to render the content.
 
