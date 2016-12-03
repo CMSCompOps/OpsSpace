@@ -9,7 +9,7 @@ matrix:
       sudo: required
       python: 2.7
       env: CHECKDOC=true
-stall:
+install:
   - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4"; fi
   - ./setup.py install --force
 script: test/run_tests.sh CMSToolBox
