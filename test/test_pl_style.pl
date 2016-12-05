@@ -29,7 +29,7 @@ use File::Find;
 
 # Load or install (and then load) Perl::Critic
 
-eval {use Perl::Critic};
+eval "use Perl::Critic";
 
 # Checking for error message, and install, if necessary
 
@@ -53,11 +53,9 @@ open my $package_handle, '<', catfile($test_dir, '..', 'PackageList.txt');
 chomp(my @packages = <$package_handle>);
 close $package_handle;
 
-my @OpsSpace_dirs = ('CMSToolBox', 'test', 'docs');
+my @OpsSpace_dirs = ('CMSToolBox', 'docs');
 
 push @packages, @OpsSpace_dirs;
-
-my $pack_dir;
 
 my $errors = 0;
 
