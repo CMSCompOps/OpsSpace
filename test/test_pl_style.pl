@@ -35,15 +35,24 @@ eval "use Perl::Critic";
 
 if ($@) {
 
-    print "Installing Perl::Critic\n";
+    if ($ENV{'TRAVIS'} eq 'true') {
 
-    use CPAN;
-    CPAN::Shell->install("Perl::Critic");
-    eval "use Perl::Critic";
+        print "Installing Perl::Critic\n";
+        $ENV{'PERL_MM_USE_DEFAULT'} = 1;
 
-    if ($@) {
+        use CPAN;
+        CPAN::Shell->install("Perl::Critic");
+        eval "use Perl::Critic";
 
-        die "Perl::Critic doesn't like being installed on the fly.";
+        if ($@) {
+
+            die "Perl::Critic doesn't like being installed on the fly.\n";
+
+        }
+
+    } else {
+
+        die "Please install Perl::Critic to run this script\n";
 
     }
 
