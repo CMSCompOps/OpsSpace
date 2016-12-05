@@ -29,7 +29,7 @@ use File::Find;
 
 # Load or install (and then load) Perl::Critic
 
-eval "use Perl::Critic";
+eval 'use Perl::Critic';
 
 # Checking for error message, and install, if necessary
 
@@ -41,8 +41,8 @@ if ($@) {
         $ENV{'PERL_MM_USE_DEFAULT'} = 1;
 
         use CPAN;
-        CPAN::Shell->install("Perl::Critic");
-        eval "use Perl::Critic";
+        CPAN::Shell->notest('install', 'Perl::Critic');
+        eval 'use Perl::Critic';
 
         if ($@) {
 
