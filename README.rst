@@ -197,10 +197,10 @@ See :ref:`shell-docs-ref` to see how that comment block is rendered.
 Perl Style
 ~~~~~~~~~~
 
-.. todo::
-
-   Impliment a generic Perl::Critic script that will run over all Perl scripts in the repository.
-   Briefly document its standards and use here.
+Perl style is critiqued using `Perl::Critic <http://search.cpan.org/~thaljef/Perl-Critic-1.126/lib/Perl/Critic.pm>`_.
+At the moment, only default policies are used.
+Many of these are taken from the book *Perl Best Practices*.
+All Perl scripts within every repository are subject to this review.
 
 .. _perl-comment-ref:
 
