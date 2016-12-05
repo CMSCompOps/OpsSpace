@@ -39,7 +39,13 @@ if ($@) {
 
     use CPAN;
     CPAN::Shell->install("Perl::Critic");
-    use Perl::Critic;
+    eval "use Perl::Critic";
+
+    if ($@) {
+
+        die "Perl::Critic doesn't like being installed on the fly.";
+
+    }
 
 }
 
