@@ -12,6 +12,11 @@ then
     # If not in travis-ci, create a virtualenv
     # to simulate a fresh python installation
 
+    if [ -d venv ]                        # Clean up previous virtualenv, if necessary
+    then
+        rm -rf venv
+    fi
+
     virtualenv -p python"$PY" venv        # Create a virtualenv with your chosen python
     export PATH=$testdir/venv/bin:$PATH   # Put virtualenv in your path
     export PYTHONPATH=""                  # Get rid of PYTHONPATH
@@ -50,11 +55,6 @@ do
     tput sgr0 2> /dev/null                # Reset color
 
 done
-
-if [ "$TRAVIS" != "true" ] && [ -d venv ] # Clean up virtualenv, if necessary
-then
-    rm -rf venv
-fi
 
 if [ "$ERRORSFOUND" -eq 1 ]               # Setting plural correctly
 then                                      #   looks impressive to some
