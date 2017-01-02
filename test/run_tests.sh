@@ -15,7 +15,7 @@ then
     virtualenv -p python"$PY" venv        # Create a virtualenv with your chosen python
     # shellcheck disable=SC1091
     . venv/bin/activate
-   
+
 else
 
     env

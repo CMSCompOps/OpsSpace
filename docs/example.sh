@@ -31,7 +31,7 @@ do
             usage
             ;;
         *)
-            echo "That's not an option I recognize." 1>&2 
+            echo "That's not an option I recognize." 1>&2
             usage
             exit 1
             ;;

@@ -41,7 +41,7 @@ check_package () {
 
     location="$1"
 
-    if eslint -c test/eslintrc.yml "$location" > "$outputdir/$location.txt" 
+    if eslint -c test/eslintrc.yml "$location" > "$outputdir/$location.txt"
     then
         tput setaf 2 2> /dev/null
         echo "$outputdir/$location.txt passed the check."
