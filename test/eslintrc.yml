@@ -215,3 +215,5 @@ rules:
   wrap-regex: 'off'
   yield-star-spacing: error
   yoda: 'off'
+plugins:
+  - html

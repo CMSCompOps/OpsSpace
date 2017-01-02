@@ -18,9 +18,9 @@ then
     fi
 
     virtualenv -p python"$PY" venv        # Create a virtualenv with your chosen python
-    export PATH=$testdir/venv/bin:$PATH   # Put virtualenv in your path
-    export PYTHONPATH=""                  # Get rid of PYTHONPATH
-
+    # shellcheck disable=SC1091
+    . venv/bin/activate
+   
 else
 
     env
