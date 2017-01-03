@@ -14,6 +14,7 @@ Contents:
    dbs
    workflowwebtools
    siteadmintoolkit
+   consistencycheck
    todo
 
 Indices and tables

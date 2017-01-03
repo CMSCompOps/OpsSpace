@@ -9,7 +9,7 @@ import os
 import time
 import json
 
-from ._webtools import get_json
+from .webtools import get_json
 
 
 ELASTIC_SEARCH_HOST = 'cms-elastic-fe.cern.ch:9200'

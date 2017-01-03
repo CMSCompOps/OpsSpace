@@ -10,7 +10,7 @@ import time
 import json
 import random
 
-from ._webtools import get_json
+from .webtools import get_json
 
 
 def get_node_usage(url, node):
