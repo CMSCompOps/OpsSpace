@@ -32,7 +32,7 @@ Since we are hosting our code on GitHub, anyone can look at our code.
 We have decided to keep the code on GitHub to avoid
 a false sense of security offered by private provided by private repositories.
 GitHub is also supported by a range of useful third-party applications.
-(There will be more on that in :ref:`gen-docs-ref` and 
+(There will be more on that in :ref:`gen-docs-ref` and
 :ref:`tests-ref`.)
 
 Since we are using this open source model, care should be taken that usernames and

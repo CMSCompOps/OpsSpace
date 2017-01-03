@@ -41,7 +41,7 @@ _do_test () {
 
         tput setaf 2 2> /dev/null
         echo "$packagetest passed!"
-        
+
     fi
 
     tput sgr0 2> /dev/null                # Reset colors
