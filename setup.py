@@ -117,7 +117,9 @@ class Installer(object):
                         error_string += (' in ' + user +
                                          ' repository! Check again for package location.')
                         print error_string
-                        exit(1)
+
+                        # I probably have it in my own GitHub
+                        user = 'dabercro'
 
                     # If not checking central repository, check that next
                     else:
