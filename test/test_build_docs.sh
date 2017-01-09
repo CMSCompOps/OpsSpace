@@ -12,6 +12,13 @@ opsdir=${testdir%%"/test"}
 
 # Install documentation requirements
 cd "$opsdir" || exit 1
+pip install -r docs/requirements.txt
+
+# Install all packages.
+# Note that the --force option is used in our
+# setup script to install everything.
+# That's how readthedocs.org calls setup.py.
+./setup.py install --force
 
 # Make a directory for output of build log.
 outputdir="$testdir/build_out"
