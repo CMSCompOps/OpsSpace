@@ -12,6 +12,7 @@ Contents:
    developer
    toolbox
    dbs
+   wmagentscripts
    workflowwebtools
    siteadmintoolkit
    consistencycheck
