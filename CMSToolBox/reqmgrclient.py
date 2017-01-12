@@ -16,14 +16,15 @@ def get_workflow_parameters(workflow):
     :rtype: dict
     """
 
-    result = get_json('cmsweb.cern.ch',
-                      '/reqmgr2/data/request',
-                      params={'name': workflow},
-                      use_https=True, use_cert=True)
+    try:
+        result = get_json('cmsweb.cern.ch',
+                          '/reqmgr2/data/request',
+                          params={'name': workflow},
+                          use_https=True, use_cert=True)
 
-    for params in result['result']:
-        for key, item in params.iteritems():
-            if key == workflow:
-                return item
-
-    return {}
+        for params in result['result']:
+            for key, item in params.iteritems():
+                if key == workflow:
+                    return item
+    finally:
+        return {}
