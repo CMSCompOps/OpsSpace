@@ -13,3 +13,5 @@ dbs/*
 dbs_src/*
 RestClient/*
 docs/*/*
+ConsistencyCheck/*
+WmAgentScripts/*

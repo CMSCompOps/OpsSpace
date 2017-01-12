@@ -7,22 +7,6 @@ here=$(pwd)
 cd "${0%%$(basename "$0")}" || exit 1
 testdir=$(pwd)
 
-if [ "$OPSFULLTEST" != "true" ]
-then
-
-    # Create a virtualenv with your python2.7
-    # Full test already creates one for you
-    virtualenv -p python2.7 venv
-
-    # Put virtualenv in your path
-    PATH=$testdir/venv/bin:$PATH
-
-    # Get rid of PYTHONPATH
-    PYTHONPATH=""
-    echo "PYTHONPATH: $PYTHONPATH"
-
-fi
-
 # Get directory of package
 opsdir=${testdir%%"/test"}
 
@@ -41,7 +25,6 @@ outputdir="$testdir/build_out"
 output="$outputdir/build_out.txt"
 
 test -d "$outputdir" || mkdir "$outputdir"
-
 
 # Build the documentation and redirect errors for analysis
 sphinx-build -b html -E docs test/html 2> "$output"
@@ -64,11 +47,11 @@ then
 
 fi
 
-if grep "autodoc: failed to import" "$output"
+if grep "autodoc: failed to import" "$output" -o grep "WARNING: undefined label:"
 then
 
     tput setaf 1 2> /dev/null
-    echo "Import failed in documentation build!"
+    echo "Problem in documentation build!"
 
     if  [ "$CHECKDOC" = "true" ]
     then

@@ -7,7 +7,7 @@ Module containing and returning information about workflows.
 """
 
 
-from ._webtools import get_json
+from .webtools import get_json
 
 
 def list_workflows(status):

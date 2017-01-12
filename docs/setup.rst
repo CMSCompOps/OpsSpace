@@ -5,7 +5,7 @@ Installation
 
 The installation of Comp Ops tools and scripts can be facilitated by the OpsSpace repository::
 
-    git clone https://github.com/CMSCompOps/OpsSpace.git
+n    git clone https://github.com/CMSCompOps/OpsSpace.git
     cd OpsSpace
 
 Full installation is done by using the ``setup.py`` script.
@@ -87,6 +87,28 @@ or adjusting their tools as they use them.
 .. todo::
 
   Handle updating (git pull, etc.) inside ``setup.py`` properly.
+
+Troubleshooting
+---------------
+
+A list of problems and solutions that come up during ``OpsSpace`` installation and usage should be placed here.
+
+ImportError when using installed pycurl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+``pycurl`` is needed for the :ref:`dbs-ref` package, which is installed with ``OpsSpace``.
+It is possible for ``pycurl`` to be compiled using the wrong ssl backend.
+Then when trying to import :py:class:`dbs.apis.dbsClient`, you might get the following error::
+
+    ImportError: pycurl: libcurl link-time ssl backend (nss) is different from compile-time ssl backend (none/other)
+
+To fix this, uninstall ``pycurl`` and reinstall, setting the environment variable ``PYCURL_SSL_LIBRARY`` to match the link-time ssl backend::
+
+    pip uninstall pycurl
+    PYCURL_SSL_LIBRARY=nss pip install pycurl --no-cache-dir
+
+Other systems may use ``openssl`` as the backend.
+See `here <http://stackoverflow.com/questions/21096436/ssl-backend-error-when-using-openssl>`_ for more details.
 
 Reference
 ---------

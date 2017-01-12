@@ -8,7 +8,7 @@ import CMSToolBox.sitereadiness as sr
 class TestSiteReadiness(unittest.TestCase):
 
     def test_site_readiness(self):
-        for site, stat in sr.i_site_readiness(): 
+        for site, stat in sr.i_site_readiness():
             self.assertNotEqual(sr.site_readiness(site), 'none',
                                 'Site not found: %s' % site)
             self.assertEqual(sr.site_readiness(site), stat,

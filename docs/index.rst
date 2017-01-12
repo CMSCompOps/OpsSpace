@@ -12,8 +12,10 @@ Contents:
    developer
    toolbox
    dbs
+   wmagentscripts
    workflowwebtools
    siteadmintoolkit
+   consistencycheck
    todo
 
 Indices and tables

@@ -32,7 +32,7 @@ Since we are hosting our code on GitHub, anyone can look at our code.
 We have decided to keep the code on GitHub to avoid
 a false sense of security offered by private provided by private repositories.
 GitHub is also supported by a range of useful third-party applications.
-(There will be more on that in :ref:`gen-docs-ref` and 
+(There will be more on that in :ref:`gen-docs-ref` and
 :ref:`tests-ref`.)
 
 Since we are using this open source model, care should be taken that usernames and
@@ -122,10 +122,26 @@ See this
 `Pylint FAQ <https://pylint.readthedocs.io/en/1.6.0/faq.html#is-there-a-way-to-disable-a-message-for-a-particular-module-only>`_
 for more details.
 
-JavaScript Comments
-~~~~~~~~~~~~~~~~~~~
+.. _js-style-ref:
 
-Comments can be pull from JavaScript if you start a comment block with ``/*"""`` and end with ``/*``.
+Javascript Style
+~~~~~~~~~~~~~~~~
+
+JavaScript is checked using the ESLint tool (https://github.com/eslint/eslint).
+The tool can be installed through npm (https://www.npmjs.com/), as described on the ESLint README page.
+From the ``OpsSpace`` directory, you can check all of the JavaScript in a given package with the following call::
+
+    eslint -c test/eslintrc.yml <package>
+
+.. Note::
+
+   The configuration for ESLint, located at ``test/eslintrc.yml`` is a work in progress.
+   I certainly do not consider myself an expert at JavaScript, so contributions to the standards for this check are welcome.
+
+Comment Blocks
+++++++++++++++
+
+Comments can be pulled from JavaScript if you start a comment block with ``/*"""`` and end with ``/*``.
 The indentation of the comments must line up with the first ``/`` starting the comment block,
 or Sphinx will refuse to render the content.
 
@@ -181,10 +197,10 @@ See :ref:`shell-docs-ref` to see how that comment block is rendered.
 Perl Style
 ~~~~~~~~~~
 
-.. todo::
-
-   Impliment a generic Perl::Critic script that will run over all Perl scripts in the repository.
-   Briefly document its standards and use here.
+Perl style is critiqued using `Perl::Critic <http://search.cpan.org/~thaljef/Perl-Critic-1.126/lib/Perl/Critic.pm>`_.
+At the moment, only default policies are used.
+Many of these are taken from the book *Perl Best Practices*.
+All Perl scripts within every repository are subject to this review.
 
 .. _perl-comment-ref:
 

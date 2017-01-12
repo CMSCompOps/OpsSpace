@@ -1,6 +1,7 @@
 #!/bin/bash
 
-install=$1
+install="$1"
+shift
 
 # Check for pylint
 if [ "$(which pylint 2> /dev/null)" = "" ]
@@ -74,6 +75,13 @@ pylintCall CMSToolBox > "$outputdir/CMSToolBox.txt"
 # Check installed packages
 while read -r d
 do
+
+    if [ "$d" = "WmAgentScripts" ]
+    then
+
+        continue
+
+    fi
 
     test -f "$d/__init__.py" && pylintCall "$d" > "$outputdir/$d.txt"
 
