@@ -26,5 +26,8 @@ def get_workflow_parameters(workflow):
             for key, item in params.iteritems():
                 if key == workflow:
                     return item
-    finally:
-        return {}
+    except Exception as error:
+        print 'Failed to get from reqmgr', workflow
+        print str(error)
+
+    return {}
