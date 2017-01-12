@@ -81,6 +81,13 @@ check_package
 while read -r package
 do
 
+    if [ "$package" = "WmAgentScripts" ]
+    then
+
+        continue
+
+    fi
+
     if [ -d "$package" ]
     then
 

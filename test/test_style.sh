@@ -76,6 +76,13 @@ pylintCall CMSToolBox > "$outputdir/CMSToolBox.txt"
 while read -r d
 do
 
+    if [ "$d" = "WmAgentScripts" ]
+    then
+
+        continue
+
+    fi
+
     test -f "$d/__init__.py" && pylintCall "$d" > "$outputdir/$d.txt"
 
     if [ -f "$d/test/path.txt" ]
