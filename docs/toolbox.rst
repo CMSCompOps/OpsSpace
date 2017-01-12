@@ -16,10 +16,16 @@ that are maintained by the experts and used by the masses.
 
 .. _email-tools-ref:
 
-E-mail Tools
-------------
+Request Manager Client
+----------------------
 
-.. automodule:: CMSToolBox.emailtools
+.. automodule:: CMSToolBox.reqmgrclient
+   :members:
+
+Fetching JSON Files
+-------------------
+
+.. automodule:: CMSToolBox.webtools
    :members:
 
 .. _dashboard-info-ref:
@@ -39,6 +45,12 @@ Site Readiness Metric
    :members:
 
 .. _file-manip-ref:
+
+E-mail Tools
+------------
+
+.. automodule:: CMSToolBox.emailtools
+   :members:
 
 Simple File Manipulation
 ------------------------
