@@ -265,6 +265,7 @@ def main():
             return output
 
         packages = ['CMSToolBox', 'dbs', 'RestClient'] + \
+            [cpack for cpack in ['cjson', 'pycurl'] if os.path.exists(cpack)] + \
             [pack for pack in installer.ValidPackages if os.path.exists(pack)]
 
         setup(name='OpsSpace',
