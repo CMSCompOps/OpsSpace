@@ -113,7 +113,7 @@ This script allows to change the splitting of a request, on a given task name
 forceCompleteWorkflows.py
 -------------------------
 
-.. automodule:: WmAgentScipts.forceCompleteWorkflows
+.. automodule:: WmAgentScripts.forceCompleteWorkflows
 
 .. program-output:: python ../WmAgentScripts/forceCompleteWorkflows.py -h
 
