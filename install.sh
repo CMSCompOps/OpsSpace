@@ -17,3 +17,13 @@ then
     patch dbs/apis/dbsClient.py dbsClient.patch
 
 fi
+
+# If we're working on readthedocs, we need to use these dummy versions of cjson and pycurl
+
+if [ "$READTHEDOCS" = "True" ]
+then
+
+    ln -s docs/cjson cjson
+    ln -s docs/pycurl pycurl
+
+fi
