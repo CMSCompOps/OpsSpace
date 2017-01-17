@@ -7,6 +7,7 @@ File mostly intended to set up working environment for operator as a script.
 """
 
 import os
+import sys
 import urllib
 import glob
 from distutils.core import setup
@@ -239,7 +240,9 @@ def main():
     packages = args
 
     installer = Installer(options.gitUser)
-    installer.install_requirements('.')
+
+    if len(sys.argv) != 1:
+        installer.install_requirements('.')
 
     if options.installAll:
         installer.install_packages(installer.ValidPackages)
