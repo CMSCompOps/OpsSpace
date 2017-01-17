@@ -12,6 +12,7 @@ SiteAdminToolkit/*
 dbs/*
 dbs_src/*
 RestClient/*
-docs/*/*
+docs/dbs*/*
+docs/RestClient
 ConsistencyCheck/*
 WmAgentScripts/*
