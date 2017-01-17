@@ -47,7 +47,7 @@ then
 
 fi
 
-if grep "autodoc: failed to import" "$output" -o grep "WARNING: undefined label:"
+if grep -E "autodoc: failed to import|WARNING: undefined label:|contains reference to nonexisting document" "$output"
 then
 
     tput setaf 1 2> /dev/null
