@@ -23,7 +23,11 @@ fi
 if [ "$READTHEDOCS" = "True" ]
 then
 
+    echo "Adding softlinks to dummy packages."
+
     ln -s docs/cjson cjson
     ln -s docs/pycurl pycurl
+
+    ls
 
 fi
