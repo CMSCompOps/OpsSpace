@@ -100,7 +100,7 @@ Some examples:
     python WmAgentScripts/reqmgr.py -u https://cmsweb.cern.ch -p -g -f julian.json -r jbadillo_StoreResults_51816_v1_140826_100602_3071
 
 changeSplittingWorkflow.py
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This script allows to change the splitting of a request, on a given task name
 
@@ -111,18 +111,18 @@ This script allows to change the splitting of a request, on a given task name
    - The TYPE is the algorithm for splitting.
 
 forceCompleteWorkflows.py
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: WmAgentScripts.forceCompleteWorkflows
 
 .. program-output:: python ../WmAgentScripts/forceCompleteWorkflows.py -h
 
 getInputLocation.py
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 .. program-output:: python ../WmAgentScripts/getInputLocation.py -h
 
 And So On
-~~~~~~~~~
+---------
 
 I'm not sure how many of these scripts are actually being used, so I'll stop now.
