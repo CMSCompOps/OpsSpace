@@ -24,6 +24,9 @@ except ImportError:
 from CMSToolBox.simplefiletools import load_env, append_to_file
 
 
+VERSION='0.4'
+
+
 class Installer(object):
     """Class the holds the information for installing workspace"""
 
@@ -269,7 +272,7 @@ def main():
             [pack for pack in installer.ValidPackages if os.path.exists(pack)]
 
         setup(name='OpsSpace',
-              version='0.1',
+              version=VERSION,
               packages=full_dirs(packages))
 
     else:
