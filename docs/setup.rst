@@ -5,7 +5,7 @@ Installation
 
 The installation of Comp Ops tools and scripts can be facilitated by the OpsSpace repository::
 
-n    git clone https://github.com/CMSCompOps/OpsSpace.git
+    git clone https://github.com/CMSCompOps/OpsSpace.git
     cd OpsSpace
 
 Full installation is done by using the ``setup.py`` script.
