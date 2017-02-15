@@ -17,7 +17,7 @@ that are maintained by the experts and used by the masses.
 .. contents:: :local:
    :depth: 2
 
-.. _email-tools-ref:
+.. _webtools-ref:
 
 Fetching JSON Files
 -------------------
@@ -41,13 +41,15 @@ Site Readiness Metric
 .. automodule:: CMSToolBox.sitereadiness
    :members:
 
-.. _file-manip-ref:
+.. _email-tools-ref:
 
 E-mail Tools
 ------------
 
 .. automodule:: CMSToolBox.emailtools
    :members:
+
+.. _file-manip-ref:
 
 Simple File Manipulation
 ------------------------
