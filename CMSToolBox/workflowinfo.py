@@ -1,5 +1,3 @@
-# pylint: disable=protected-access, unexpected-keyword-arg
-
 """
 Module containing and returning information about workflows.
 
@@ -35,6 +33,7 @@ def errors_for_workflow(workflow, url='cmsweb.cern.ch'):
     Get the useful status information from a workflow
 
     :param str workflow: the name of the workflow request
+    :param str url: the base url to find the information at
     :returns: a dictionary containing error codes in the following format::
 
               {step: {errorcode: {site: number_errors}}}
@@ -138,12 +137,12 @@ class WorkflowInfo(object):
 
             for params in result['result']:
                 for key, item in params.iteritems():
-                    if key == workflow:
+                    if key == self.workflow:
                         self.workflow_params = item
                         return self.workflow_params
 
         except Exception as error:
-            print 'Failed to get from reqmgr', workflow
+            print 'Failed to get from reqmgr', self.workflow
             print str(error)
 
         return {}
@@ -210,13 +209,15 @@ class WorkflowInfo(object):
                 if not vals:
                     self.recovery_info[task] = {}
 
-                self.recovery_info[task]['sites_to_run'] = (vals.get('sites_to_run', set()) | locations)
-                self.recovery_info[task]['missing_to_run'] = (vals.get('missing_to_run', 0) + info['events'])
+                self.recovery_info[task]['sites_to_run'] = \
+                    (vals.get('sites_to_run', set()) | locations)
+                self.recovery_info[task]['missing_to_run'] = \
+                    (vals.get('missing_to_run', 0) + info['events'])
 
         return self.recovery_info
 
 
-    def site_to_run(task):
+    def site_to_run(self, task):
         """
         Gets a list of sites that a task in the workflow can run at
 
@@ -230,8 +231,8 @@ class WorkflowInfo(object):
 
         for site in site_set:
             clean_site = re.sub(r'_(Disk|MSS)$', '', site)
-            if site not in site_list:
-                site_list.append(site)
+            if clean_site not in site_list:
+                site_list.append(clean_site)
 
         site_list.sort()
         return site_list
