@@ -14,13 +14,10 @@ that are maintained by the experts and used by the masses.
   by the setup script and WorkflowWebTools.
   Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!
 
+.. contents:: :local:
+   :depth: 2
+
 .. _email-tools-ref:
-
-Request Manager Client
-----------------------
-
-.. automodule:: CMSToolBox.reqmgrclient
-   :members:
 
 Fetching JSON Files
 -------------------
