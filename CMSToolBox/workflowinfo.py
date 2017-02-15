@@ -8,6 +8,7 @@ Module containing and returning information about workflows.
 import re
 
 from .webtools import get_json
+from .sitereadiness import site_list
 
 
 def list_workflows(status):
@@ -203,7 +204,7 @@ class WorkflowInfo(object):
                 if replica.startswith('MCFakeFile'):
                     locations = set(self.get_workflow_params()['SiteWhitelist'])
                 else:
-                    locations = set(info['location'])
+                    locations = set(info['locations'])
 
                 vals = self.recovery_info.get(task, {})
                 if not vals:
@@ -227,12 +228,14 @@ class WorkflowInfo(object):
         """
 
         site_set = self.get_recovery_info()[task]['sites_to_run']
-        site_list = []
+        out_list = []
+        all_site_list = site_list()
 
         for site in site_set:
             clean_site = re.sub(r'_(Disk|MSS)$', '', site)
-            if clean_site not in site_list:
-                site_list.append(clean_site)
+            if clean_site not in out_list and clean_site and \
+                    clean_site in all_site_list:
+                out_list.append(clean_site)
 
-        site_list.sort()
-        return site_list
+        out_list.sort()
+        return out_list
