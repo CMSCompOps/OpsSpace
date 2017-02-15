@@ -2,6 +2,10 @@
 Uses the `reqmgr2 APIs <https://github.com/dmwm/WMCore/wiki/reqmgr2-apis>`_
 to get information about workflows.
 
+.. Warning::
+
+   Depreciated. Delete this once everything is done using it.
+
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
 

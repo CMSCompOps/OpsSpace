@@ -14,13 +14,10 @@ that are maintained by the experts and used by the masses.
   by the setup script and WorkflowWebTools.
   Edit ``OpsSpace/docs/toolbox.rst`` to add your module to this page!
 
-.. _email-tools-ref:
+.. contents:: :local:
+   :depth: 2
 
-Request Manager Client
-----------------------
-
-.. automodule:: CMSToolBox.reqmgrclient
-   :members:
+.. _webtools-ref:
 
 Fetching JSON Files
 -------------------
@@ -44,13 +41,15 @@ Site Readiness Metric
 .. automodule:: CMSToolBox.sitereadiness
    :members:
 
-.. _file-manip-ref:
+.. _email-tools-ref:
 
 E-mail Tools
 ------------
 
 .. automodule:: CMSToolBox.emailtools
    :members:
+
+.. _file-manip-ref:
 
 Simple File Manipulation
 ------------------------
