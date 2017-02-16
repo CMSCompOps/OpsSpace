@@ -202,7 +202,7 @@ class WorkflowInfo(object):
             for replica, info in doc['files'].iteritems():
                 # For fake files, just return the site whitelist
                 if replica.startswith('MCFakeFile'):
-                    locations = set(self.get_workflow_params()['SiteWhitelist'])
+                    locations = set(self.get_workflow_parameters()['SiteWhitelist'])
                 else:
                     locations = set(info['locations'])
 
