@@ -72,7 +72,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'OpsSpace'
-copyright = u'2016, Daniel Abercrombie'
+copyright = u'2017, Daniel Abercrombie'
 author = u'Daniel Abercrombie'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -132,9 +132,24 @@ todo_include_todos = True
 
 # -- Options for HTML output ----------------------------------------------
 
+# Need separate configuration for ReadTheDocs
+# http://stackoverflow.com/questions/23211695/modifying-content-width-of-the-sphinx-theme-read-the-docs
+
+if os.environ.get('READTHEDOCS') == 'True':
+    html_context = {
+        'css_files': [
+            'https://media.readthedocs.org/css/sphinx_rtd_theme.css',
+            'https://media.readthedocs.org/css/readthedocs-doc-embed.css',
+            '_static/css/wider_rtd.css',
+            ]
+        }
+else:
+    html_theme = 'sphinx_rtd_theme'
+    html_style = 'css/wider_rtd.css'
+
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+#html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -310,8 +325,6 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
-
-html_style = 'css/wider_rtd.css'
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
