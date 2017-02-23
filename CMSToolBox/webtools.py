@@ -112,13 +112,13 @@ def get_cookie_header(url, cookie_file, pem=None, key=None, refresh_time=None):
     :param str pem: The location of the ``.pem`` file (default ``~/.globus/usercert.pem``)
     :param str key: The location of the ``.rsa`` key (default ``~/.globus/userkey.rsa``)
     :param float refresh_time: The number of seconds until the next time the cookie is generated
-                     (default to one day)
+                     (default to three hours)
     :returns: The cookie string for each host to be set as the
               ``'Cookie'`` element of the request header
     :rtype: dict
     """
 
-    old_time = refresh_time or float(24 * 60 * 60)
+    old_time = refresh_time or float(3 * 60 * 60)
 
     output = {}
 
