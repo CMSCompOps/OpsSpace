@@ -90,7 +90,6 @@ def explain_errors(workflow, errorcode):
 
                 output.extend(samples)
 
-
     return output
 
 
@@ -115,7 +114,8 @@ class WorkflowInfo(object):
         self.errors = None
         # Is set the first time get_recovery_info() is called
         self.recovery_info = {}
-
+        # Is set first time get_explanation() is called
+        self.explanations = None
 
     def get_workflow_parameters(self):
         """
@@ -239,3 +239,29 @@ class WorkflowInfo(object):
 
         out_list.sort()
         return out_list
+
+    def get_explanation(self, errorcode):
+        """
+        Gets a list of error logs for a given error code.
+
+        :param str errorcode: The error code to explain
+        :returns: list of error logs
+        :rtype: list
+        """
+
+        if self.explanations is None:
+            self.explanations = {}
+            result = get_json(self.url,
+                              '/wmstatsserver/data/jobdetail/%s' % self.workflow,
+                              use_cert=True)
+
+            for stepdata in result['result'][0].get(workflow, {}).values():
+                for error, site in stepdata.get('jobfailed', {}).iteritems:
+                    self.explanations[error] = 
+
+
+                    for samples in sitedata['samples'][0]['errors'].values():
+
+                output.extend(samples)
+
+    return output
