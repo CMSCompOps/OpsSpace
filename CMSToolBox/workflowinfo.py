@@ -117,6 +117,9 @@ class WorkflowInfo(object):
         # Is set first time get_explanation() is called
         self.explanations = None
 
+        # Is set first time _get_jobdetail() is called
+        self.jobdetail = None
+
     def get_workflow_parameters(self):
         """
         Get the workflow parameters from ReqMgr2, or returns a cached value.
@@ -240,6 +243,21 @@ class WorkflowInfo(object):
         out_list.sort()
         return out_list
 
+    def _get_jobdetail(self):
+        """
+        Get the jobdetail from the wmstatsserver
+
+        :returns: The job detail json from the server or cache
+        :rtype: dict
+        """
+
+        if self.jobdetail is None:
+            self.jobdetail = get_json(self.url,
+                                      '/wmstatsserver/data/jobdetail/%s' % self.workflow,
+                                      use_cert=True)
+
+        return self.jobdetail
+
     def get_explanation(self, errorcode):
         """
         Gets a list of error logs for a given error code.
@@ -251,17 +269,37 @@ class WorkflowInfo(object):
 
         if self.explanations is None:
             self.explanations = {}
-            result = get_json(self.url,
-                              '/wmstatsserver/data/jobdetail/%s' % self.workflow,
-                              use_cert=True)
+            result = self._get_jobdetail()
+            for stepdata in result['result'][0].get(self.workflow, {}).values():
+                for error, site in stepdata.get('jobfailed', {}).iteritems():
+                    if error == '0':
+                        continue
 
-            for stepdata in result['result'][0].get(workflow, {}).values():
-                for error, site in stepdata.get('jobfailed', {}).iteritems:
-                    self.explanations[error] = 
+                    if self.explanations.get(error) is None:
+                        self.explanations[error] = []
 
 
-                    for samples in sitedata['samples'][0]['errors'].values():
+                    for sitename, samples in site.iteritems():
 
-                output.extend(samples)
+                        #
+                        # Flatten the following nested loops:
+                        #
+                        # for sample in samples['samples']:
+                        #     for values in sample['errors'].values():
+                        #         for detail in values:
+                        #
+                        # Both ways are equally unreadable, I think
+                        #
 
-    return output
+                        for detail in sum(
+                                [values for values in sum(
+                                    [sample['errors'].values() for sample in samples['samples']],
+                                    [])],
+                                []):
+
+                            self.explanations[error].append('\n\n'.join(
+                                ['Site name: %s' % sitename,
+                                 '%s (Exit code: %s)' % (detail['type'], detail['exitCode']),
+                                 detail['details']]))
+
+        return self.explanations.get(errorcode, ['No info for this error code'])
