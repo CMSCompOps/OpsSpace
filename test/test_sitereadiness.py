@@ -15,7 +15,7 @@ class TestSiteReadiness(unittest.TestCase):
                              'Inconsistent result: %s' % site)
             self.assertEqual(stat in ['green', 'yellow', 'red'], True,
                              'Status is not valid: %s' % site)
-            self.assertEqual(drain in ['enabled', 'drain', 'test'], True,
+            self.assertEqual(drain in ['enabled', 'disabled', 'drain', 'test'], True,
                              'Drain status is not valid: %s' % site)
 
     def test_bad_site(self):
