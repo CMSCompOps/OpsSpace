@@ -258,7 +258,7 @@ class WorkflowInfo(object):
 
         return self.jobdetail
 
-    def get_explanation(self, errorcode, step = ''):
+    def get_explanation(self, errorcode, step=''):
         """
         Gets a list of error logs for a given error code.
 
