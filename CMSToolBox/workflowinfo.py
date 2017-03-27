@@ -230,7 +230,7 @@ class WorkflowInfo(object):
         :rtype: list
         """
 
-        site_set = self.get_recovery_info()[task]['sites_to_run']
+        site_set = self.get_recovery_info().get(task, {}).get('sites_to_run', [])
         out_list = []
         all_site_list = site_list()
 

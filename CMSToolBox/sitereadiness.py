@@ -66,6 +66,7 @@ def site_drain_status(site_name):
     :returns: Readiness status. Possibilities and their meanings are:
 
               - 'enabled': The site is running
+              - 'disabled': The site is not running
               - 'drain': The jobs at the site are being drained
               - 'test': This site is being commissioned or something?
               - 'none': Site not found
