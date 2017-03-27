@@ -258,11 +258,12 @@ class WorkflowInfo(object):
 
         return self.jobdetail
 
-    def get_explanation(self, errorcode):
+    def get_explanation(self, errorcode, step=''):
         """
         Gets a list of error logs for a given error code.
 
         :param str errorcode: The error code to explain
+        :param str step: The full name of the step to return explanations from
         :returns: list of error logs
         :rtype: list
         """
@@ -270,14 +271,16 @@ class WorkflowInfo(object):
         if self.explanations is None:
             self.explanations = {}
             result = self._get_jobdetail()
-            for stepdata in result['result'][0].get(self.workflow, {}).values():
+            for stepname, stepdata in result['result'][0].get(self.workflow, {}).iteritems():
                 for error, site in stepdata.get('jobfailed', {}).iteritems():
                     if error == '0':
                         continue
 
                     if self.explanations.get(error) is None:
-                        self.explanations[error] = []
+                        self.explanations[error] = {}
 
+                    if self.explanations[error].get(stepname) is None:
+                        self.explanations[error][stepname] = []
 
                     for sitename, samples in site.iteritems():
 
@@ -297,9 +300,21 @@ class WorkflowInfo(object):
                                     [])],
                                 []):
 
-                            self.explanations[error].append('\n\n'.join(
+                            self.explanations[error][stepname].append('\n\n'.join(
                                 ['Site name: %s' % sitename,
                                  '%s (Exit code: %s)' % (detail['type'], detail['exitCode']),
                                  detail['details']]))
 
-        return self.explanations.get(errorcode, ['No info for this error code'])
+        explain = self.explanations.get(errorcode, {'': ['No info for this error code']})
+        if step in explain.keys():
+            return explain[step]
+        else:
+            return sum([val for val in explain.values()], [])
+
+    def get_prep_id(self):
+        """
+        :returns: the PrepID for this workflow
+        :rtype: str
+        """
+
+        return str(self.get_workflow_parameters()['PrepID'])
