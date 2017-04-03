@@ -105,7 +105,14 @@ def get_json(host, request, params='', body='', headers=None,
 
 def get_cookie_header(url, cookie_file, pem=None, key=None, refresh_time=None):
     """
-    Get the header infomation that meeds to be passed to the server
+    Get the header infomation that meeds to be passed to the server.
+    This function by default requires a .rsa key inside your ``~/.globus`` directory.
+    To generate this run the following commands from ``~/.globus``::
+
+        openssl rsa -in userkey.pem -out userkey.rsa
+        chmod 400 userkey.rsa
+
+    This function also requires ``cern-get-sso-cookie`` to be installed on your machine.
 
     :param str url: The location to get the cookie from
     :param str cookie_file: The location where to store the cookie
