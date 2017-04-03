@@ -122,8 +122,8 @@ class Installer(object):
                                          ' repository! Check again for package location.')
                         print error_string
 
-                        # I probably have it in my own GitHub
-                        user = 'dabercro'
+                        # Alternately, we have some projects here
+                        user = 'SmartDataProjects'
 
                     # If not checking central repository, check that next
                     else:
