@@ -56,8 +56,10 @@ package=${HOME##*/}
 
 touch ~/.bashrc                           # Make .bashrc
 
+mkdir OpsSpace/"$package"
+cp --parents $(git-ls) OpsSpace/"$package"
+
 cd OpsSpace || exit 1                     # Setup package as a user normally would
-git clone ../../"$package"                # Except use the tested package
 ./setup.py -p "$package"
 # shellcheck source=/dev/null
 . ~/.bashrc
