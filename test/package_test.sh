@@ -61,7 +61,7 @@ mkdir OpsSpace/"$package"
 cp --parents $(git ls-files) OpsSpace/"$package"
 
 cd OpsSpace || exit 1                     # Setup package as a user normally would
-./setup.py -p "$package"
+"$IfSudo" ./setup.py -p "$package"        # Use sudo for the setup if asked with env variable
 # shellcheck source=/dev/null
 . ~/.bashrc
 
