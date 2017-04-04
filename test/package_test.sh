@@ -57,7 +57,8 @@ package=${HOME##*/}
 touch ~/.bashrc                           # Make .bashrc
 
 mkdir OpsSpace/"$package"
-cp --parents $(git-ls) OpsSpace/"$package"
+# shellcheck disable=SC2046
+cp --parents $(git ls-files) OpsSpace/"$package"
 
 cd OpsSpace || exit 1                     # Setup package as a user normally would
 ./setup.py -p "$package"
