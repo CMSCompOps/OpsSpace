@@ -2,3 +2,4 @@ WorkflowWebTools
 SiteAdminToolkit
 ConsistencyCheck
 WmAgentScripts
+dynamo

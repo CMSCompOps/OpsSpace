@@ -1,2 +1,3 @@
 pycurl
 python-cjson
+mock

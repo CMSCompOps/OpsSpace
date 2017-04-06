@@ -176,12 +176,7 @@ class WorkflowInfo(object):
         :returns: a dictionary containing the information used in recovery.
                   The keys in this dictionary are arranged like the following::
 
-                  {
-                    task: {
-                      'sites_to_run': set(sites),
-                      'missing_to_run': int()
-                    }
-                  }
+                  { task: { 'sites_to_run': set(sites), 'missing_to_run': int() } }
 
         :rtype: dict
         """

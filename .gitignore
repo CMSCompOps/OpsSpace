@@ -16,3 +16,4 @@ docs/dbs*/*
 docs/RestClient
 ConsistencyCheck/*
 WmAgentScripts/*
+dynamo/*
