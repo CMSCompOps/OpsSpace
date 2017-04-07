@@ -61,8 +61,15 @@ mkdir OpsSpace/"$package"
 cp --parents $(git ls-files) OpsSpace/"$package"
 
 cd OpsSpace || exit 1                     # Setup package as a user normally would
+
 # shellcheck disable=SC2154
-test -z "$IfSudo" && ./setup.py -p "$package" || sudo ./setup.py -p "$package"
+if [ -z "$IfSudo" ]
+then
+    ./setup.py -p "$package" 
+else 
+    sudo ./setup.py -p "$package"
+fi
+
 # shellcheck source=/dev/null
 . ~/.bashrc
 
