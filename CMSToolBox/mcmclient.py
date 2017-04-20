@@ -199,8 +199,8 @@ class McMClient(object):
             self._response = self.output.getvalue()
             self.clear()
             return self._response
-        else:
-            return self.__http.getresponse().read()
+
+        return self.__http.getresponse().read()
 
     #####################
     def get2(self, something, someone=None, query='', method='get', page=-1):
@@ -221,8 +221,8 @@ class McMClient(object):
         output = self.get(url)
         if output:
             return output['results']
-        else:
-            return None
+
+        return None
 
     def put2(self, something, what, update='save'):
         """

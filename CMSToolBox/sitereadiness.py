@@ -16,6 +16,7 @@ def i_site_readiness():
     """Iterates over site readiness for the user
 
     :returns: iterator tuple with site, readiness, and drain status
+    :rtype: generator
     """
     info = GLOBAL_CACHE.get('ssb_237')
 

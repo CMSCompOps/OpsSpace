@@ -35,9 +35,9 @@ def get_node_usage(url, node):
 
     usage = 0
 
-    for node in result['phedex']['node']:
+    for node_ in result['phedex']['node']:
         usage = max(
-            sum([node[key] for key in node.keys() if key.endswith('_node_bytes')]),
+            sum([node_[key] for key in node_.keys() if key.endswith('_node_bytes')]),
             usage
             )
 
@@ -73,10 +73,10 @@ class DocCache(object):
             :rtype: function
             """
             curl_call = 'curl -s --retry 5 "{0}"'.format(url)
+
             if key:
                 return lambda: load_json(url)()[key]
-            else:
-                return lambda: json.loads(os.popen(curl_call).read())
+            return lambda: json.loads(os.popen(curl_call).read())
 
         def make_cache_entry(getter, default, description='no description'):
             """
