@@ -52,7 +52,7 @@ class Installer(object):
 
     def set_packages(self):
         """Read from list of valid package and append to valid list."""
-        if len(self.ValidPackages) == 0:
+        if not self.ValidPackages:
             with open(os.path.join(self.InstallDirectory, 'PackageList.txt'), 'r') as list_file:
                 for package in list_file.readlines():
                     self.ValidPackages.append(package.strip('\n'))
@@ -279,7 +279,7 @@ def main():
         if options.addPath:
             installer.add_pythonpath()
 
-        if len(packages) == 0 or packages[0] == '':
+        if not packages or packages[0] == '':
             if not options.addPath:
                 parser.print_help()
                 installer.print_valid_packages()
