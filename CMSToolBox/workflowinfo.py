@@ -48,7 +48,7 @@ def errors_for_workflow(workflow, url='cmsweb.cern.ch'):
 
     output = {}
 
-    if len(result['result']) == 0:
+    if not result['result']:
         return output
 
     for step, stepdata in result['result'][0].get(workflow, {}).iteritems():
@@ -303,10 +303,11 @@ class WorkflowInfo(object):
                                  detail['details']]))
 
         explain = self.explanations.get(errorcode, {'': ['No info for this error code']})
+
         if step in explain.keys():
             return explain[step]
-        else:
-            return sum([val for val in explain.values()], [])
+
+        return sum([val for val in explain.values()], [])
 
     def get_prep_id(self):
         """
