@@ -113,7 +113,7 @@ class WorkflowInfo(object):
         # Is set the first time get_errors() is called
         self.errors = None
         # Is set the first time get_recovery_info() is called
-        self.recovery_info = {}
+        self.recovery_info = None
         # Is set first time get_explanation() is called
         self.explanations = None
 
@@ -181,8 +181,10 @@ class WorkflowInfo(object):
         :rtype: dict
         """
 
-        if self.recovery_info:
+        if self.recovery_info is not None:
             return self.recovery_info
+
+        self.recovery_info = {}
 
         docs = get_json(self.url,
                         '/couchdb/acdcserver/_design/ACDC/_view/byCollectionName',

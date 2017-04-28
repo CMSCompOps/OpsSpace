@@ -67,7 +67,7 @@ if [ -z "$IfSudo" ]
 then
     ./setup.py -p "$package" 
 else 
-    sudo ./setup.py -p "$package"
+    sudo -H ./setup.py -p "$package"
 fi
 
 # shellcheck source=/dev/null
