@@ -4,11 +4,68 @@ Module containing and returning information about workflows.
 :authors: Daniel Abercrombie <dabercro@mit.edu>
 """
 
-
+import os
 import re
+import json
 
 from .webtools import get_json
 from .sitereadiness import site_list
+
+
+def cached_json(attribute):
+    """
+    A decorator for caching dictionaries in local files.
+
+    :param str attribute: The key of the :py:class:``WorkflowInfo`` cache to
+                          set using the decorated function.
+    :returns: Function decorator
+    :rtype: func
+    """
+
+    def cache_decorator(func):
+        """
+        The actual decorator (since decorator takes an argument)
+
+        :param func func: A function to modify
+        :returns: Decorated function
+        :rtype: func
+        """
+        def function_wrapper(self):
+            """
+            Executes the :py:class:``WorkflowInfo`` function
+
+            :returns: Output of the originally decorated function
+            :rtype: dict
+            """
+            file_name = '/tmp/workflowinfocache_%s_%s.json' % (self.workflow, attribute)
+
+            check_var = self.cache.get(attribute)
+
+            if check_var is None:
+                if os.path.exists(file_name):
+                    with open(file_name, 'r') as cache_file:
+                        try:
+                            check_var = json.load(cache_file)
+                        except ValueError:
+                            print 'JSON file no good. Delete %s and try again.' % file_name
+                            exit(5)
+
+                else:
+                    check_var = func(self)
+
+                self.cache[attribute] = check_var
+
+            if check_var is None:
+                return {}
+
+            with open(file_name, 'w') as cache_file:
+                json.dump(check_var, cache_file)
+
+            return check_var
+
+        return function_wrapper
+
+    return cache_decorator
 
 
 def list_workflows(status):
@@ -108,18 +165,13 @@ class WorkflowInfo(object):
 
         self.workflow = workflow
         self.url = url
-        # Is set the first time get_workflow_parameters() is called
-        self.workflow_params = None
-        # Is set the first time get_errors() is called
-        self.errors = None
-        # Is set the first time get_recovery_info() is called
-        self.recovery_info = None
+
+        # Stores things using the cached_json decorator
+        self.cache = {}
         # Is set first time get_explanation() is called
         self.explanations = None
 
-        # Is set first time _get_jobdetail() is called
-        self.jobdetail = None
-
+    @cached_json('workflow_params')
     def get_workflow_parameters(self):
         """
         Get the workflow parameters from ReqMgr2, or returns a cached value.
@@ -130,9 +182,6 @@ class WorkflowInfo(object):
         :rtype: dict
         """
 
-        if self.workflow_params:
-            return self.workflow_params
-
         try:
             result = get_json(self.url,
                               '/reqmgr2/data/request',
@@ -142,16 +191,16 @@ class WorkflowInfo(object):
             for params in result['result']:
                 for key, item in params.iteritems():
                     if key == self.workflow:
-                        self.workflow_params = item
-                        return self.workflow_params
+                        return item
 
         except Exception as error:
             print 'Failed to get from reqmgr', self.workflow
             print str(error)
 
-        return {}
+        return None
 
 
+    @cached_json('errors')
     def get_errors(self):
         """
         A wrapper for :py:func:`errors_for_workflow` if you happen to have
@@ -164,11 +213,10 @@ class WorkflowInfo(object):
         :rtype: dict
         """
 
-        if not self.errors:
-            self.errors = errors_for_workflow(self.workflow, self.url)
+        return errors_for_workflow(self.workflow, self.url)
 
-        return self.errors
 
+    @cached_json('recovery_info')
     def get_recovery_info(self):
         """
         Get the recovery info for this workflow.
@@ -181,10 +229,7 @@ class WorkflowInfo(object):
         :rtype: dict
         """
 
-        if self.recovery_info is not None:
-            return self.recovery_info
-
-        self.recovery_info = {}
+        recovery_info = {}
 
         docs = get_json(self.url,
                         '/couchdb/acdcserver/_design/ACDC/_view/byCollectionName',
@@ -206,16 +251,16 @@ class WorkflowInfo(object):
                 else:
                     locations = set(info['locations'])
 
-                vals = self.recovery_info.get(task, {})
+                vals = recovery_info.get(task, {})
                 if not vals:
-                    self.recovery_info[task] = {}
+                    recovery_info[task] = {}
 
-                self.recovery_info[task]['sites_to_run'] = \
+                recovery_info[task]['sites_to_run'] = \
                     (vals.get('sites_to_run', set()) | locations)
-                self.recovery_info[task]['missing_to_run'] = \
+                recovery_info[task]['missing_to_run'] = \
                     (vals.get('missing_to_run', 0) + info['events'])
 
-        return self.recovery_info
+        return recovery_info
 
 
     def site_to_run(self, task):
@@ -240,6 +285,7 @@ class WorkflowInfo(object):
         out_list.sort()
         return out_list
 
+    @cached_json('jobdetail')
     def _get_jobdetail(self):
         """
         Get the jobdetail from the wmstatsserver
@@ -248,12 +294,9 @@ class WorkflowInfo(object):
         :rtype: dict
         """
 
-        if self.jobdetail is None:
-            self.jobdetail = get_json(self.url,
-                                      '/wmstatsserver/data/jobdetail/%s' % self.workflow,
-                                      use_cert=True)
-
-        return self.jobdetail
+        return get_json(self.url,
+                        '/wmstatsserver/data/jobdetail/%s' % self.workflow,
+                        use_cert=True)
 
     def get_explanation(self, errorcode, step=''):
         """
