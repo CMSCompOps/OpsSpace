@@ -224,7 +224,7 @@ class WorkflowInfo(object):
         :returns: a dictionary containing the information used in recovery.
                   The keys in this dictionary are arranged like the following::
 
-                  { task: { 'sites_to_run': set(sites), 'missing_to_run': int() } }
+                  { task: { 'sites_to_run': list(sites), 'missing_to_run': int() } }
 
         :rtype: dict
         """
@@ -256,7 +256,7 @@ class WorkflowInfo(object):
                     recovery_info[task] = {}
 
                 recovery_info[task]['sites_to_run'] = \
-                    (vals.get('sites_to_run', set()) | locations)
+                    list(set(vals.get('sites_to_run', set())) | locations)
                 recovery_info[task]['missing_to_run'] = \
                     (vals.get('missing_to_run', 0) + info['events'])
 
