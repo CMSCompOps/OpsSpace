@@ -7,17 +7,20 @@ Module containing and returning information about workflows.
 import os
 import re
 import json
+import time
+import datetime
 
 from .webtools import get_json
 from .sitereadiness import site_list
 
 
-def cached_json(attribute):
+def cached_json(attribute, timeout=None):
     """
     A decorator for caching dictionaries in local files.
 
     :param str attribute: The key of the :py:class:``WorkflowInfo`` cache to
                           set using the decorated function.
+    :param int timeout: The amount of time before refreshing the JSON file, in seconds.
     :returns: Function decorator
     :rtype: func
     """
@@ -37,12 +40,13 @@ def cached_json(attribute):
             :returns: Output of the originally decorated function
             :rtype: dict
             """
-            file_name = '/tmp/workflowinfocache_%s_%s.json' % (self.workflow, attribute)
+            file_name = '/tmp/%s_%s.cache.json' % (self, attribute)
 
             check_var = self.cache.get(attribute)
 
             if check_var is None:
-                if os.path.exists(file_name):
+                if os.path.exists(file_name) and \
+                        (timeout is None or time.time() - timeout < os.stat(file_name).st_mtime):
                     with open(file_name, 'r') as cache_file:
                         try:
                             check_var = json.load(cache_file)
@@ -52,16 +56,12 @@ def cached_json(attribute):
 
                 else:
                     check_var = func(self)
+                    with open(file_name, 'w') as cache_file:
+                        json.dump(check_var, cache_file)
 
                 self.cache[attribute] = check_var
 
-            if check_var is None:
-                return {}
-
-            with open(file_name, 'w') as cache_file:
-                json.dump(check_var, cache_file)
-
-            return check_var
+            return check_var or {}
 
         return function_wrapper
 
@@ -171,6 +171,9 @@ class WorkflowInfo(object):
         # Is set first time get_explanation() is called
         self.explanations = None
 
+    def __str__(self):
+        return 'workflowinfo_%s' % self.workflow
+
     @cached_json('workflow_params')
     def get_workflow_parameters(self):
         """
@@ -224,7 +227,7 @@ class WorkflowInfo(object):
         :returns: a dictionary containing the information used in recovery.
                   The keys in this dictionary are arranged like the following::
 
-                  { task: { 'sites_to_run': set(sites), 'missing_to_run': int() } }
+                  { task: { 'sites_to_run': list(sites), 'missing_to_run': int() } }
 
         :rtype: dict
         """
@@ -256,7 +259,7 @@ class WorkflowInfo(object):
                     recovery_info[task] = {}
 
                 recovery_info[task]['sites_to_run'] = \
-                    (vals.get('sites_to_run', set()) | locations)
+                    list(set(vals.get('sites_to_run', set())) | locations)
                 recovery_info[task]['missing_to_run'] = \
                     (vals.get('missing_to_run', 0) + info['events'])
 
@@ -359,3 +362,42 @@ class WorkflowInfo(object):
         """
 
         return str(self.get_workflow_parameters()['PrepID'])
+
+
+class PrepIDInfo(object):
+    """
+    A class that just holds a small amount of information about a given PrepID.
+    """
+
+    def __init__(self, prep_id, url='cmsweb.cern.ch'):
+
+        self.prep_id = prep_id
+        self.url = url
+
+        # Stores things using the cached_json decorator
+        self.cache = {}
+
+    def __str__(self):
+        return 'prepIDinfo_%s' % self.prep_id
+
+    @cached_json('requests', 3600 * 24)
+    def get_requests(self):
+        """
+        :returns: The requests for the Prep ID from ReqMgr2 API
+        :rtype: dict
+        """
+        result = get_json(self.url, '/reqmgr2/data/request',
+                          params={'prep_id': self.prep_id, 'detail': 'true'},
+                          use_cert=True)
+
+        return result['result'][0]
+
+    def get_workflows_requesttime(self):
+        """
+        :returns: A list of tuples containing (workflow name, timestamp of request)
+        :rtype: list
+        """
+        request = self.get_requests()
+
+        return [(workflow, time.mktime(datetime.datetime(*value['RequestDate']).timetuple())) \
+                    for workflow, value in request.iteritems()]
