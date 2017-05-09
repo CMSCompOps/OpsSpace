@@ -61,10 +61,7 @@ def cached_json(attribute, timeout=None):
 
                 self.cache[attribute] = check_var
 
-            if check_var is None:
-                return {}
-
-            return check_var
+            return check_var or {}
 
         return function_wrapper
 
