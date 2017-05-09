@@ -7,17 +7,20 @@ Module containing and returning information about workflows.
 import os
 import re
 import json
+import time
+import datetime
 
 from .webtools import get_json
 from .sitereadiness import site_list
 
 
-def cached_json(attribute):
+def cached_json(attribute, timeout=None):
     """
     A decorator for caching dictionaries in local files.
 
     :param str attribute: The key of the :py:class:``WorkflowInfo`` cache to
                           set using the decorated function.
+    :param int timeout: The amount of time before refreshing the JSON file, in seconds.
     :returns: Function decorator
     :rtype: func
     """
@@ -37,15 +40,19 @@ def cached_json(attribute):
             :returns: Output of the originally decorated function
             :rtype: dict
             """
-            file_name = '/tmp/workflowinfocache_%s_%s.json' % (self.workflow, attribute)
+            file_name = '/tmp/%s_%s.cache.json' % (self, attribute)
 
             check_var = self.cache.get(attribute)
 
+            loaded = False
+
             if check_var is None:
-                if os.path.exists(file_name):
+                if os.path.exists(file_name) and \
+                        (timeout is None or time.time() - timeout < os.stat(file_name).st_mtime):
                     with open(file_name, 'r') as cache_file:
                         try:
                             check_var = json.load(cache_file)
+                            loaded = True
                         except ValueError:
                             print 'JSON file no good. Delete %s and try again.' % file_name
                             exit(5)
@@ -58,8 +65,9 @@ def cached_json(attribute):
             if check_var is None:
                 return {}
 
-            with open(file_name, 'w') as cache_file:
-                json.dump(check_var, cache_file)
+            if not loaded:
+                with open(file_name, 'w') as cache_file:
+                    json.dump(check_var, cache_file)
 
             return check_var
 
@@ -170,6 +178,9 @@ class WorkflowInfo(object):
         self.cache = {}
         # Is set first time get_explanation() is called
         self.explanations = None
+
+    def __str__(self):
+        return 'workflowinfo_%s' % self.workflow
 
     @cached_json('workflow_params')
     def get_workflow_parameters(self):
@@ -359,3 +370,34 @@ class WorkflowInfo(object):
         """
 
         return str(self.get_workflow_parameters()['PrepID'])
+
+
+class PrepIDInfo(object):
+    """
+    A class that just holds a small amount of information about a given PrepID.
+    """
+
+    def __init__(self, prep_id, url='cmsweb.cern.ch'):
+
+        self.prep_id = prep_id
+        self.url = url
+
+        # Stores things using the cached_json decorator
+        self.cache = {}
+
+    def __str__(self):
+        return 'prepIDinfo_%s' % self.prep_id
+
+    @cached_json('requests', 3600 * 24)
+    def get_requests(self):
+        result = get_json(self.url, '/reqmgr2/data/request',
+                          params={'prep_id': self.prep_id, 'detail': 'true'},
+                          use_cert=True)
+
+        return result['result'][0]
+
+    def get_workflows_requesttime(self):
+        request = self.get_requests()
+        
+        return [(workflow, time.mktime(datetime.datetime(*value['RequestDate']).timetuple())) \
+                    for workflow, value in request.iteritems()]
