@@ -390,6 +390,10 @@ class PrepIDInfo(object):
 
     @cached_json('requests', 3600 * 24)
     def get_requests(self):
+        """
+        :returns: The requests for the Prep ID from ReqMgr2 API
+        :rtype: dict
+        """
         result = get_json(self.url, '/reqmgr2/data/request',
                           params={'prep_id': self.prep_id, 'detail': 'true'},
                           use_cert=True)
@@ -397,7 +401,11 @@ class PrepIDInfo(object):
         return result['result'][0]
 
     def get_workflows_requesttime(self):
+        """
+        :returns: A list of tuples containing (workflow name, timestamp of request)
+        :rtype: list
+        """
         request = self.get_requests()
-        
+
         return [(workflow, time.mktime(datetime.datetime(*value['RequestDate']).timetuple())) \
                     for workflow, value in request.iteritems()]
