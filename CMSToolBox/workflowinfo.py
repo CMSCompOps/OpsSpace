@@ -44,30 +44,25 @@ def cached_json(attribute, timeout=None):
 
             check_var = self.cache.get(attribute)
 
-            loaded = False
-
             if check_var is None:
                 if os.path.exists(file_name) and \
                         (timeout is None or time.time() - timeout < os.stat(file_name).st_mtime):
                     with open(file_name, 'r') as cache_file:
                         try:
                             check_var = json.load(cache_file)
-                            loaded = True
                         except ValueError:
                             print 'JSON file no good. Delete %s and try again.' % file_name
                             exit(5)
 
                 else:
                     check_var = func(self)
+                    with open(file_name, 'w') as cache_file:
+                        json.dump(check_var, cache_file)
 
                 self.cache[attribute] = check_var
 
             if check_var is None:
                 return {}
-
-            if not loaded:
-                with open(file_name, 'w') as cache_file:
-                    json.dump(check_var, cache_file)
 
             return check_var
 
