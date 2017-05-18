@@ -42,7 +42,7 @@ def cached_json(attribute, timeout=None):
             """
             if not os.path.exists('/tmp/workflowinfo'):
                 os.mkdir('/tmp/workflowinfo')
-            
+
             file_name = '/tmp/workflowinfo/%s_%s.cache.json' % (self, attribute)
 
             check_var = self.cache.get(attribute)
