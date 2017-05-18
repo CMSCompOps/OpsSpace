@@ -40,7 +40,10 @@ def cached_json(attribute, timeout=None):
             :returns: Output of the originally decorated function
             :rtype: dict
             """
-            file_name = '/tmp/%s_%s.cache.json' % (self, attribute)
+            if not os.path.exists('/tmp/workflowinfo'):
+                os.mkdir('/tmp/workflowinfo')
+
+            file_name = '/tmp/workflowinfo/%s_%s.cache.json' % (self, attribute)
 
             check_var = self.cache.get(attribute)
 
@@ -401,3 +404,11 @@ class PrepIDInfo(object):
 
         return [(workflow, time.mktime(datetime.datetime(*value['RequestDate']).timetuple())) \
                     for workflow, value in request.iteritems()]
+
+    def get_workflows(self):
+        """
+        :returns: A list of tuples containing (workflow name, timestamp of request)
+        :rtype: list
+        """
+
+        return [workflow[0] for workflow in self.get_workflows_requesttime()]
