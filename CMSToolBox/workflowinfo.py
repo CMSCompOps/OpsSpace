@@ -364,7 +364,7 @@ class WorkflowInfo(object):
         :rtype: str
         """
 
-        return str(self.get_workflow_parameters()['PrepID'])
+        return str(self.get_workflow_parameters().get('PrepID', 'NoPrepID'))
 
 
 class PrepIDInfo(object):

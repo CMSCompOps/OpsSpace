@@ -64,4 +64,15 @@ def get_domain(site):
         'T2_US_Vanderbilt': 'vanderbilt.edu',
         }
 
-    return host_map[site]
+    domain = host_map.get('site')
+
+    if domain:
+        return domain
+
+    # If the key includes the site name, return the domain.
+    # This is for things like T1_US_FNAL_Disk, etc.
+    for key, domain in host_map.iteritems():
+        if key in site:
+            return domain
+
+    return ''
