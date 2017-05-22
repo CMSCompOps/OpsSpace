@@ -392,6 +392,9 @@ class PrepIDInfo(object):
         :returns: The requests for the Prep ID from ReqMgr2 API
         :rtype: dict
         """
+        if self.prep_id == 'NoPrepID':
+            return None
+
         result = get_json(self.url, '/reqmgr2/data/request',
                           params={'prep_id': self.prep_id, 'detail': 'true'},
                           use_cert=True)
