@@ -144,6 +144,9 @@ def explain_errors(workflow, errorcode):
 
     output = []
 
+    if not result['results']:
+        return output
+
     for stepdata in result['result'][0].get(workflow, {}).values():
         for sitedata in stepdata.get('jobfailed', {}).get(errorcode, {}).values():
             for samples in sitedata['samples'][0]['errors'].values():
@@ -392,6 +395,9 @@ class PrepIDInfo(object):
         result = get_json(self.url, '/reqmgr2/data/request',
                           params={'prep_id': self.prep_id, 'detail': 'true'},
                           use_cert=True)
+
+        if not result['result']:
+            return None
 
         return result['result'][0]
 
