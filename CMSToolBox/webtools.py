@@ -1,4 +1,4 @@
-# pylint: disable=protected-access, unexpected-keyword-arg, bad-option-value, redefined-variable-type
+# pylint: disable=protected-access, unexpected-keyword-arg, bad-option-value, redefined-variable-type, too-many-locals
 
 """
 A high-level module for getting JSON information from web services.
@@ -20,7 +20,7 @@ import subprocess
 
 
 def get_json(host, request, params='', body='', headers=None,
-             port=None, **kwargs):
+             port=None, retries=3, **kwargs):
     """
     Function for getting JSON from a URL that handles the connection
     and certificates with just a couple of bools.
@@ -32,6 +32,7 @@ def get_json(host, request, params='', body='', headers=None,
     :param dict headers: Headers to pass to request. If ``None``,
                          ``{'Accept': 'application/json'}`` will be passed.
     :param int port: The port to access, if a not default value
+    :param int retries: The number of times to try to get the JSON response before giving up
     :param kwargs: Additional aruments that can be used to change
                    the connection behavior.
                    These are listed below:
@@ -89,18 +90,24 @@ def get_json(host, request, params='', body='', headers=None,
                                              kwargs.get('cookie_pem'), kwargs.get('cookie_key'),
                                              kwargs.get('cookie_time'))[host]
 
-    conn.request(
-        method, full_request, json.dumps(body), header)
+    tries = 0
 
-    res = conn.getresponse()
+    while tries <= retries:
+        conn.request(
+            method, full_request, json.dumps(body), header)
 
-    print("STATUS", res.status, "REASON", res.reason)
+        res = conn.getresponse()
 
-    result = json.loads(res.read())
+        if res.status == 200:
+            result = json.loads(res.read())
+            conn.close()
+            return result
 
-    conn.close()
+        print("STATUS", res.status, "REASON", res.reason)
+        tries += 1
+        conn.close()
 
-    return result
+    return {}
 
 
 def get_cookie_header(url, cookie_file, pem=None, key=None, refresh_time=None):
