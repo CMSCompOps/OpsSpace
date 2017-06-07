@@ -210,11 +210,12 @@ class WorkflowInfo(object):
 
 
     @cached_json('errors')
-    def get_errors(self):
+    def get_errors(self, get_unreported=False):
         """
         A wrapper for :py:func:`errors_for_workflow` if you happen to have
         a :py:class:`WorkflowInfo` object already.
 
+        :param bool get_unreported: Get the unreported errors from ACDC server
         :returns: a dictionary containing error codes in the following format::
 
                   {step: {errorcode: {site: number_errors}}}
@@ -222,7 +223,26 @@ class WorkflowInfo(object):
         :rtype: dict
         """
 
-        return errors_for_workflow(self.workflow, self.url)
+        output = errors_for_workflow(self.workflow, self.url)
+
+        if get_unreported:
+            acdc_server_response = get_json(
+                'cmsweb.cern.ch', '/couchdb/acdcserver/_design/ACDC/_view/byCollectionName',
+                {'key': '"%s"' % self.workflow, 'include_docs': 'true', 'reduce': 'false'},
+                use_cert=True)
+
+            for row in acdc_server_response['rows']:
+                task = row['doc']['fileset_name']
+                new_output = output.get(task, {})
+                new_errorcode = new_output.get('NotReported', {})
+                for file_replica in row['doc']['files'].values():
+                    for site in file_replica['locations']:
+                        new_errorcode[site] = 0
+
+                new_output['NotReported'] = new_errorcode
+                output[task] = new_output
+
+        return output
 
 
     @cached_json('recovery_info')
