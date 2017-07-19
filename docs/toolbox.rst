@@ -33,6 +33,14 @@ Cached Dashboard Information
 .. automodule:: CMSToolBox.dashboard
    :members:
 
+.. _site-info-ref:
+
+Site Info
+---------
+
+.. automodule:: CMSToolBox.siteinfo
+   :members:
+
 .. _site-readiness-ref:
 
 Site Readiness Metric

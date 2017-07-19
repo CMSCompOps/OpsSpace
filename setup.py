@@ -24,7 +24,7 @@ except ImportError:
 from CMSToolBox.simplefiletools import load_env, append_to_file
 
 
-VERSION = '0.4'
+VERSION = '0.7'
 
 
 class Installer(object):

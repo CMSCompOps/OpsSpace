@@ -10,6 +10,7 @@ import json
 import time
 import datetime
 
+from functools import wraps
 from .webtools import get_json
 from .sitereadiness import site_list
 
@@ -18,7 +19,7 @@ def cached_json(attribute, timeout=None):
     """
     A decorator for caching dictionaries in local files.
 
-    :param str attribute: The key of the :py:class:``WorkflowInfo`` cache to
+    :param str attribute: The key of the :py:class:`WorkflowInfo` cache to
                           set using the decorated function.
     :param int timeout: The amount of time before refreshing the JSON file, in seconds.
     :returns: Function decorator
@@ -33,9 +34,11 @@ def cached_json(attribute, timeout=None):
         :returns: Decorated function
         :rtype: func
         """
+
+        @wraps(func)
         def function_wrapper(self):
             """
-            Executes the :py:class:``WorkflowInfo`` function
+            Executes the :py:class:`WorkflowInfo` function
 
             :returns: Output of the originally decorated function
             :rtype: dict
