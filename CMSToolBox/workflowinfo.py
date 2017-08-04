@@ -347,8 +347,7 @@ class WorkflowInfo(object):
                 # Get the errors from both 'jobfailed' and 'submitfailed' details
                 for error, site in \
                         sum([stepdata.get(status, {}).items() for status in \
-                                 ['jobfailed', 'submitfailed']],
-                            []):
+                                 ['jobfailed', 'submitfailed']], []):
                     if error == '0':
                         continue
 
