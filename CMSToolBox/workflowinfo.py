@@ -344,7 +344,11 @@ class WorkflowInfo(object):
             self.explanations = {}
             result = self._get_jobdetail()
             for stepname, stepdata in result['result'][0].get(self.workflow, {}).iteritems():
-                for error, site in stepdata.get('jobfailed', {}).iteritems():
+                # Get the errors from both 'jobfailed' and 'submitfailed' details
+                for error, site in \
+                        sum([stepdata.get(status, {}).items() for status in \
+                                 ['jobfailed', 'submitfailed']],
+                            []):
                     if error == '0':
                         continue
 
