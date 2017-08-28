@@ -36,7 +36,7 @@ def cached_json(attribute, timeout=None):
         """
 
         @wraps(func)
-        def function_wrapper(self):
+        def function_wrapper(self, *args, **kwargs):
             """
             Executes the :py:class:`WorkflowInfo` function
 
@@ -61,7 +61,7 @@ def cached_json(attribute, timeout=None):
                             exit(5)
 
                 else:
-                    check_var = func(self)
+                    check_var = func(self, *args, **kwargs)
                     with open(file_name, 'w') as cache_file:
                         json.dump(check_var, cache_file)
 
