@@ -90,7 +90,7 @@ do
     if [ -f "$d/test/path.txt" ]
     then
 
-        while read dir
+        while read -r dir
         do
 
             if [ "$dir" = "test" ]
