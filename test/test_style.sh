@@ -83,18 +83,22 @@ do
 
     fi
 
+    echo "Testing $d"
+
     test -f "$d/__init__.py" && pylintCall "$d" > "$outputdir/$d.txt"
 
     if [ -f "$d/test/path.txt" ]
     then
 
-        for dir
+        while read dir
         do
 
             if [ "$dir" = "test" ]
             then
                 continue
             fi
+
+            echo "Testing subdirectory $dir"
 
             for f in $d/$dir/*.py
             do
