@@ -35,7 +35,7 @@ HOST_MAP = {
     'T2_FR_GRIF_LLR':      'polgrid4.in2p3.fr',
     'T2_FR_IPHC':          'sbgse1.in2p3.fr',
     'T2_GR_Ioannina':      'physics.uoi.gr',
-    'T2_HU_Budapes':       'kfki.hu',
+    'T2_HU_Budapest':      'kfki.hu',
     'T2_IN_TIFR':          'indiacms.res.in',
     'T2_IT_Bar':           'ba.infn.it',
     'T2_IT_Legnaro':       'lnl.infn.it',
