@@ -62,11 +62,20 @@ class PODAnalyzer(CustomAnalyzer):
     headers = ['=', '~', '+', '^', '*', '-', '#']
 
     def process_line(self, line):
+
         if line.startswith('=head'):
             output = ' '.join(line.split()[1:])
-            for final in [output, self.headers[int(line[5]) - 1] * len(output)]:
+            end = []
+
+            if output.endswith(':'):
+                output = output.rstrip(':')
+                end.append('::')
+
+            for final in [output, self.headers[int(line[5]) - 1] * len(output)] + end:
                 yield final
+
         elif line.endswith(':') and not line.endswith('::'):
             yield line + ':'
+
         else:
             yield line
