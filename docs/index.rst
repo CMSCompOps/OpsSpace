@@ -15,7 +15,7 @@ Contents:
    wmagentscripts
    workflowwebtools
    siteadmintoolkit
-   consistencycheck
+   siteconsistency
    todo
 
 Indices and tables
