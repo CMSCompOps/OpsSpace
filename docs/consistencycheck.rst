@@ -1,1 +1,0 @@
-../ConsistencyCheck/README.rst
