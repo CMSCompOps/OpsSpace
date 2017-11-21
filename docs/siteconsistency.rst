@@ -1,1 +1,1 @@
-../dynamo-consistency
+../dynamo-consistency/README.rst
