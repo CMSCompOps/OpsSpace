@@ -59,7 +59,7 @@ _do_test () {
 
 HOME=$(pwd)                               # Get the package you are testing from location and change HOME
 export HOME
-package=$(git remote -v | perl -nae 'print "$1\n" if /\/(.+)\.git \(fetch\)/') # Get package name from git
+package=$(git remote -v | perl -nae 'print "$1\n" if /([\w-]+)\.git \(fetch\)/') # Get package name from git
 
 touch ~/.bashrc                           # Make .bashrc
 
