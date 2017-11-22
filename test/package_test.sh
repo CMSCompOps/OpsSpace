@@ -5,7 +5,7 @@
 
 # If Jenkins, pretend to be Travis
 
-if [ ! -z $JENKINS_HOME ]
+if [ "$JENKINS_HOME" != "" ]
 then
     TRAVIS=true
 fi
