@@ -3,6 +3,13 @@
 # This test should only be used
 # by a package continuous integration test
 
+# If Jenkins, pretend to be Travis
+
+if [ ! -z $JENKINS_HOME ]
+then
+    TRAVIS=true
+fi
+
 if [ "$TRAVIS" != "true" ]
 then
 
@@ -52,7 +59,7 @@ _do_test () {
 
 HOME=$(pwd)                               # Get the package you are testing from location and change HOME
 export HOME
-package=${HOME##*/}
+package=$(git remote -v | perl -nae 'print "$1\n" if /\/(.+)\.git \(fetch\)/') # Get package name from git
 
 touch ~/.bashrc                           # Make .bashrc
 
