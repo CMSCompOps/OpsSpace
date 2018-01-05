@@ -1,3 +1,6 @@
+#pylint: disable=too-complex
+# Parsing CMS JSONs is always a mess
+
 """
 A module that checks the SAM status of a site
 
@@ -23,28 +26,26 @@ def is_sam_good(site, time_span=24, success=0.85):
         exit(0)
 
     time_span_str = 'last%s' % time_span
-    gen_json =  get_json('wlcg-sam-cms.cern.ch', '/dashboard/request.py/latestresultssmry-json',
+    gen_json = get_json('wlcg-sam-cms.cern.ch', '/dashboard/request.py/latestresultssmry-json',
                         {'profile': 'CMS_CRITICAL_FULL',
-                         'site': site}
-                        )
+                         'site': site})
 
-    gen_probes = gen_json['data']['results'][0]['flavours']
     srm_host_name = ''
     ce_host_name = ''
     ce_flavour = ''
-    for item in gen_probes:
+    for item in gen_json['data']['results'][0]['flavours']:
         if item['servicename'] == 'SRM':
             srm_host_name = item['hosts'][0]['hostname']
         else:
             ce_host_name = item['hosts'][0]['hostname']
             ce_flavour = item['servicename']
 
-    get_data = lambda flav, host: get_json('wlcg-sam-cms.cern.ch', '/dashboard/request.py/getTestResults',
+    get_data = lambda flav, host: get_json('wlcg-sam-cms.cern.ch',
+                                           '/dashboard/request.py/getTestResults',
                                            {'flavors': flav,
                                             'profile_name': 'CMS_CRITICAL_FULL',
                                             'hostname': host,
-                                            'time_range': time_span_str}
-                                           )
+                                            'time_range': time_span_str})
 
     def is_problem(success, data):
         """
@@ -72,9 +73,7 @@ def is_sam_good(site, time_span=24, success=0.85):
             return False
 
     for probe in get_data(ce_flavour, ce_host_name)['data']:
-        if 'WN-xrootd-access' not in probe[0]:
-            continue
-        if is_problem(success, probe[1]):
+        if 'WN-xrootd-access' in probe[0] and is_problem(success, probe[1]):
             return False
 
     return True
