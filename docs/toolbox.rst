@@ -49,6 +49,14 @@ Site Readiness Metric
 .. automodule:: CMSToolBox.sitereadiness
    :members:
 
+.. _sam-status-ref:
+
+SAM Status History
+------------------
+
+.. automodule:: CMSToolBox.samstatus
+   :members:
+
 .. _email-tools-ref:
 
 E-mail Tools

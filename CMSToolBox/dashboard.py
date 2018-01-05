@@ -273,6 +273,9 @@ class DocCache(object):
                 print str(error)
                 return copy.deepcopy(cache['default'])
 
+        return None
+
+
 GLOBAL_CACHE = DocCache()
 """A global instance of the :py:class:`DocCache` that should be used."""
 
