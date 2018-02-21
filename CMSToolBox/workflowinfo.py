@@ -10,7 +10,9 @@ import json
 import time
 import datetime
 
+from collections import defaultdict
 from functools import wraps
+
 from .webtools import get_json
 from .sitereadiness import site_list
 
@@ -43,22 +45,21 @@ def cached_json(attribute, timeout=None):
             :returns: Output of the originally decorated function
             :rtype: dict
             """
-            if not os.path.exists('/tmp/workflowinfo'):
-                os.mkdir('/tmp/workflowinfo')
-
-            file_name = '/tmp/workflowinfo/%s_%s.cache.json' % (self, attribute)
+            if not os.path.exists(self.cache_dir):
+                os.mkdir(self.cache_dir)
 
             check_var = self.cache.get(attribute)
 
             if check_var is None:
+                file_name = self.cache_filename(attribute)
                 if os.path.exists(file_name) and \
                         (timeout is None or time.time() - timeout < os.stat(file_name).st_mtime):
-                    with open(file_name, 'r') as cache_file:
-                        try:
+                    try:
+                        with open(file_name, 'r') as cache_file:
                             check_var = json.load(cache_file)
-                        except ValueError:
-                            print 'JSON file no good. Delete %s and try again.' % file_name
-                            exit(5)
+                    except ValueError:
+                        print 'JSON file no good. Deleting %s. Try again later.' % file_name
+                        os.remove(file_name)
 
                 else:
                     check_var = func(self, *args, **kwargs)
@@ -159,7 +160,48 @@ def explain_errors(workflow, errorcode):
     return output
 
 
-class WorkflowInfo(object):
+class Info(object):
+    """
+    Implements shared operations on the cache
+    """
+
+    def __init__(self):
+        # Stores things using the cached_json decorator
+        self.cache = {}
+        self.cache_dir = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'workflowinfo')
+        self.bak_dir = os.path.join(self.cache_dir, 'bak')
+
+    def __str__(self):
+        pass
+
+    def cache_filename(self, attribute):
+        """
+        Return the name of the file for caching
+
+        :param str attribute: The information to store in the file
+        :returns: The full file name to store the cache
+        :rtype: str
+        """
+        return os.path.join(self.cache_dir, '%s_%s.cache.json' % (self, attribute))
+
+    def reset(self):
+        """
+        Reset the cache for this object and clear out the files.
+        """
+        print 'Reseting %s' % self
+
+        if not os.path.exists(self.bak_dir):
+            os.mkdir(self.bak_dir)
+
+        for attribute in self.cache:
+            cache_file = self.cache_filename(attribute)
+            if os.path.exists(cache_file):
+                os.rename(cache_file, cache_file.replace(self.cache_dir, self.bak_dir))
+
+        self.cache.clear()
+
+
+class WorkflowInfo(Info):
     """
     Class that holds methods for accessing various information about a workflow.
     """
@@ -172,11 +214,10 @@ class WorkflowInfo(object):
         :param str url: is the url to fetch information from
         """
 
+        super(WorkflowInfo, self).__init__()
         self.workflow = workflow
         self.url = url
 
-        # Stores things using the cached_json decorator
-        self.cache = {}
         # Is set first time get_explanation() is called
         self.explanations = None
 
@@ -341,39 +382,19 @@ class WorkflowInfo(object):
         """
 
         if self.explanations is None:
-            self.explanations = {}
+            self.explanations = defaultdict(lambda: defaultdict(lambda: []))
             result = self._get_jobdetail()
             for stepname, stepdata in result['result'][0].get(self.workflow, {}).iteritems():
                 # Get the errors from both 'jobfailed' and 'submitfailed' details
-                for error, site in \
-                        sum([stepdata.get(status, {}).items() for status in \
-                                 ['jobfailed', 'submitfailed']], []):
+                for error, site in [(error, site) for status in ['jobfailed', 'submitfailed'] \
+                                        for error, site in stepdata.get(status, {}).items()]:
                     if error == '0':
                         continue
 
-                    if self.explanations.get(error) is None:
-                        self.explanations[error] = {}
-
-                    if self.explanations[error].get(stepname) is None:
-                        self.explanations[error][stepname] = []
-
                     for sitename, samples in site.iteritems():
-
-                        #
-                        # Flatten the following nested loops:
-                        #
-                        # for sample in samples['samples']:
-                        #     for values in sample['errors'].values():
-                        #         for detail in values:
-                        #
-                        # Both ways are equally unreadable, I think
-                        #
-
-                        for detail in sum(
-                                [values for values in sum(
-                                    [sample['errors'].values() for sample in samples['samples']],
-                                    [])],
-                                []):
+                        for detail in [values for sample in samples['samples']
+                                       for errs in sample['errors'].values()
+                                       for values in errs]:
 
                             self.explanations[error][stepname].append('\n\n'.join(
                                 ['Site name: %s' % sitename,
@@ -385,7 +406,7 @@ class WorkflowInfo(object):
         if step in explain.keys():
             return explain[step]
 
-        return sum([val for val in explain.values()], [])
+        return [val for expl in explain.values() for val in expl]
 
     def get_prep_id(self):
         """
@@ -396,18 +417,15 @@ class WorkflowInfo(object):
         return str(self.get_workflow_parameters().get('PrepID', 'NoPrepID'))
 
 
-class PrepIDInfo(object):
+class PrepIDInfo(Info):
     """
     A class that just holds a small amount of information about a given PrepID.
     """
 
     def __init__(self, prep_id, url='cmsweb.cern.ch'):
-
+        super(PrepIDInfo, self).__init__()
         self.prep_id = prep_id
         self.url = url
-
-        # Stores things using the cached_json decorator
-        self.cache = {}
 
     def __str__(self):
         return 'prepIDinfo_%s' % self.prep_id
