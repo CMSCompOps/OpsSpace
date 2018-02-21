@@ -271,6 +271,9 @@ def main():
             [cpack for cpack in ['cjson', 'pycurl'] if os.path.exists(cpack)] + \
             [pack for pack in installer.ValidPackages if os.path.exists(pack)]
 
+        # Remove broken symlinks first
+        os.system('find -L . -type l -delete')
+
         setup(name='OpsSpace',
               version=VERSION,
               packages=full_dirs(packages))

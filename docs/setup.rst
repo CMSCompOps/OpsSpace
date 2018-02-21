@@ -46,7 +46,7 @@ Example Setup
 If I want to freshly install the WorkflowWebTools from dabercro's GitHub on a new machine,
 I simply do the following::
 
-  ./setup -u dabercro WorkflowWebTools
+  ./setup.py -u dabercro WorkflowWebTools
 
 The WorkflowWebTools exists in both the CMSCompOps group and dabercro's fork,
 so the setup script will clone from dabercro.
