@@ -352,7 +352,7 @@ class WorkflowInfo(Info):
         for site in site_set:
             clean_site = re.sub(r'_(Disk|MSS)$', '', site)
             if clean_site not in out_list and clean_site and \
-                    clean_site in all_site_list:
+                    re.sub(r'_(ECHO)', '', clean_site) in all_site_list:
                 out_list.append(clean_site)
 
         out_list.sort()
