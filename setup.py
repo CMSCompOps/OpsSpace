@@ -24,7 +24,7 @@ except ImportError:
 from CMSToolBox.simplefiletools import load_env, append_to_file
 
 
-VERSION = '0.7'
+VERSION = '0.8'
 
 
 class Installer(object):
@@ -274,7 +274,7 @@ def main():
         # Remove broken symlinks first
         os.system('find -L . -type l -delete')
 
-        setup(name='OpsSpace',
+        setup(name='cmstoolbox',
               version=VERSION,
               packages=full_dirs(packages))
 
