@@ -10,7 +10,7 @@ matrix:
       python: 2.7
       env: CHECKDOC=true
 install:
-  - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4"; fi
+  - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4" "testfixtures<6"; fi
   - python setup.py install
 script:
   - cd test
