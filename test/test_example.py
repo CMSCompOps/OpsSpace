@@ -4,7 +4,7 @@ import os
 import sys
 import unittest
 
-import CMSToolBox._loadtestpath
+import cmstoolbox._loadtestpath
 
 import example
 

@@ -2,7 +2,7 @@
 
 import unittest
 
-import CMSToolBox.sitereadiness as sr
+import cmstoolbox.sitereadiness as sr
 
 
 class TestSiteReadiness(unittest.TestCase):

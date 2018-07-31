@@ -2,7 +2,7 @@
 
 import unittest
 
-import CMSToolBox.siteinfo as si
+import cmstoolbox.siteinfo as si
 
 class TestSiteInfo(unittest.TestCase):
 
