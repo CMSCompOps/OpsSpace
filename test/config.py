@@ -1,0 +1,25 @@
+# Testing configuration
+
+import os
+import sys
+
+from cmstoolbox.unmergedcleaner.configtools import pfn_from_phedex
+
+SITE_NAME = 'test'
+LFN_TO_CLEAN = '/store/unmerged'
+DELETION_FILE =  'unmerged_results/to_delete.txt'
+DIRS_TO_AVOID = ['avoid']
+MIN_AGE = 5
+SLEEP_TIME = 0.1
+
+if len(sys.argv) > 1:
+    UNMERGED_DIR_LOCATION = os.path.abspath(sys.argv.pop(1))
+else:
+    UNMERGED_DIR_LOCATION = os.path.join(
+        os.path.abspath(os.path.dirname(__file__)), 'store/unmerged')
+
+if len(sys.argv) == 1:
+    sys.argv.append('posix')
+
+STORAGE_TYPE = sys.argv.pop(1)
+WHICH_LIST = 'directories'

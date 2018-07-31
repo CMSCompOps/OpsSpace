@@ -1,4 +1,0 @@
-HTTPGET = None
-POST = None
-UPLOAD = None
-CUSTOMREQUEST = None

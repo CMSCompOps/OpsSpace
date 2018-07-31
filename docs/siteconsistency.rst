@@ -1,1 +1,0 @@
-../dynamo-consistency/README.rst
