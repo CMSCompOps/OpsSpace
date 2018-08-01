@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-# pylint: disable=redefined-builtin, anomalous-backslash-in-string, too-complex, global-statement, redefined-outer-name, invalid-name
+# pylint: disable=redefined-builtin, anomalous-backslash-in-string, too-complex, global-statement, redefined-outer-name, invalid-name, import-error
 
 """
 This script is located as :file:`SiteAdminToolkit/unmerged-cleaner/ListDeletable.py`.
