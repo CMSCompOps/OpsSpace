@@ -1,1 +1,0 @@
-../WmAgentScripts/README.rst

@@ -11,12 +11,6 @@ Contents:
    setup
    developer
    toolbox
-   dbs
-   wmagentscripts
-   workflowwebtools
-   siteadmintoolkit
-   siteconsistency
-   todo
 
 Indices and tables
 ==================

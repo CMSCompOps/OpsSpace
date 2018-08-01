@@ -28,7 +28,8 @@ The current list of valid packages and options are shown by running with no argu
 
 This gives:
 
-.. program-output:: ../setup.py
+.. note::
+   Need to update everything
 
 To install a non-listed package as a submodule of OpsSpace,
 Make sure that the package is in either the CMSCompOps or your
@@ -96,7 +97,6 @@ A list of problems and solutions that come up during ``OpsSpace`` installation a
 ImportError when using installed pycurl
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-``pycurl`` is needed for the :ref:`dbs-ref` package, which is installed with ``OpsSpace``.
 It is possible for ``pycurl`` to be compiled using the wrong ssl backend.
 Then when trying to import :py:class:`dbs.apis.dbsClient`, you might get the following error::
 
@@ -109,14 +109,3 @@ To fix this, uninstall ``pycurl`` and reinstall, setting the environment variabl
 
 Other systems may use ``openssl`` as the backend.
 See `here <http://stackoverflow.com/questions/21096436/ssl-backend-error-when-using-openssl>`_ for more details.
-
-Reference
----------
-
-The setup script can also be imported to gain access to the following members,
-but that is an unlikely use case.
-However, I will add this so that ``OpsSpace/docs/setup.rst`` can be used as an example
-for someone documenting their own scripts or modules.
-
-.. automodule:: setup
-   :members:
