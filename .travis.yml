@@ -4,16 +4,22 @@ matrix:
   include:
     - python: 2.6
       env:
-        - PYLINTER=old
-        - NODOC=true
+        - pylinter=old
+        - nodoc=true
     - python: 2.7
-      env: NODOC=true
+      env: nodoc=true
     - dist: trusty
       sudo: required
       python: 2.7
 install:
-  - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4" "testfixtures<6"; else pip install pylint; fi
+  - if [ "$pylinter" = "old" ]; \
+        then pip install "astroid<1.3" "pylint<1.4" "testfixtures<6"; \
+        else pip install pylint; \
+    fi
   - python setup.py install
 script:
   - opsspace-test
-  - pylint --rcfile=test/pylint.cfg cmstoolbox
+  - if [ "$pylinter" = "old" ]; \
+        then pylint --rcfile <(sed 's/load-plugins=/#/g' test/pylint.cfg) cmstoolbox; \
+        else pylint --rcfile test/pylint.cfg cmstoolbox; \
+    fi

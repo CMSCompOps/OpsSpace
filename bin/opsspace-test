@@ -6,16 +6,14 @@ then
     exit 11
 fi
 
-cd test
+errorsfound=0
 
 # Function to do the test for us
 _do_test () {
 
+    packagetest="$1"                      # Setup the test to be done
 
-    errors=$1                             # Track how many errors found so far
-    packagetest=$2                        # Setup the test to be done
-
-    ./$packagetest                        # Do the test
+    $packagetest                          # Do the test
     errorcode=$?                          # Get the error code
 
     if [ $errorcode -ne 0 ]               # If failed tell user, and increase error count
@@ -23,7 +21,7 @@ _do_test () {
 
         tput setaf 1 2> /dev/null
         echo "$packagetest exited with error code $errorcode!"
-        errors=$((errors + 1))
+        errorsfound=$((errorsfound + 1))
 
     else                                  # If passed, tell for fun too
 
@@ -34,17 +32,25 @@ _do_test () {
 
     tput sgr0 2> /dev/null                # Reset colors
 
-    return "$errors"                      # Return total number of errors
-
 }
 
-errorsfound=0
+# Check if we should test build Sphinx documentation
+if [ -f docs/conf.py ] && [ "$nodoc" != "true" ]
+then
+
+    test -f docs/requirements.txt && pip install -r docs/requirements.txt
+    _do_test "sphinx-build -W -b html -E docs test/html"
+
+fi
+
+
+# Now do the tests inside the test directory
+cd test
 
 for packagetest in test_*
 do
 
-    _do_test $errorsfound $packagetest
-    errorsfound=$?
+    _do_test "./$packagetest"
 
 done
 

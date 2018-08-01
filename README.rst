@@ -520,10 +520,3 @@ Place the following lines anywhere in your ``.travis.yml`` file to do that::
       apt:
         sources: debian-sid
         packages: shellcheck
-
-Then activate your repository as briefly described in the :ref:`fork-status-ref` below.
-
-For more information on the configuration, see the `Travis CI documentation <https://docs.travis-ci.com/>`_.
-We ask that you do not change the ``install`` or ``script`` steps though.
-These will install your package through the ``setup.py`` method for `Ensuring an Easy Installation`_.
-The ``package_test.sh`` file will run all tests matching the pattern ``test/test_*`` inside your repository.

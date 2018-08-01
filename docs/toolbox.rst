@@ -22,7 +22,7 @@ that are maintained by the experts and used by the masses.
 Fetching JSON Files
 -------------------
 
-.. automodule:: CMSToolBox.webtools
+.. automodule:: cmstoolbox.webtools
    :members:
 
 .. _dashboard-info-ref:
@@ -30,7 +30,7 @@ Fetching JSON Files
 Cached Dashboard Information
 ----------------------------
 
-.. automodule:: CMSToolBox.dashboard
+.. automodule:: cmstoolbox.dashboard
    :members:
 
 .. _site-info-ref:
@@ -38,7 +38,7 @@ Cached Dashboard Information
 Site Info
 ---------
 
-.. automodule:: CMSToolBox.siteinfo
+.. automodule:: cmstoolbox.siteinfo
    :members:
 
 .. _site-readiness-ref:
@@ -46,7 +46,7 @@ Site Info
 Site Readiness Metric
 ---------------------
 
-.. automodule:: CMSToolBox.sitereadiness
+.. automodule:: cmstoolbox.sitereadiness
    :members:
 
 .. _sam-status-ref:
@@ -54,7 +54,7 @@ Site Readiness Metric
 SAM Status History
 ------------------
 
-.. automodule:: CMSToolBox.samstatus
+.. automodule:: cmstoolbox.samstatus
    :members:
 
 .. _email-tools-ref:
@@ -62,7 +62,7 @@ SAM Status History
 E-mail Tools
 ------------
 
-.. automodule:: CMSToolBox.emailtools
+.. automodule:: cmstoolbox.emailtools
    :members:
 
 .. _file-manip-ref:
@@ -70,7 +70,7 @@ E-mail Tools
 Simple File Manipulation
 ------------------------
 
-.. automodule:: CMSToolBox.simplefiletools
+.. automodule:: cmstoolbox.simplefiletools
    :members:
 
 .. _workflow-info-ref:
@@ -78,23 +78,7 @@ Simple File Manipulation
 Workflow Information
 --------------------
 
-.. automodule:: CMSToolBox.workflowinfo
-   :members:
-
-.. _mcmclient-ref:
-
-McM Client
-----------
-
-.. automodule:: CMSToolBox.mcmclient
-   :members:
-
-.. _elastic-search-ref:
-
-Elastic Search Tools
---------------------
-
-.. automodule:: CMSToolBox.elasticsearch
+.. automodule:: cmstoolbox.workflowinfo
    :members:
 
 .. _add-path-ref:
@@ -102,5 +86,5 @@ Elastic Search Tools
 Loading Test Paths
 ------------------
 
-.. automodule:: CMSToolBox._loadtestpath
+.. automodule:: cmstoolbox._loadtestpath
    :members:
