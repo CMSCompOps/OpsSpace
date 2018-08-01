@@ -24,10 +24,10 @@ import shutil
 
 import testfixtures
 
-import cmstoolbox._loadtestpath
 from cmstoolbox.unmergedcleaner import listdeletable
 
 
+listdeletable.set_config()
 # Check if the place to do the test is already used or not
 unmerged_location = listdeletable.config.UNMERGED_DIR_LOCATION
 

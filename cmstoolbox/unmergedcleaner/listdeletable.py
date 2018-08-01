@@ -63,6 +63,7 @@ is welcome to make pull requests.
 import httplib
 import json
 import os
+import sys
 import time
 import datetime
 import subprocess
@@ -94,17 +95,49 @@ if __name__ == '__main__':
     (OPTS, ARGS) = PARSER.parse_args()
 
 
-try:
-    import config
+config = None
 
-except ImportError:
-    print 'Generating default configuration...'
-    configtools.generate_default_config()
+def set_config(path=None, key=None):
+    """
+    Sets the configuration up.
+    This can either be from a static JSON file, or a dynamic module.
+    The module must lie in the sys.path and be named config.py.
+    This function only does anything the first time it's called.
 
-    print '\nConfiguration created at config.py.'
-    print 'Please correct the default values to match your site'
-    print 'and run this script again.'
-    exit()
+    :param str path: Path to JSON file. If None (default),
+                     loads the first module found called config,
+                     or generates a module in the working directory and quits.
+    :param str key: The key to search for the unmerged cleaner configuration.
+                    This allows nesting inside other configuration files.
+    """
+
+    global config
+
+    if config is None:
+        if path:
+            from . import _config as config
+
+            with open(path, 'r') as infile:
+                fileconfig = json.load(infile)
+            if key:
+                fileconfig = fileconfig[key]
+
+            # Now overwrite the defaults
+            for var, val in fileconfig.iteritems():
+                setattr(config, var, val)
+
+        else:
+            try:
+                import config
+
+            except ImportError:
+                print 'Generating default configuration...'
+                configtools.generate_default_config()
+
+                print '\nConfiguration created at config.py.'
+                print 'Please correct the default values to match your site'
+                print 'and run this script again.'
+                exit()
 
 
 class SuspiciousConditions(Exception):
@@ -439,6 +472,7 @@ def get_unmerged_files():
     stdout, _ = out.communicate()
     return stdout.decode().split()
 
+
 def get_unmerged_files_hadoop():
     """
     :returns: the old files' PFNs in the unmerged directory
@@ -533,6 +567,9 @@ def main():
     """
     Does the full listing for the site given in the :file:`config.py` file.
     """
+
+    # Do the old behavior if not set yet
+    set_config()
 
     # Perform some checks of configuration file
     if not config.UNMERGED_DIR_LOCATION.endswith('/store/unmerged'):
