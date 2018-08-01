@@ -9,6 +9,16 @@ fi
 errorsfound=0
 
 
+# Get the python version
+#   26 for Python 2.6
+#   27 for Python 2.7
+# and so on
+pyvers=$(python --version 2>&1 | perl -ne '/\b(\d)\.(\d+)\./ && print "$1$2"')
+
+# If versioned file not here, fall back to requirements.txt
+# Get the full path to the test requirements file
+reqfile=$(pwd)/test/requirements$(test -f test/requirements${pyvers}.txt && echo ${pyvers}).txt
+
 
 # Function to do the test for us
 _do_test () {
@@ -37,77 +47,104 @@ _do_test () {
 }
 
 
+_doc_test () {
 
-# Check if we should test build Sphinx documentation
-if [ -f docs/conf.py ] && [ "$nodoc" != "true" ]
+    # Check if we should test build Sphinx documentation
+    if [ -f docs/conf.py ] && [ "$nodoc" != "true" ]
+    then
+
+        test -f docs/requirements.txt && pip install -r docs/requirements.txt
+        _do_test "sphinx-build -W -b html -E docs test/html"
+
+    fi
+
+}
+
+
+_unit_test () {
+
+    # Install requirements, if they exist
+    test -f $reqfile && pip install -r $reqfile
+
+    # Now do the tests inside the test directory
+    cd test
+
+    # Run the test for all files that start with "test_". They should be executable.
+    for packagetest in test_*
+    do
+
+        _do_test "./$packagetest"
+
+    done
+
+    cd -
+
+}
+
+
+_style_test () {
+
+    # Check for pylint in test requirements, and run test if desired
+    if grep pylint $reqfile
+    then
+
+        # Look for packages from root directory
+        package=$(dirname $(find * -maxdepth 1 -name __init__.py))
+
+        # This exits 0 when the pylint version is old, and we have to disable the extensions
+        if pylint --version 2> /dev/null | perl -ne '/pylint\s(\d+.\d+)/ && exit($1 > 1.3)'
+        then
+
+            lintfilter='s/load-plugins/#/'
+
+        fi
+
+        # PyLint Config is towards the bottom of this file
+        # It's used as default when local pylint.cfg does not exist
+        if [ ! -f test/pylint.cfg ]
+        then
+
+            perl -0ne '/PyLint Config\n(\-+)\n(.*)\n\1/sm && print $2' $0 > test/pylint.cfg
+            plseraselintcfg=1
+
+        fi
+
+        _do_test "pylint --rcfile=<(sed '$lintfilter' test/pylint.cfg) $package"
+
+        # If PyLint file was created, get rid of it unless asked to be kept
+        test -z $plseraselintcfg || test ! -z $keepcfg || rm test/pylint.cfg
+
+    fi
+
+}
+
+
+if [ -z $1 ]
 then
-
-    test -f docs/requirements.txt && pip install -r docs/requirements.txt
-    _do_test "sphinx-build -W -b html -E docs test/html"
-
+    actions="docs unit style"
+else
+    actions=$@
 fi
 
-
-
-# Now do the tests inside the test directory
-cd test
-
-# Get the python version
-#   26 for Python 2.6
-#   27 for Python 2.7
-# and so on
-pyvers=$(python --version 2>&1 | perl -ne '/\b(\d)\.(\d+)\./ && print "$1$2"')
-
-# If versioned file not here, fall back to requirements.txt
-reqfile=$(test -f requirements${pyvers}.txt && echo requirements${pyvers}.txt || echo requirements.txt)
-
-# Install requirements, if they exist
-test -f $reqfile && pip install -r $reqfile
-
-
-
-# Run the test for all files that start with "test_". They should be executable.
-for packagetest in test_*
+for action in $actions
 do
 
-    _do_test "./$packagetest"
+    case $action in
+        "docs")
+            _doc_test
+            ;;
+        "unit")
+            _unit_test
+            ;;
+        "style")
+            _style_test
+            ;;
+        *)
+            echo "Don't recognize action '$action'"
+            ;;
+    esac
 
 done
-
-
-# Check for pylint in test requirements, and run test if desired
-if grep pylint $reqfile
-then
-
-    cd ..
-    # Look for packages from root directory
-    package=$(dirname $(find * -maxdepth 1 -name __init__.py))
-
-    # This exits 0 when the pylint version is old, and we have to disable the extensions
-    if pylint --version 2> /dev/null | perl -ne '/pylint\s(\d+.\d+)/ && exit($1 > 1.3)'
-    then
-
-        lintfilter='s/load-plugins/#/'
-
-    fi
-
-    # PyLint Config is towards the bottom of this file
-    # It's used as default when local pylint.cfg does not exist
-    if [ ! -f test/pylint.cfg ]
-    then
-
-        perl -0ne '/PyLint Config\n(\-+)\n(.*)\n\1/sm && print $2' $0 > test/pylint.cfg
-        plseraselintcfg=1
-
-    fi
-
-    _do_test "pylint --rcfile=<(sed '$lintfilter' test/pylint.cfg) $package"
-
-    # If PyLint file was created, get rid of it unless asked to be kept
-    test -z $plseraselintcfg || test ! -z $keepcfg || rm test/pylint.cfg
-
-fi
-
 
 
 if [ $errorsfound -eq 1 ]                 # Setting plural correctly
