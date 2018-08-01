@@ -14,11 +14,11 @@ matrix:
       python: 2.7
 install:
   # 2.6 will need a different requirements file for tests
-  - pip install -r test/requirements${testrequirements}.txt
+  - pip install -r test/requirements${testreq}.txt
   - python setup.py install
 script:
   - opsspace-test
-  - if [ "$testrequrements" = "26" ];
+  - if [ "$testreq" = "26" ];
         then pylint --rcfile <(sed 's/load-plugins=/#/g' test/pylint.cfg) cmstoolbox;
         else pylint --rcfile test/pylint.cfg cmstoolbox;
     fi
