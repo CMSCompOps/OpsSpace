@@ -3,18 +3,17 @@ cache: pip
 matrix:
   include:
     - python: 2.6
-      env: PYLINTER=old
+      env:
+        - PYLINTER=old
+        - NODOC=true
     - python: 2.7
+      env: NODOC=true
     - dist: trusty
       sudo: required
       python: 2.7
-      env: CHECKDOC=true
 install:
-  - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4" "testfixtures<6"; fi
+  - if [ "$PYLINTER" = "old" ]; then pip install "astroid<1.3" "pylint<1.4" "testfixtures<6"; else pip install pylint; fi
   - python setup.py install
 script:
-  - cd test
-  - ./test_example.py
-  - ./test_siteinfo.py
-  - ./test_sitereadiness.py
-  - ./test_unmerged_cleaner.py
+  - opsspace-test
+  - pylint --rcfile=test/pylint.cfg cmstoolbox

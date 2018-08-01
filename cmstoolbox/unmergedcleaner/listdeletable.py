@@ -1,6 +1,6 @@
 #! /usr/bin/env python
 
-# pylint: disable=redefined-builtin, import-error, anomalous-backslash-in-string, too-complex
+# pylint: disable=redefined-builtin, anomalous-backslash-in-string, too-complex, global-statement, redefined-outer-name, invalid-name
 
 """
 This script is located as :file:`SiteAdminToolkit/unmerged-cleaner/ListDeletable.py`.
@@ -63,7 +63,6 @@ is welcome to make pull requests.
 import httplib
 import json
 import os
-import sys
 import time
 import datetime
 import subprocess
@@ -123,8 +122,8 @@ def set_config(path=None, key=None):
                 fileconfig = fileconfig[key]
 
             # Now overwrite the defaults
-            for var, val in fileconfig.iteritems():
-                setattr(config, var, val)
+            for variable, value in fileconfig.iteritems():
+                setattr(config, variable, value)
 
         else:
             try:

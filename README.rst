@@ -527,21 +527,3 @@ For more information on the configuration, see the `Travis CI documentation <htt
 We ask that you do not change the ``install`` or ``script`` steps though.
 These will install your package through the ``setup.py`` method for `Ensuring an Easy Installation`_.
 The ``package_test.sh`` file will run all tests matching the pattern ``test/test_*`` inside your repository.
-
-.. _fork-status-ref:
-
-OpsSpace Forks' Build Statuses
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It is easy to run the OpsSpace build tests on your own forks.
-The only thing used to configure the tests is the ``.travis.yml`` file that is already in OpsSpace.
-After that, connect your GitHub account at `Travis CI <https://travis-ci.org/>`_ and activate your fork.
-Feel free to link to your status badge below so that you can easily see your own build status
-on the rendering of the GitHub README.
-This way, you can check the automatic build results before making a pull request.
-
-dabercro: |build-status-dabercro|
-
-.. |build-status-dabercro| image:: https://travis-ci.org/dabercro/OpsSpace.svg?branch=master
-    :target: https://travis-ci.org/dabercro/OpsSpace
-    :alt: Build Status

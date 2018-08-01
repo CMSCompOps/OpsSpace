@@ -1,0 +1,69 @@
+#! /bin/bash
+
+if [ ! -d test ]
+then
+    echo 'Needs to called in root of package (outside "test" directory).'
+    exit 11
+fi
+
+cd test
+
+# Function to do the test for us
+_do_test () {
+
+
+    errors=$1                             # Track how many errors found so far
+    packagetest=$2                        # Setup the test to be done
+
+    ./$packagetest                        # Do the test
+    errorcode=$?                          # Get the error code
+
+    if [ $errorcode -ne 0 ]               # If failed tell user, and increase error count
+    then
+
+        tput setaf 1 2> /dev/null
+        echo "$packagetest exited with error code $errorcode!"
+        errors=$((errors + 1))
+
+    else                                  # If passed, tell for fun too
+
+        tput setaf 2 2> /dev/null
+        echo "$packagetest passed!"
+
+    fi
+
+    tput sgr0 2> /dev/null                # Reset colors
+
+    return "$errors"                      # Return total number of errors
+
+}
+
+errorsfound=0
+
+for packagetest in test_*
+do
+
+    _do_test $errorsfound $packagetest
+    errorsfound=$?
+
+done
+
+if [ $errorsfound -eq 1 ]                 # Setting plural correctly
+then                                      #   looks impressive to some
+    errstr="error"
+else
+    errstr="errors"
+fi
+
+if [ $errorsfound -eq 0 ]                 # Set terminal text color depending on result
+then
+    tput setaf 2 2> /dev/null             # Green: Passed test
+else
+    tput setaf 1 2> /dev/null             # Red: Did not pass test
+fi
+
+echo "$errorsfound $errstr found"
+
+tput sgr0 2> /dev/null                    # Reset color
+
+exit $errorsfound

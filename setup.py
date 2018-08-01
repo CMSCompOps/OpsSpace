@@ -1,3 +1,4 @@
+import glob
 import setuptools
 
 setuptools.setup(
@@ -8,5 +9,6 @@ setuptools.setup(
     author_email='dabercro@mit.edu',
     description='Tools used by CMS Computing Operations',
     url='https://github.com/CMSCompOps/OpsSpace',
-    install_requires=['testfixtures']
+    install_requires=['testfixtures'],
+    scripts=[s for s in glob.glob('bin/*') if not s.endswith('~')]
     )
