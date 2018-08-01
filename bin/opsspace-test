@@ -97,10 +97,14 @@ then
     then
 
         perl -0ne '/PyLint Config\n(\-+)\n(.*)\n\1/sm && print $2' $0 > test/pylint.cfg
+        plseraselintcfg=1
 
     fi
 
     _do_test "pylint --rcfile=<(sed '$lintfilter' test/pylint.cfg) $package"
+
+    # If PyLint file was created, get rid of it unless asked to be kept
+    test -z $plseraselintcfg || test ! -z $keepcfg || rm test/pylint.cfg
 
 fi
 
