@@ -1,9 +1,11 @@
 import glob
 import setuptools
 
+import cmstoolbox
+
 setuptools.setup(
     name='cmstoolbox',
-    version='0.9.3',
+    version=cmstoolbox.__version__,
     packages=setuptools.find_packages(),
     author='Daniel Abercrombie',
     author_email='dabercro@mit.edu',
