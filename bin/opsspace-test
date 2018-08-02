@@ -9,6 +9,8 @@ fi
 errorsfound=0
 
 
+package=$(dirname $(find * -maxdepth 1 -name __init__.py))
+
 # Get the python version
 #   26 for Python 2.6
 #   27 for Python 2.7
@@ -87,7 +89,7 @@ _unit_test () {
         if [ ! -z $docoverage ] && [ "${packagetest##*.}" == "py" ]
         then
 
-            _do_test "coverage run -a $packagetest"
+            _do_test "coverage run --source $package -a $packagetest"
 
         else 
 
@@ -116,9 +118,6 @@ _style_test () {
     # Check for pylint in test requirements, and run test if desired
     if grep pylint $reqfile
     then
-
-        # Look for packages from root directory
-        package=$(dirname $(find * -maxdepth 1 -name __init__.py))
 
         # This exits 0 when the pylint version is old, and we have to disable the extensions
         if pylint --version 2> /dev/null | perl -ne '/pylint\s(\d+.\d+)/ && exit($1 > 1.3)'
