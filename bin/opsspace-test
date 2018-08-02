@@ -69,13 +69,42 @@ _unit_test () {
     # Now do the tests inside the test directory
     cd test
 
+    if grep coverage $reqfile
+    then
+
+        docoverage=1
+        # Remove any old .coverage file
+        test ! -f .coverage || rm .coverage
+
+    fi
+
+
     # Run the test for all files that start with "test_". They should be executable.
     for packagetest in test_*
     do
 
-        _do_test "./$packagetest"
+        # Run the coverage on top of the unit tests
+        if [ ! -z $docoverage ] && [ "${packagetest##*.}" == "py" ]
+        then
+
+            _do_test "coverage run -a $packagetest"
+
+        else 
+
+            _do_test "./$packagetest"
+
+        fi
 
     done
+
+
+    if [ ! -z $docoverage ]
+    then
+
+        coverage report
+
+    fi
+
 
     cd -
 
