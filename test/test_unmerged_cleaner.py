@@ -19,11 +19,11 @@ import sys
 import unittest
 import random
 import uuid
+import testfixtures
 import time
 import shutil
 
-import testfixtures
-
+import cmstoolbox._loadtestpath
 from cmstoolbox.unmergedcleaner import listdeletable
 
 
@@ -243,10 +243,9 @@ class TestConditions(unittest.TestCase):
                           [os.path.join(listdeletable.config.UNMERGED_DIR_LOCATION.replace('/store/', '/disk/store/'),
                                         'example/file/location.root')], [])
 
-    def test_partial_match(self):
         self.assertRaises(listdeletable.SuspiciousConditions, listdeletable.filter_protected,
-                          [os.path.join(listdeletable.config.UNMERGED_DIR_LOCATION, 'store/unmerged/protected/file.root')],
-                          ['/store/unmerged/protected/file.root'])
+                          [os.path.join(listdeletable.config.UNMERGED_DIR_LOCATION.replace('/store/', '/disk/store/'),
+                                        'example/file/location.root')], ['/store/unmerged/protected/'])
 
 
 if __name__ == '__main__':
