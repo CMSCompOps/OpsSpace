@@ -5,3 +5,4 @@ test/*/*
 test/*.cache.json
 dist/*
 cmstoolbox.egg-info/*
+test/.coverage

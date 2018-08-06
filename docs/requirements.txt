@@ -3,4 +3,3 @@ sphinx_rtd_theme
 sphinxcontrib-programoutput
 sphinxcontrib-autoanysrc
 customdocs
-mock

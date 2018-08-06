@@ -1,0 +1,3 @@
+astroid<1.3
+pylint<1.4
+testfixtures<6
