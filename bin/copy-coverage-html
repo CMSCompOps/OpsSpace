@@ -31,7 +31,7 @@ for (@files) {
 
     open(my $in_fh, '<', $_);
 
-    s/.*${package}_(.*)/$1/;
+    s/.*${package}(.*_egg)?_(.*)/$2/;
 
     my $base = fileparse $_;
     open(my $out_fh, '>', catfile($outdir, $base));
@@ -39,9 +39,9 @@ for (@files) {
     for (<$in_fh>) {
         if (/$package/) {
             # Fix href
-            s/(href=").*_${package}_(.*)/$1$2/;
+            s/(href=").*_${package}(.*_egg)?_(.*)/$1$3/;
             # Fix text
-            s|/.*${package}/(.*)|$1|;
+            s|/.*${package}([^/]*\.egg)?/(.*)|$2|;
         }
         print $out_fh $_;
     }
