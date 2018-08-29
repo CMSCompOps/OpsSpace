@@ -82,7 +82,7 @@ _unit_test () {
 
 
     # Run the test for all files that start with "test_". They should be executable.
-    for packagetest in test_*
+    for packagetest in test_*[^~]
     do
 
         # Run the coverage on top of the unit tests
