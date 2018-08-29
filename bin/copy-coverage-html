@@ -1,0 +1,40 @@
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+
+use v5.10;
+
+use Cwd;
+use File::Path qw(make_path);
+use File::Basename;
+use File::Spec::Functions;
+
+
+my $outdir = shift @ARGV;
+make_path($outdir);
+
+# Get the name of the package
+my $package = basename cwd;
+# And all of the files that we'll want
+my @files = glob 'test/htmlcov/*';
+
+for (@files) {
+    my $newfile = s/.*${package}_(.*)/$1/r;
+
+    open(my $in_fh, '<', $_);
+
+    my $base = fileparse $newfile;
+    open(my $out_fh, '>', catfile($outdir, $base));
+
+    for (<$in_fh>) {
+        if (/$package/) {
+            # Fix href
+            s/(href=").*_${package}_(.*)/$1$2/;
+            # Fix text
+            s|(">)/.*${package}/(.*)|$1$2|;
+        }
+        print $out_fh $_;
+    }
+
+}
