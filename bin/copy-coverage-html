@@ -10,21 +10,30 @@ use File::Path qw(make_path);
 use File::Basename;
 use File::Spec::Functions;
 
+# If not in a location with a test directory, exit
+if (! -f 'test/.coverage') {
+    exit 1;
+}
 
 my $outdir = shift @ARGV;
 make_path($outdir);
 
 # Get the name of the package
 my $package = basename cwd;
-# And all of the files that we'll want
+
+# Create the htmlcov directory
+`cd test && coverage html`;
+
+# And get all of the files that we'll want
 my @files = glob 'test/htmlcov/*';
 
 for (@files) {
-    my $newfile = s/.*${package}_(.*)/$1/r;
 
     open(my $in_fh, '<', $_);
 
-    my $base = fileparse $newfile;
+    s/.*${package}_(.*)/$1/;
+
+    my $base = fileparse $_;
     open(my $out_fh, '>', catfile($outdir, $base));
 
     for (<$in_fh>) {
@@ -32,7 +41,7 @@ for (@files) {
             # Fix href
             s/(href=").*_${package}_(.*)/$1$2/;
             # Fix text
-            s|(">)/.*${package}/(.*)|$1$2|;
+            s|/.*${package}/(.*)|$1|;
         }
         print $out_fh $_;
     }
