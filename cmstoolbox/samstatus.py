@@ -33,12 +33,18 @@ def is_sam_good(site, time_span=24, success=0.85):
     srm_host_name = ''
     ce_host_name = ''
     ce_flavour = ''
-    for item in gen_json['data']['results'][0]['flavours']:
-        if item['servicename'] == 'SRM':
-            srm_host_name = item['hosts'][0]['hostname']
-        else:
-            ce_host_name = item['hosts'][0]['hostname']
-            ce_flavour = item['servicename']
+
+    try:
+        for item in gen_json['data']['results'][0]['flavours']:
+            if item['servicename'] == 'SRM':
+                srm_host_name = item['hosts'][0]['hostname']
+            else:
+                ce_host_name = item['hosts'][0]['hostname']
+                ce_flavour = item['servicename']
+
+    except (KeyError, IndexError):
+        # If there's something wrong with the JSON file, go through
+        return True
 
     get_data = lambda flav, host: get_json('wlcg-sam-cms.cern.ch',
                                            '/dashboard/request.py/getTestResults',
@@ -68,12 +74,16 @@ def is_sam_good(site, time_span=24, success=0.85):
 
         return float(bad)/float(items) > (1.0 - success)
 
-    for probe in get_data('SRM', srm_host_name)['data']:
-        if is_problem(success, probe[1]):
-            return False
+    try:
+        for probe in get_data('SRM', srm_host_name)['data']:
+            if is_problem(success, probe[1]):
+                return False
 
-    for probe in get_data(ce_flavour, ce_host_name)['data']:
-        if 'WN-xrootd-access' in probe[0] and is_problem(success, probe[1]):
-            return False
+        for probe in get_data(ce_flavour, ce_host_name)['data']:
+            if 'WN-xrootd-access' in probe[0] and is_problem(success, probe[1]):
+                return False
+
+    except KeyError:
+        pass
 
     return True
