@@ -10,6 +10,29 @@ A module that checks the SAM status of a site
 
 from .webtools import get_json
 
+
+def _is_problem(success, data):
+    """
+    :param float success: the rate of success desired
+    :param list data: Data from the WLCG SAM server
+    :returns: True if the success rate of SAM test is below success
+    :rtype: bool
+    """
+    # if success is less then 85% call it a problem
+    items = 0
+    bad = 0
+    for item in data:
+        stat = item[1]
+        if stat == 'WHITE':
+            continue
+
+        items += 1
+        if stat in ['CRITICAL', 'WARNING']:
+            bad += 1
+
+    return float(bad)/float(items) > (1.0 - success)
+
+
 def is_sam_good(site, time_span=24, success=0.85):
     """
     Checks the SAM tests for success rate, and returns True if SAM tests were passing
@@ -53,34 +76,13 @@ def is_sam_good(site, time_span=24, success=0.85):
                                             'hostname': host,
                                             'time_range': time_span_str})
 
-    def is_problem(success, data):
-        """
-        :param float success: the rate of success desired
-        :param list data: Data from the WLCG SAM server
-        :returns: True if the success rate of SAM test is below success
-        :rtype: bool
-        """
-		# if success is less then 85% call it a problem
-        items = 0
-        bad = 0
-        for item in data:
-            stat = item[1]
-            if stat == 'WHITE':
-                continue
-
-            items += 1
-            if stat in ['CRITICAL', 'WARNING']:
-                bad += 1
-
-        return float(bad)/float(items) > (1.0 - success)
-
     try:
         for probe in get_data('SRM', srm_host_name)['data']:
-            if is_problem(success, probe[1]):
+            if _is_problem(success, probe[1]):
                 return False
 
         for probe in get_data(ce_flavour, ce_host_name)['data']:
-            if 'WN-xrootd-access' in probe[0] and is_problem(success, probe[1]):
+            if 'WN-xrootd-access' in probe[0] and _is_problem(success, probe[1]):
                 return False
 
     except KeyError:
