@@ -9,6 +9,7 @@ use Cwd;
 use File::Path qw(make_path);
 use File::Basename;
 use File::Spec::Functions;
+use File::Find;
 
 # If not in a location with a test directory, exit
 if (! -f 'test/.coverage') {
@@ -18,8 +19,10 @@ if (! -f 'test/.coverage') {
 my $outdir = shift @ARGV;
 make_path($outdir);
 
+my @inits = sort { length $a <=> length $b } `find . -type f -name '__init__.py'`;
+
 # Get the name of the package
-my $package = basename cwd;
+my ($pack) = ($inits[0] =~ m|\./(.*)/__init__\.py|);
 
 # Create the htmlcov directory
 `cd test && coverage html`;
@@ -27,24 +30,22 @@ my $package = basename cwd;
 # And get all of the files that we'll want
 my @files = glob 'test/htmlcov/*';
 
-my $rename = qr/.*(${package}|_egg)_(.*_py).*(\.html)/;
-
 for (@files) {
 
     open(my $in_fh, '<', $_);
 
-    s/$rename/$2$3/;
+    s/.*(${pack}.*)/$1/;
 
     my $base = fileparse $_;
 
     open(my $out_fh, '>', catfile($outdir, $base));
 
     for (<$in_fh>) {
-        if (/$package/) {
+        if (/$pack/) {
             # Fix href
-            s/(href=")$rename/$1$3$4/;
+            s/(href=").*(${pack}.*?\.html)/$1$2/;
             # Fix text
-            s|/.*${package}(.*\.egg)?/(.*)|$2|;
+            s|/.*/(${pack}.*\.py)|$1|;
         }
         print $out_fh $_;
     }
