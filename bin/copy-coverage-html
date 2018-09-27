@@ -16,13 +16,13 @@ if (! -f 'test/.coverage') {
     exit 1;
 }
 
-my $outdir = shift @ARGV;
+my $outdir = pop @ARGV or die 'Need a destination';
 make_path($outdir);
 
 my @inits = sort { length $a <=> length $b } `find . -type f -name '__init__.py'`;
 
 # Get the name of the package
-my ($pack) = ($inits[0] =~ m|\./(.*)/__init__\.py|);
+my ($pack) = shift @ARGV || ($inits[0] =~ m|\./(.*)/__init__\.py|);
 
 # Create the htmlcov directory
 `cd test && coverage html`;
