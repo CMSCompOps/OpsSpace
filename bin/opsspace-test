@@ -52,7 +52,7 @@ _do_test () {
 _doc_test () {
 
     # Check if we should test build Sphinx documentation
-    if [ -f docs/conf.py ] && [ "$nodoc" != "true" ]
+    if [ -f docs/conf.py ] && [ "$nodoc" != "true" ] && [ "$pyvers" != "26" ]
     then
 
         test -f docs/requirements.txt && pip install -r docs/requirements.txt
