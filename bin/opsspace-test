@@ -89,7 +89,7 @@ _unit_test () {
         if [ ! -z $docoverage ] && [ "${packagetest##*.}" == "py" ]
         then
 
-            _do_test "coverage run --source $package -a $packagetest"
+            _do_test "coverage run --source ${cover:-$package} -a $packagetest"
 
         else 
 
