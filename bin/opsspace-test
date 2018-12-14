@@ -52,7 +52,7 @@ _do_test () {
 _doc_test () {
 
     # Check if we should test build Sphinx documentation
-    if [ -f docs/conf.py ] && [ "$nodoc" != "true" ]
+    if [ -f docs/conf.py ] && [ "$nodoc" != "true" ] && [ "$pyvers" != "26" ]
     then
 
         test -f docs/requirements.txt && pip install -r docs/requirements.txt
@@ -82,14 +82,14 @@ _unit_test () {
 
 
     # Run the test for all files that start with "test_". They should be executable.
-    for packagetest in test_*
+    for packagetest in test_*[^~]
     do
 
         # Run the coverage on top of the unit tests
         if [ ! -z $docoverage ] && [ "${packagetest##*.}" == "py" ]
         then
 
-            _do_test "coverage run --source $package -a $packagetest"
+            _do_test "coverage run --source ${cover:-$package} -a $packagetest"
 
         else 
 

@@ -1,0 +1,53 @@
+#! /usr/bin/env perl
+
+use strict;
+use warnings;
+
+use v5.10;
+
+use Cwd;
+use File::Path qw(make_path);
+use File::Basename;
+use File::Spec::Functions;
+use File::Find;
+
+# If not in a location with a test directory, exit
+if (! -f 'test/.coverage') {
+    exit 1;
+}
+
+my $outdir = pop @ARGV or die 'Need a destination';
+make_path($outdir);
+
+my @inits = sort { length $a <=> length $b } `find . -type f -name '__init__.py'`;
+
+# Get the name of the package
+my ($pack) = shift @ARGV || ($inits[0] =~ m|\./(.*)/__init__\.py|);
+
+# Create the htmlcov directory
+`cd test && coverage html`;
+
+# And get all of the files that we'll want
+my @files = glob 'test/htmlcov/*';
+
+for (@files) {
+
+    open(my $in_fh, '<', $_);
+
+    s/.*(${pack}.*)/$1/;
+
+    my $base = fileparse $_;
+
+    open(my $out_fh, '>', catfile($outdir, $base));
+
+    for (<$in_fh>) {
+        if (/$pack/) {
+            # Fix href
+            s/(href=").*(${pack}.*?\.html)/$1$2/;
+            # Fix text
+            s|/.*/(${pack}.*\.py)|$1|;
+        }
+        print $out_fh $_;
+    }
+
+}

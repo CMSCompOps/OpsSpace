@@ -60,8 +60,11 @@ def get_json(host, request, params='', body='', headers=None,
 
     if use_https:
         use_port = port or 443
-        cert_file = kwargs.get('cert_file', os.getenv('X509_USER_PROXY')) \
-            if use_cert else None
+        cert_file = kwargs.get(
+            'cert_file',
+            os.environ.get('X509_USER_PROXY',
+                           '/tmp/x509up_u%i' % os.geteuid())
+            ) if use_cert else None
 
         # Python 2.7.something verifies HTTPS connections,
         # but earlier version of Python do not

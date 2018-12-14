@@ -2,6 +2,7 @@
 *~
 build/*
 test/*/*
+!test/sl?/Dockerfile
 test/*.cache.json
 dist/*
 cmstoolbox.egg-info/*
