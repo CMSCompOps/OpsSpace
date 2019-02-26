@@ -1,4 +1,4 @@
+setuptools>=40.8.0
 testfixtures
 pylint
 coverage
-setuptools>=40.8.0
