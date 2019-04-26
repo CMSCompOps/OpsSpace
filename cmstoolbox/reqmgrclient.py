@@ -8,6 +8,7 @@ to get information about workflows.
 
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
+from __future__ import print_function
 
 from .webtools import get_json
 
@@ -31,7 +32,7 @@ def get_workflow_parameters(workflow):
                 if key == workflow:
                     return item
     except Exception as error:
-        print 'Failed to get from reqmgr', workflow
-        print str(error)
+        print('Failed to get from reqmgr', workflow)
+        print(str(error))
 
     return {}

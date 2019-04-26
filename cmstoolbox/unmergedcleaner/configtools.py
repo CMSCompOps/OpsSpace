@@ -6,6 +6,7 @@ as well as generating the default configuration.
 
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
+from __future__ import print_function
 
 import httplib
 import socket
@@ -44,9 +45,9 @@ def pfn_from_phedex(site_name, lfn):
         result = json.loads(res.read())
 
     except Exception as msg:
-        print 'Exception: %s' % msg
-        print 'Failed to get LFNs from Phedex...'
-        print 'Had tried %s.' % site_name
+        print('Exception: %s' % msg)
+        print('Failed to get LFNs from Phedex...')
+        print('Had tried %s.' % site_name)
         conn.close()
         exit(1)
 
@@ -97,9 +98,9 @@ def guess_site():
 
     # Cannot find a possible site
 
-    print 'Cannot determine site from this hostname.'
-    print 'Feel free to edit the function configtools.guess_site().'
-    print 'For now, returning T2_US_MIT.'
+    print('Cannot determine site from this hostname.')
+    print('Feel free to edit the function configtools.guess_site().')
+    print('For now, returning T2_US_MIT.')
 
     return 'T2_US_MIT'
 
@@ -210,7 +211,7 @@ def generate_default_config():
     """
 
     if os.path.exists('config.py'):
-        print 'Default config, config.py already exists.'
+        print('Default config, config.py already exists.')
     else:
 
         # This goes at the top of the config file.

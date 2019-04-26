@@ -3,6 +3,7 @@ Contains methods for sending emails.
 
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
+from __future__ import print_function
 
 import smtplib
 import subprocess
@@ -57,11 +58,11 @@ def send_email(sender, recipients, subject, message_text,
             smtp_server.sendmail(sender, recipients, msg.as_string())
             smtp_server.quit()
         except socket.error:
-            print 'You do not have a valid SMPT server set up.'
+            print('You do not have a valid SMPT server set up.')
 
     elif method == 'sendmail':
         proc = subprocess.Popen(['sendmail', '-t'], stdin=subprocess.PIPE)
         proc.communicate(input=msg.as_string())
 
     else:
-        print 'That is not a valid email method option.'
+        print('That is not a valid email method option.')

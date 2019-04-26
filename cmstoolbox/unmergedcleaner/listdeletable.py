@@ -59,6 +59,7 @@ is welcome to make pull requests.
           Max Goncharov <maxi@mit.edu> \n
           Daniel Abercrombie <dabercro@mit.edu>
 """
+from __future__ import print_function
 
 import httplib
 import json
@@ -137,12 +138,12 @@ def set_config(path=None, key=None):
                 import config
 
             except ImportError:
-                print 'Generating default configuration...'
+                print('Generating default configuration...')
                 configtools.generate_default_config()
 
-                print '\nConfiguration created at config.py.'
-                print 'Please correct the default values to match your site'
-                print 'and run this script again.'
+                print('\nConfiguration created at config.py.')
+                print('Please correct the default values to match your site')
+                print('and run this script again.')
                 exit()
 
 

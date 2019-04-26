@@ -3,6 +3,7 @@ Contains methods for manipulating txt files and sourcing bash scripts.
 
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
+from __future__ import print_function
 
 import os
 import subprocess
@@ -28,13 +29,13 @@ def load_env(configs):
                     elif isinstance(line, str):
                         (key, _, value) = line.partition('=')
                     else:
-                        print 'Not sure how to handle subprocess output. Contact Dan.'
+                        print('Not sure how to handle subprocess output. Contact Dan.')
                         break
                     os.environ[str(key)] = str(value).strip('\n')
 
                 config_contents.communicate()
             else:
-                print 'Info: ' + config + ' does not exist.'
+                print('Info: ' + config + ' does not exist.')
     else:
         print 'You passed an invalid argument type to utils.load_env()'
         exit()

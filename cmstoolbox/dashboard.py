@@ -253,24 +253,24 @@ class DocCache(object):
                 if not cache['data']:
                     # check the file version
                     if os.path.isfile(cache['cachefile']):
-                        print "load", label, "from file", cache['cachefile']
+                        print("load", label, "from file", cache['cachefile'])
                         f_cache = json.loads(open(cache['cachefile']).read())
                         cache['data'] = f_cache['data']
                         cache['timestamp'] = f_cache['timestamp']
                     else:
-                        print "no file cache for", label, "getting fresh"
+                        print("no file cache for", label, "getting fresh")
                         update_cache()
 
                 # check the time stamp
                 if cache['expiration'] + cache['timestamp'] < now or fresh:
-                    print "getting fresh", label
+                    print("getting fresh", label)
                     update_cache()
 
                 return cache['data']
 
             except Exception as error:
-                print "failed to get", label
-                print str(error)
+                print("failed to get", label)
+                print(str(error))
                 return copy.deepcopy(cache['default'])
 
         return None

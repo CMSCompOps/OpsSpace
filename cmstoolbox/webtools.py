@@ -6,7 +6,7 @@ The HTTP vs HTTPS and certificate handling is done here.
 
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
-
+from __future__ import print_function
 
 import os
 import time

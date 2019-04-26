@@ -3,7 +3,7 @@ Contains tools for interacting with elastic search
 
 :author: Jean-Roch Vlimant <jean-roch.vlimant@cern.ch>
 """
-
+from __future__ import print_function
 
 import os
 import time
@@ -29,8 +29,8 @@ def send_log(subject, text, host=ELASTIC_SEARCH_HOST,
     try:
         try_send_log(subject, text, host, show, level)
     except (AttributeError, NameError, KeyError)  as message:
-        print "failed to send log to elastic search"
-        print str(message)
+        print("failed to send log to elastic search")
+        print(str(message))
 
 
 def search_logs(query, host=ELASTIC_SEARCH_HOST):
@@ -89,7 +89,7 @@ def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
     """
 
     if show:
-        print text
+        print(text)
 
     meta_text = 'level:%s\n' % level
     now_ = time.gmtime()
@@ -105,8 +105,8 @@ def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
                                         'date': time.asctime(now_)}
                                       ))
 
-        print 'log:', res['_id'], 'was created'
+        print('log:', res['_id'], 'was created')
 
     except (AttributeError, NameError, KeyError)  as message:
-        print 'failed'
-        print str(message)
+        print('failed')
+        print(str(message))
