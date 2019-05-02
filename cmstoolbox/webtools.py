@@ -13,9 +13,9 @@ import time
 import re
 import stat
 import json
-import httplib
+import http.client
 import ssl
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import subprocess
 
 
@@ -69,20 +69,20 @@ def get_json(host, request, params='', body='', headers=None,
         # Python 2.7.something verifies HTTPS connections,
         # but earlier version of Python do not
         try:
-            conn = httplib.HTTPSConnection(
+            conn = http.client.HTTPSConnection(
                 host, use_port, cert_file=cert_file, key_file=cert_file,
                 context=ssl._create_unverified_context())
 
         except AttributeError:
-            conn = httplib.HTTPSConnection(
+            conn = http.client.HTTPSConnection(
                 host, use_port, cert_file=cert_file, key_file=cert_file)
 
     else:
         use_port = port or 80
-        conn = httplib.HTTPConnection(host, use_port)
+        conn = http.client.HTTPConnection(host, use_port)
 
     method = "POST" if kwargs.get('use_post', bool(body)) else "GET"
-    full_request = '%s?%s' % (request, urllib.urlencode(params)) if params else request
+    full_request = '%s?%s' % (request, urllib.parse.urlencode(params)) if params else request
 
     header = headers or {'Accept': 'application/json'}
 

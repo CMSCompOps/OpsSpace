@@ -8,7 +8,8 @@ as well as generating the default configuration.
 """
 from __future__ import print_function
 
-import httplib
+
+import http.client
 import socket
 import ssl
 import datetime
@@ -29,10 +30,10 @@ def pfn_from_phedex(site_name, lfn):
     # Python 2.7.something verifies HTTPS connections,
     # but earlier version of Python do not
     try:
-        conn = httplib.HTTPSConnection('cmsweb.cern.ch',
+        conn = http.client.HTTPSConnection('cmsweb.cern.ch',
                                        context=ssl._create_unverified_context())
     except AttributeError:
-        conn = httplib.HTTPSConnection('cmsweb.cern.ch')
+        conn = http.client.HTTPSConnection('cmsweb.cern.ch')
 
     # Get the JSON from Phedex
     try:
@@ -92,7 +93,7 @@ def guess_site():
         'ucsd.edu':       'T2_US_UCSD'
         }
 
-    for check, item in host_map.iteritems():
+    for (check, item) in host_map.items():
         if check in host:
             return item
 

@@ -61,7 +61,8 @@ is welcome to make pull requests.
 """
 from __future__ import print_function
 
-import httplib
+
+import http.client
 import json
 import os
 import time
@@ -74,6 +75,15 @@ from optparse import OptionParser
 
 from . import configtools
 
+from builtins import object
+
+class Upper(object):
+    def __init__(self, iterable):
+        self._iter = iter(iterable)
+    def __next__(self):
+        return next(self._iter).upper()
+    def __iter__(self):
+        return self
 
 LOG = logging.getLogger(__name__)
 
@@ -130,7 +140,7 @@ def set_config(path=None, key=None):
                 fileconfig = fileconfig[key]
 
             # Now overwrite the defaults
-            for variable, value in fileconfig.iteritems():
+            for (variable, value) in fileconfig.items():
                 setattr(config, variable, value)
 
         else:
@@ -339,7 +349,7 @@ def get_protected():
     """
 
     url = 'cmst2.web.cern.ch'
-    conn = httplib.HTTPSConnection(url)
+    conn = http.client.HTTPSConnection(url)
 
     try:
         conn.request('GET', '/cmst2/unified/listProtectedLFN.txt')
@@ -543,7 +553,7 @@ def filter_protected(unmerged_files, protected):
     unmerged_files.sort()
 
     iter_protect = iter(protected)
-    pfn = lfn_to_pfn(iter_protect.next())      # We should never have 0 protected here
+    pfn = lfn_to_pfn(next(iter_protect))      # We should never have 0 protected here
 
     for unmerged_file in unmerged_files:
         if not unmerged_file.startswith(config.UNMERGED_DIR_LOCATION):
@@ -559,7 +569,7 @@ def filter_protected(unmerged_files, protected):
                 break
 
             try:
-                pfn = lfn_to_pfn(iter_protect.next())
+                pfn = lfn_to_pfn(next(iter_protect))
             except StopIteration:
                 pfn = 'None'  # Paths start with '/', so this never satisfies pfn < unmerged_file
                 break

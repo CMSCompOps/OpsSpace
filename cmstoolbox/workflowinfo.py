@@ -116,11 +116,11 @@ def errors_for_workflow(workflow, url='cmsweb.cern.ch'):
     if not result['result']:
         return output
 
-    for step, stepdata in result['result'][0].get(workflow, {}).iteritems():
+    for (step, stepdata) in result['result'][0].get(workflow, {}).items():
         errors = {}
-        for code, codedata in stepdata.get('jobfailed', {}).iteritems():
+        for (code, codedata) in stepdata.get('jobfailed', {}).items():
             sites = {}
-            for site, sitedata in codedata.iteritems():
+            for (site, sitedata) in codedata.items():
                 if sitedata['errorCount']:
                     sites[site] = sitedata['errorCount']
 
@@ -152,9 +152,9 @@ def explain_errors(workflow, errorcode):
     if not result['results']:
         return output
 
-    for stepdata in result['result'][0].get(workflow, {}).values():
-        for sitedata in stepdata.get('jobfailed', {}).get(errorcode, {}).values():
-            for samples in sitedata['samples'][0]['errors'].values():
+    for stepdata in list(result['result'][0].get(workflow, {}).values()):
+        for sitedata in list(stepdata.get('jobfailed', {}).get(errorcode, {}).values()):
+            for samples in list(sitedata['samples'][0]['errors'].values()):
 
                 output.extend(samples)
 
@@ -243,7 +243,7 @@ class WorkflowInfo(Info):
                               use_https=True, use_cert=True)
 
             for params in result['result']:
-                for key, item in params.iteritems():
+                for (key, item) in params.items():
                     if key == self.workflow:
                         return item
 
@@ -280,7 +280,7 @@ class WorkflowInfo(Info):
                 task = row['doc']['fileset_name']
                 new_output = output.get(task, {})
                 new_errorcode = new_output.get('NotReported', {})
-                for file_replica in row['doc']['files'].values():
+                for file_replica in list(row['doc']['files'].values()):
                     for site in file_replica['locations']:
                         new_errorcode[site] = 0
 
@@ -318,7 +318,7 @@ class WorkflowInfo(Info):
             task = doc['fileset_name']
             # For each task, we have the following keys:
             # sites - a set of sites that the recovery docs say to run on.
-            for replica, info in doc['files'].iteritems():
+            for (replica, info) in doc['files'].items():
                 # For fake files, just return the site whitelist
                 if replica.startswith('MCFakeFile'):
                     locations = set(self.get_workflow_parameters()['SiteWhitelist'])
@@ -385,16 +385,16 @@ class WorkflowInfo(Info):
         if self.explanations is None:
             self.explanations = defaultdict(lambda: defaultdict(lambda: []))
             result = self._get_jobdetail()
-            for stepname, stepdata in result['result'][0].get(self.workflow, {}).iteritems():
+            for (stepname, stepdata) in result['result'][0].get(self.workflow, {}).items():
                 # Get the errors from both 'jobfailed' and 'submitfailed' details
                 for error, site in [(error, site) for status in ['jobfailed', 'submitfailed'] \
-                                        for error, site in stepdata.get(status, {}).items()]:
+                                        for (error, site) in stepdata.get(status, {}).items()]:
                     if error == '0':
                         continue
 
-                    for sitename, samples in site.iteritems():
+                    for (sitename, samples) in site.items():
                         for detail in [values for sample in samples['samples']
-                                       for errs in sample['errors'].values()
+                                       for errs in list(sample['errors'].values())
                                        for values in errs]:
 
                             self.explanations[error][stepname].append('\n\n'.join(
@@ -404,10 +404,10 @@ class WorkflowInfo(Info):
 
         explain = self.explanations.get(errorcode, {'': ['No info for this error code']})
 
-        if step in explain.keys():
+        if step in list(explain):
             return explain[step]
 
-        return [val for expl in explain.values() for val in expl]
+        return [val for expl in list(explain.values()) for val in expl]
 
     def get_prep_id(self):
         """
@@ -457,7 +457,7 @@ class PrepIDInfo(Info):
         request = self.get_requests()
 
         return [(workflow, time.mktime(datetime.datetime(*value['RequestDate']).timetuple())) \
-                    for workflow, value in request.iteritems()]
+                    for (workflow, value) in request.items()]
 
     def get_workflows(self):
         """

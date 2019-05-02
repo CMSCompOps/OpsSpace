@@ -113,7 +113,7 @@ def get_domain(site):
 
     # If the key includes the site name, return the domain.
     # This is for things like T1_US_FNAL_Disk, etc.
-    for key, domain in HOST_MAP.iteritems():
+    for key, domain in list(HOST_MAP.items()):
         if key in site:
             return domain
 
@@ -130,7 +130,7 @@ def get_site(host):
 
     """
 
-    for site, domain in HOST_MAP.iteritems():
+    for site, domain in list(HOST_MAP.items()):
         if domain in host:
             return site
 

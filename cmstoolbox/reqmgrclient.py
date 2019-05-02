@@ -28,7 +28,7 @@ def get_workflow_parameters(workflow):
                           use_https=True, use_cert=True)
 
         for params in result['result']:
-            for key, item in params.iteritems():
+            for key, item in list(params.items()):
                 if key == workflow:
                     return item
     except Exception as error:

@@ -38,7 +38,7 @@ def get_node_usage(url, node):
 
     for node_ in result['phedex']['node']:
         usage = max(
-            sum([node_[key] for key in node_.keys() if key.endswith('_node_bytes')]),
+            sum([node_[key] for key in list(node_) if key.endswith('_node_bytes')]),
             usage
             )
 
@@ -115,7 +115,7 @@ class DocCache(object):
             '160': '',
             '237': 'The Site Readiness'
             }
-        for col, desc in columns.iteritems():
+        for col, desc in list(columns.items()):
             self.cache['ssb_{0}'.format(col)] = make_cache_entry(
                 load_json('http://dashb-ssb.cern.ch'
                           '/dashboard/request.py/getplotdata'

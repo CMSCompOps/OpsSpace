@@ -28,7 +28,7 @@ def send_log(subject, text, host=ELASTIC_SEARCH_HOST,
 
     try:
         try_send_log(subject, text, host, show, level)
-    except (AttributeError, NameError, KeyError)  as message:
+    except (AttributeError, NameError, KeyError) as message:
         print("failed to send log to elastic search")
         print(str(message))
 
@@ -107,6 +107,6 @@ def try_send_log(subject, text, host=ELASTIC_SEARCH_HOST,
 
         print('log:', res['_id'], 'was created')
 
-    except (AttributeError, NameError, KeyError)  as message:
+    except (AttributeError, NameError, KeyError) as message:
         print('failed')
         print(str(message))
