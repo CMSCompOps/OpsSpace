@@ -3,6 +3,7 @@ A module to gather and hold information from the dashboard.
 
 :author: Jean-Roch Vlimant <jean-roch.vlimant@cern.ch>
 """
+from __future__ import print_function
 
 import os
 import copy
