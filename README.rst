@@ -520,3 +520,4 @@ Place the following lines anywhere in your ``.travis.yml`` file to do that::
       apt:
         sources: debian-sid
         packages: shellcheck
+
