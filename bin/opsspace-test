@@ -9,7 +9,10 @@ fi
 errorsfound=0
 
 
-package=$(dirname $(find * -maxdepth 1 -name __init__.py))
+if [ -z $package ]
+then
+    package=$(dirname $(find * -maxdepth 1 -name __init__.py))
+fi
 
 # Get the python version
 #   26 for Python 2.6
