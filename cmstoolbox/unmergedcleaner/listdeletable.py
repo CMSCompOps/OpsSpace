@@ -60,7 +60,8 @@ is welcome to make pull requests.
           Daniel Abercrombie <dabercro@mit.edu>
 """
 
-import httplib
+from __future__ import print_function
+
 import json
 import os
 import time
@@ -70,6 +71,11 @@ import shutil
 import logging
 from bisect import bisect_left
 from optparse import OptionParser
+
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib
 
 from . import configtools
 
@@ -137,12 +143,12 @@ def set_config(path=None, key=None):
                 import config
 
             except ImportError:
-                print 'Generating default configuration...'
+                print('Generating default configuration...')
                 configtools.generate_default_config()
 
-                print '\nConfiguration created at config.py.'
-                print 'Please correct the default values to match your site'
-                print 'and run this script again.'
+                print('\nConfiguration created at config.py.')
+                print('Please correct the default values to match your site')
+                print('and run this script again.')
                 exit()
 
 
@@ -542,7 +548,11 @@ def filter_protected(unmerged_files, protected):
     unmerged_files.sort()
 
     iter_protect = iter(protected)
-    pfn = lfn_to_pfn(iter_protect.next())      # We should never have 0 protected here
+    get_next = iter_protect.next \
+        if 'next' in dir(iter_protect) else \
+        iter_protect.__next__
+
+    pfn = lfn_to_pfn(get_next())      # We should never have 0 protected here
 
     for unmerged_file in unmerged_files:
         if not unmerged_file.startswith(config.UNMERGED_DIR_LOCATION):
@@ -558,7 +568,7 @@ def filter_protected(unmerged_files, protected):
                 break
 
             try:
-                pfn = lfn_to_pfn(iter_protect.next())
+                pfn = lfn_to_pfn(get_next())
             except StopIteration:
                 pfn = 'None'  # Paths start with '/', so this never satisfies pfn < unmerged_file
                 break
@@ -648,7 +658,7 @@ def main():
             list_to_del = []
             top_node.traverse_tree(list_to_del)
 
-            if len(list_to_del) < 1:
+            if not list_to_del:
                 continue
 
             num_todelete_dirs = 0   # Number of directories to be deleted
