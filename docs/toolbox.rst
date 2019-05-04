@@ -73,14 +73,6 @@ Simple File Manipulation
 .. automodule:: cmstoolbox.simplefiletools
    :members:
 
-.. _workflow-info-ref:
-
-Workflow Information
---------------------
-
-.. automodule:: cmstoolbox.workflowinfo
-   :members:
-
 .. _add-path-ref:
 
 Loading Test Paths

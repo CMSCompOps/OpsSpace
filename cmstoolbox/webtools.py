@@ -13,10 +13,14 @@ import time
 import re
 import stat
 import json
-import httplib
+import logging
 import ssl
 import urllib
 import subprocess
+try:
+    import httplib
+except ImportError:
+    import http.client as httplib # pylint: disable=import-error
 
 
 def get_json(host, request, params='', body='', headers=None,
@@ -106,7 +110,7 @@ def get_json(host, request, params='', body='', headers=None,
             conn.close()
             return result
 
-        print("STATUS", res.status, "REASON", res.reason)
+        logging.warning('STATUS: %s, REASON: %s', res.status, res.reason)
         tries += 1
         conn.close()
 

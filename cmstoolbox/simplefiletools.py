@@ -6,7 +6,7 @@ Contains methods for manipulating txt files and sourcing bash scripts.
 
 import os
 import subprocess
-
+import logging
 
 def load_env(configs):
     """Sources bash files and loads the resulting environment into os.environ
@@ -28,15 +28,15 @@ def load_env(configs):
                     elif isinstance(line, str):
                         (key, _, value) = line.partition('=')
                     else:
-                        print 'Not sure how to handle subprocess output. Contact Dan.'
+                        logging.warning('Not sure how to handle subprocess output. Contact Dan.')
                         break
                     os.environ[str(key)] = str(value).strip('\n')
 
                 config_contents.communicate()
             else:
-                print 'Info: ' + config + ' does not exist.'
+                logging.warning('%s does not exist.', config)
     else:
-        print 'You passed an invalid argument type to utils.load_env()'
+        logging.critical('You passed an invalid argument type as config')
         exit()
 
 

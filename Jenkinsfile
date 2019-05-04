@@ -1,6 +1,8 @@
 def run(os) {
   return {
 
+    def start = "cd ${os}; . /root/.bashrc"
+
     docker.build("opsspace-${os}:${env.BUILD_ID}", "test/${os}").inside('-u root:root') {
 
       stage("${os}: Copy Source") {
@@ -12,17 +14,17 @@ def run(os) {
       }
 
       stage("${os}: Installation") {
-        sh "cd ${os}; python setup.py install"
+        sh "${start}; python setup.py install"
       }
 
       stage("${os}: Unit Tests") {
-        sh "cd ${os}; opsspace-test"
+        sh "${start}; opsspace-test"
       }
     }
   }
 }
 
-def osList = ['sl6', 'sl7']
+def osList = ['sl6', 'sl7', 'sl7py3']
 
 node {
   checkout scm

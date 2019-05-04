@@ -13,6 +13,7 @@ The script can take two optional arguments for testing for the file system at yo
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
 
+from __future__ import print_function
 
 import os
 import sys
@@ -33,11 +34,11 @@ unmerged_location = listdeletable.config.UNMERGED_DIR_LOCATION
 
 
 if os.path.exists(unmerged_location):
-    print ('Path %s already exists. Refusing to do unit tests.' % 
-           unmerged_location)
+    print('Path %s already exists. Refusing to do unit tests.' % 
+          unmerged_location)
     exit()
 else:
-    print 'Running test at %s' % unmerged_location
+    print('Running test at %s' % unmerged_location)
 
 
 protected_list = ['protected1', 'dir/that/is/protected', 'delete/except/protected']
@@ -53,10 +54,10 @@ listdeletable.ALL_LENGTHS.sort()
 class TestUnmergedFunctions(unittest.TestCase):
 
     def test_search_numbers(self):
-        test_list = random.sample(xrange(1000000), 10000)
+        test_list = random.sample(range(1000), 100)
         test_list.sort()
 
-        for i in range(100):
+        for i in range(10):
             element = test_list[int(random.random() * len(test_list))]
             self.assertEqual(listdeletable.bi_search(test_list, element),
                              True, 'bi_search did not find number when it should.')
@@ -110,10 +111,10 @@ class TestUnmergedFileChecks(unittest.TestCase):
                              (listdeletable.get_file_size(tmp_file), size))
 
     def test_time(self):
-        print 'Testing timing. Will take a few seconds.'
+        print('Testing timing. Will take a few seconds.')
         start_time = time.time()
         time.sleep(2)
-        tmp_file = self.tmpdir.write('time/file.txt', 'Testing time since created.')
+        tmp_file = self.tmpdir.write('time/file.txt', 'Testing time since created.'.encode())
         time.sleep(2)
         after_create = time.time()
 
@@ -138,7 +139,7 @@ class TestUnmergedFileChecks(unittest.TestCase):
                 self.tmpdir.write(os.path.join(next_dir, 'test_file.root'),
                                   bytearray(os.urandom(1024)))
 
-        print 'Waiting for some time.'
+        print('Waiting for some time.')
 
         time.sleep(5)
         cutoff_time = int(time.time())
@@ -183,7 +184,7 @@ class TestUnmergedFileChecks(unittest.TestCase):
         for i, method in enumerate(methods[listdeletable.config.STORAGE_TYPE]):
             for which in ['directories', 'files']:
 
-                print 'Testing deletions on %s using %s' % (listdeletable.config.STORAGE_TYPE, which)
+                print('Testing deletions on %s using %s' % (listdeletable.config.STORAGE_TYPE, which))
 
                 listdeletable.config.WHICH_LIST = which
 
@@ -198,7 +199,7 @@ class TestUnmergedFileChecks(unittest.TestCase):
         self.tmpdir.write(test_to_delete,
                           bytearray(os.urandom(1024)))
 
-        print 'Waiting for some time.'
+        print('Waiting for some time.')
 
         time.sleep(5)
         cutoff_time = int(time.time())

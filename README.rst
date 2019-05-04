@@ -106,8 +106,6 @@ results in code that is significantly easier to follow and better documented.
 
 If you have a good reason that your code does not pass the style test,
 you can disable a certain kind of check for a file.
-For example, the :ref:`workflow-info-ref` module makes an HTTPS connection,
-and CMS certificates are not considered valid.
 Python 2.6 doesn't make this check, but in Python 2.7,
 there is a workaround that includes a new keyword and accessing a private member of the ssl module.
 The log file of the check will include warnings that end with ``(protected-access)`` and
