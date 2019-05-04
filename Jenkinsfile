@@ -22,7 +22,7 @@ def run(os) {
   }
 }
 
-def osList = ['sl6', 'sl7']
+def osList = ['sl6', 'sl7', 'sl7py3']
 
 node {
   checkout scm
