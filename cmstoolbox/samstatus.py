@@ -8,6 +8,8 @@ A module that checks the SAM status of a site
           Daniel Abercrombie <dabercro@mit.edu>
 """
 
+import logging
+
 from .webtools import get_json
 
 
@@ -45,7 +47,7 @@ def is_sam_good(site, time_span=24, success=0.85):
     """
 
     if (not site.startswith('T2_')) and (not site.startswith('T1_')):
-        print " need valid site name"
+        logging.error("Need valid site name. Given %s", site)
         exit(0)
 
     time_span_str = 'last%s' % time_span

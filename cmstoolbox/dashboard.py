@@ -9,6 +9,7 @@ import copy
 import time
 import json
 import random
+import logging
 
 from .webtools import get_json
 
@@ -114,7 +115,7 @@ class DocCache(object):
             '160': '',
             '237': 'The Site Readiness'
             }
-        for col, desc in columns.iteritems():
+        for col, desc in columns.items():
             self.cache['ssb_{0}'.format(col)] = make_cache_entry(
                 load_json('http://dashb-ssb.cern.ch'
                           '/dashboard/request.py/getplotdata'
@@ -240,37 +241,39 @@ class DocCache(object):
                     """perform update operations for the cache."""
                     cache['data'] = cache['getter']()
                     cache['timestamp'] = now
-                    open(cache['cachefile'], 'w').write(
-                        json.dumps(
-                            {
-                                'data': cache['data'],
-                                'timestamp': cache['timestamp']
-                            },
-                            indent=2
+                    with open(cache['cachefile'], 'w') as cachefile:
+                        cachefile.write(
+                            json.dumps(
+                                {
+                                    'data': cache['data'],
+                                    'timestamp': cache['timestamp']
+                                    },
+                                indent=2
+                                )
                             )
-                        )
 
                 if not cache['data']:
                     # check the file version
                     if os.path.isfile(cache['cachefile']):
-                        print "load", label, "from file", cache['cachefile']
-                        f_cache = json.loads(open(cache['cachefile']).read())
+                        logging.info("load %s from file %s", label, cache['cachefile'])
+                        with open(cache['cachefile'], 'r') as cachefile:
+                            f_cache = json.load(cachefile)
                         cache['data'] = f_cache['data']
                         cache['timestamp'] = f_cache['timestamp']
                     else:
-                        print "no file cache for", label, "getting fresh"
+                        logging.info("no file cache for %s getting fresh", label)
                         update_cache()
 
                 # check the time stamp
                 if cache['expiration'] + cache['timestamp'] < now or fresh:
-                    print "getting fresh", label
+                    logging.info("getting fresh %s", label)
                     update_cache()
 
                 return cache['data']
 
             except Exception as error:
-                print "failed to get", label
-                print str(error)
+                logging.error("failed to get %s", label)
+                logging.error(str(error))
                 return copy.deepcopy(cache['default'])
 
         return None
@@ -280,7 +283,12 @@ GLOBAL_CACHE = DocCache()
 """A global instance of the :py:class:`DocCache` that should be used."""
 
 # Automatically generate documentation from the descriptions of the cache members
-DocCache.get.__func__.__doc__ %= '\n'.join(
+DOC_LIST = '\n'.join(
     [' ' * 26 + '- **' + c_key + '** - ' + GLOBAL_CACHE.cache[c_key]['description'] \
          for c_key in sorted(GLOBAL_CACHE.cache.keys())]
     )
+
+if '__doc__' in dir(DocCache.get):
+    DocCache.get.__doc__ %= DOC_LIST
+else:
+    DocCache.get.__func__.__doc__ %= DOC_LIST

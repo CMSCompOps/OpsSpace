@@ -7,6 +7,7 @@ Contains methods for sending emails.
 import smtplib
 import subprocess
 import socket
+import logging
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -57,11 +58,11 @@ def send_email(sender, recipients, subject, message_text,
             smtp_server.sendmail(sender, recipients, msg.as_string())
             smtp_server.quit()
         except socket.error:
-            print 'You do not have a valid SMPT server set up.'
+            logging.error('You do not have a valid SMPT server set up.')
 
     elif method == 'sendmail':
         proc = subprocess.Popen(['sendmail', '-t'], stdin=subprocess.PIPE)
         proc.communicate(input=msg.as_string())
 
     else:
-        print 'That is not a valid email method option.'
+        logging.error('That is not a valid email method option: method = %s', method)
