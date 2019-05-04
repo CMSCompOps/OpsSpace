@@ -20,7 +20,7 @@ import subprocess
 try:
     import httplib
 except ImportError:
-    import http.client as httplib
+    import http.client as httplib # pylint: disable=import-error
 
 
 def get_json(host, request, params='', body='', headers=None,

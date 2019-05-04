@@ -18,7 +18,7 @@ import json
 try:
     import httplib
 except ImportError:
-    import http.client as httplib
+    import http.client as httplib # pylint: disable=import-error
 
 def pfn_from_phedex(site_name, lfn):
     """

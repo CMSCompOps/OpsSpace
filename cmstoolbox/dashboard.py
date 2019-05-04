@@ -288,7 +288,7 @@ DOC_LIST = '\n'.join(
          for c_key in sorted(GLOBAL_CACHE.cache.keys())]
     )
 
-if '__doc__' in dir(DocCache.get):
-    DocCache.get.__doc__ %= DOC_LIST
-else:
+if '__func__' in dir(DocCache.get):
     DocCache.get.__func__.__doc__ %= DOC_LIST
+else:
+    DocCache.get.__doc__ %= DOC_LIST
