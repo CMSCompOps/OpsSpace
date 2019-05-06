@@ -12,13 +12,19 @@ Module the caches and holds the Site Readiness status
 from .dashboard import GLOBAL_CACHE
 
 
-def i_site_readiness():
+def i_site_readiness(date=None):
     """Iterates over site readiness for the user
 
     :returns: iterator tuple with site, readiness, and drain status
     :rtype: generator
     """
-    info = GLOBAL_CACHE.get('ssb_237')
+
+    if date :
+        info = GLOBAL_CACHE.get('ssb_237_' + date )
+        #print( info)
+    else:
+        info = GLOBAL_CACHE.get('ssb_237')
+
 
     for site_info in info:
         yield site_info['VOName'], site_info['COLORNAME'], site_info['Status']
@@ -40,7 +46,7 @@ def site_list():
     return output
 
 
-def site_readiness(site_name):
+def site_readiness(site_name , date = None):
     """Returns the readiness status for a given site
 
     :param str site_name: Name of the site
@@ -53,7 +59,7 @@ def site_readiness(site_name):
 
     :rtype: str
     """
-    for site, output, _ in i_site_readiness():
+    for site, output, _ in i_site_readiness(date):
         if site == site_name:
             return output
 

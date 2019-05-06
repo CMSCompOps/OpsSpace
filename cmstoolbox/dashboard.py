@@ -9,6 +9,8 @@ import copy
 import time
 import json
 import random
+import re
+import datetime
 import logging
 
 from .webtools import get_json
@@ -46,6 +48,52 @@ def get_node_usage(url, node):
     return int(usage / (1024. ** 4)) or None
 
 
+def default_expiration():
+    """
+    :returns: A slightly varying time between 20-30 minutes for the cache duration
+    :rtype: float
+    """
+    return 20 * 60 + random.random() * 10 * 60
+
+def load_json(url, key=''):
+    """
+    :param str url: is a URL that points to a JSON file containing useful information
+    :param str key: is a key of the JSON file to return.
+                    If left blank, the entire JSON file is returned
+    :returns: a function that downloads a JSON file through curl from the URL.
+              This function has no parameters itself so that the
+              :py:func:`DocCache.get` function can figure things out on its own.
+    :rtype: function
+    """
+    curl_call = 'curl -s --retry 5 "{0}"'.format(url)
+
+    if key:
+        return lambda: load_json(url)()[key]
+    return lambda: json.loads(os.popen(curl_call).read())
+
+def make_cache_entry(getter, default, description='no description'):
+    """
+    :param function getter: is a function with no parameters that obtains the
+                            information to store in the cache.
+    :param default: the default value to fill the cached data if the information
+                    cannot be obtained.
+    :type default: str, list, or dict
+    :param str description: is the description of the member of the cache
+    :returns: a cache entry using the given getter function and default cache value
+    :rtype: dict
+    """
+    return {
+        'data': None,
+        'timestamp': time.mktime(time.gmtime()),
+        'expiration': default_expiration(),
+        'getter': getter,
+        'cachefile': None,
+        'default': default,
+        'description': description
+        }
+
+
+
 class DocCache(object):
     """
     This class gathers various information, mostly from the dashboard when it's requested.
@@ -55,51 +103,6 @@ class DocCache(object):
 
     def __init__(self):
         """Initializes the DocCache without parameters."""
-
-        def default_expiration():
-            """
-            :returns: A slightly varying time between 20-30 minutes for the cache duration
-            :rtype: float
-            """
-            return 20 * 60 + random.random() * 10 * 60
-
-        def load_json(url, key=''):
-            """
-            :param str url: is a URL that points to a JSON file containing useful information
-            :param str key: is a key of the JSON file to return.
-                            If left blank, the entire JSON file is returned
-            :returns: a function that downloads a JSON file through curl from the URL.
-                      This function has no parameters itself so that the
-                      :py:func:`DocCache.get` function can figure things out on its own.
-            :rtype: function
-            """
-            curl_call = 'curl -s --retry 5 "{0}"'.format(url)
-
-            if key:
-                return lambda: load_json(url)()[key]
-            return lambda: json.loads(os.popen(curl_call).read())
-
-        def make_cache_entry(getter, default, description='no description'):
-            """
-            :param function getter: is a function with no parameters that obtains the
-                                    information to store in the cache.
-            :param default: the default value to fill the cached data if the information
-                            cannot be obtained.
-            :type default: str, list, or dict
-            :param str description: is the description of the member of the cache
-            :returns: a cache entry using the given getter function and default cache value
-            :rtype: dict
-            """
-            return {
-                'data': None,
-                'timestamp': time.mktime(time.gmtime()),
-                'expiration': default_expiration(),
-                'getter': getter,
-                'cachefile': None,
-                'default': default,
-                'description': description
-                }
-
         phedex_url = os.getenv('UNIFIED_PHEDEX', 'cmsweb.cern.ch')
         self.cache = {}
 
@@ -232,6 +235,24 @@ class DocCache(object):
         """
 
         now = time.mktime(time.gmtime())
+
+        if  label not in self.cache :
+            site_status_by_date = re.match( r'ssb_237_(?P<day>\d\d)(?P<month>\d\d)(?P<year>\d\d)' , label )
+            date = datetime.date( int('20'+site_status_by_date.group('year')) , int(site_status_by_date.group('month')) , int(site_status_by_date.group('day')) )
+            plusoneday = datetime.timedelta( days=1 )
+            frm= date-plusoneday 
+            to = date+plusoneday
+            if site_status_by_date :
+                self.cache[label] = make_cache_entry(
+                    load_json('http://dashb-ssb.cern.ch'
+                              '/dashboard/request.py/getplotdata'
+                              '?columnid=237&batch=1&site=T0_CH_CERN&sites=all&clouds=all&time=custom'
+                              '&dateFrom={0:%Y-%m-%d}&dateTo={1:%Y-%m-%d}'.format(frm, to ) , 'csvdata'),
+                    [],
+                    'site readiness column for {0}'.format( date )
+                    )
+                self.cache[label]['cachefile'] = os.path.join('/tmp/', label + '.cache.json')
+
 
         if label in self.cache:
             try:
