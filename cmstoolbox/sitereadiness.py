@@ -21,7 +21,7 @@ def i_site_readiness(date=None):
     """
 
     if date:
-        if isinstance(date, datetime.datetime) or isinstance(date, datetime.date):
+        if isinstance(date, (datetime.date, datetime.datetime)):
             info = GLOBAL_CACHE.get('ssb_237_{0:%d%m%y}'.format(date))
     else:
         info = GLOBAL_CACHE.get('ssb_237')
