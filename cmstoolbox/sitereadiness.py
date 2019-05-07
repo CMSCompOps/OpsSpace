@@ -8,17 +8,24 @@ Module the caches and holds the Site Readiness status
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
 
-
+import datetime
 from .dashboard import GLOBAL_CACHE
 
 
-def i_site_readiness():
+def i_site_readiness(date=None):
     """Iterates over site readiness for the user
 
+    :param datetime.date date: date
     :returns: iterator tuple with site, readiness, and drain status
     :rtype: generator
     """
-    info = GLOBAL_CACHE.get('ssb_237')
+
+    if date:
+        if isinstance(date, (datetime.date, datetime.datetime)):
+            info = GLOBAL_CACHE.get('ssb_237_{0:%d%m%y}'.format(date))
+    else:
+        info = GLOBAL_CACHE.get('ssb_237')
+
 
     for site_info in info:
         yield site_info['VOName'], site_info['COLORNAME'], site_info['Status']
@@ -40,20 +47,19 @@ def site_list():
     return output
 
 
-def site_readiness(site_name):
+def site_readiness(site_name, date=None):
     """Returns the readiness status for a given site
 
+    :param datetime.date date: date
     :param str site_name: Name of the site
     :returns: Readiness status. Possibilities and their meanings are:
-
               - 'green': Ready
               - 'yellow': Waiting Room
               - 'red': Morgue
               - 'none': Site not found
-
     :rtype: str
     """
-    for site, output, _ in i_site_readiness():
+    for site, output, _ in i_site_readiness(date):
         if site == site_name:
             return output
 
