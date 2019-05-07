@@ -236,20 +236,25 @@ class DocCache(object):
 
         now = time.mktime(time.gmtime())
 
-        if  label not in self.cache :
-            site_status_by_date = re.match( r'ssb_237_(?P<day>\d\d)(?P<month>\d\d)(?P<year>\d\d)' , label )
-            date = datetime.date( int('20'+site_status_by_date.group('year')) , int(site_status_by_date.group('month')) , int(site_status_by_date.group('day')) )
-            plusoneday = datetime.timedelta( days=1 )
-            frm= date-plusoneday 
-            to = date+plusoneday
-            if site_status_by_date :
+        if  label not in self.cache:
+            site_status_by_date = re.match(r'ssb_237_(?P<day>\d\d)(?P<month>\d\d)(?P<year>\d\d)'
+                                           , label)
+            date = datetime.date(int('20'+site_status_by_date.group('year')),
+                                 int(site_status_by_date.group('month')),
+                                 int(site_status_by_date.group('day')))
+            plusoneday = datetime.timedelta(days=1)
+            frm_date = date-plusoneday
+            to_date = date+plusoneday
+            if site_status_by_date:
                 self.cache[label] = make_cache_entry(
                     load_json('http://dashb-ssb.cern.ch'
                               '/dashboard/request.py/getplotdata'
-                              '?columnid=237&batch=1&site=T0_CH_CERN&sites=all&clouds=all&time=custom'
-                              '&dateFrom={0:%Y-%m-%d}&dateTo={1:%Y-%m-%d}'.format(frm, to ) , 'csvdata'),
+                              '?columnid=237&batch=1&site=T0_CH_CERN'
+                              '&sites=all&clouds=all&time=custom'
+                              '&dateFrom={0:%Y-%m-%d}'
+                              '&dateTo={1:%Y-%m-%d}'.format(frm_date, to_date), 'csvdata'),
                     [],
-                    'site readiness column for {0}'.format( date )
+                    'site readiness column for {0}'.format(date)
                     )
                 self.cache[label]['cachefile'] = os.path.join('/tmp/', label + '.cache.json')
 

@@ -15,12 +15,13 @@ from .dashboard import GLOBAL_CACHE
 def i_site_readiness(date=None):
     """Iterates over site readiness for the user
 
+    :param str date: date
     :returns: iterator tuple with site, readiness, and drain status
     :rtype: generator
     """
 
-    if date :
-        info = GLOBAL_CACHE.get('ssb_237_' + date )
+    if date:
+        info = GLOBAL_CACHE.get('ssb_237_' + date)
         #print( info)
     else:
         info = GLOBAL_CACHE.get('ssb_237')
@@ -46,17 +47,16 @@ def site_list():
     return output
 
 
-def site_readiness(site_name , date = None):
+def site_readiness(site_name, date=None):
     """Returns the readiness status for a given site
 
+    :param str date: date
     :param str site_name: Name of the site
     :returns: Readiness status. Possibilities and their meanings are:
-
               - 'green': Ready
               - 'yellow': Waiting Room
               - 'red': Morgue
               - 'none': Site not found
-
     :rtype: str
     """
     for site, output, _ in i_site_readiness(date):
