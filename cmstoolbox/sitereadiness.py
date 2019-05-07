@@ -8,21 +8,23 @@ Module the caches and holds the Site Readiness status
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
 
-
+import datetime
 from .dashboard import GLOBAL_CACHE
 
 
 def i_site_readiness(date=None):
     """Iterates over site readiness for the user
 
-    :param str date: date
+    :param datetime.date date: date
     :returns: iterator tuple with site, readiness, and drain status
     :rtype: generator
     """
 
     if date:
-        info = GLOBAL_CACHE.get('ssb_237_' + date)
-        #print( info)
+        if date is str:
+            info = GLOBAL_CACHE.get('ssb_237_' + date)
+        if date is datetime.date or date is datetime.datetime:
+            info = GLOBAL_CACHE.get('ssb_237_{0:%d%m%y}'.format(date))
     else:
         info = GLOBAL_CACHE.get('ssb_237')
 
@@ -50,7 +52,7 @@ def site_list():
 def site_readiness(site_name, date=None):
     """Returns the readiness status for a given site
 
-    :param str date: date
+    :param datetime.date date: date
     :param str site_name: Name of the site
     :returns: Readiness status. Possibilities and their meanings are:
               - 'green': Ready
