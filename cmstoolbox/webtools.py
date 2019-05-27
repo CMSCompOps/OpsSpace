@@ -17,7 +17,7 @@ import logging
 import ssl
 try:
     from urllib import urlencode
-except:
+except ImportError:
     from urllib.parse import urlencode # pylint: disable=import-error
 import subprocess
 try:
