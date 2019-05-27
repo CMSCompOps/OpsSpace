@@ -15,7 +15,10 @@ import stat
 import json
 import logging
 import ssl
-import urllib
+try:
+    from urllib import urlencode
+except:
+    from urllib.parse import urlencode # pylint: disable=import-error
 import subprocess
 try:
     import httplib
@@ -86,7 +89,7 @@ def get_json(host, request, params='', body='', headers=None,
         conn = httplib.HTTPConnection(host, use_port)
 
     method = "POST" if kwargs.get('use_post', bool(body)) else "GET"
-    full_request = '%s?%s' % (request, urllib.urlencode(params)) if params else request
+    full_request = '%s?%s' % (request, urlencode(params)) if params else request
 
     header = headers or {'Accept': 'application/json'}
 
