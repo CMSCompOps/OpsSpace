@@ -150,9 +150,24 @@ _style_test () {
 }
 
 
+_twine_test () {
+
+    if [ -f setup.py ]
+    then
+
+        pip install twine
+        python setup.py sdist
+
+        _do_test "twine check dist/$(ls -tr dist | tail -n1)"
+
+    fi
+
+}
+
+
 if [ -z $1 ]
 then
-    actions="docs unit style"
+    actions="docs unit style twine"
 else
     actions=$@
 fi
@@ -169,6 +184,9 @@ do
             ;;
         "style")
             _style_test
+            ;;
+        "twine")
+            _twine_test
             ;;
         *)
             echo "Don't recognize action '$action'"
