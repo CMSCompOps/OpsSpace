@@ -152,7 +152,7 @@ _style_test () {
 
 _twine_test () {
 
-    if [ -f setup.py ]
+    if [ -f setup.py ] && [ "$pyvers" != "26" ]
     then
 
         pip install twine
