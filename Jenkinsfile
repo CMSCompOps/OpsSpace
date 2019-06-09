@@ -1,15 +1,14 @@
 def run(os) {
   return {
 
-    def start = "cd ${os}; . /root/.bashrc"
+    def start = "cd /work; . /root/.bashrc"
 
     docker.build("opsspace-${os}:${env.BUILD_ID}", "test/${os}").inside('-u root:root') {
 
       stage("${os}: Copy Source") {
         sh """
-           test ! -d ${os} || rm -rf ${os}
-           mkdir ${os}
-           cp --parents `git ls-files` ${os}
+           mkdir /work
+           cp --parents `git ls-files` /work
            """
       }
 
