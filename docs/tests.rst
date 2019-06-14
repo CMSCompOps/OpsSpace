@@ -1,7 +1,7 @@
 .. _opsspace-test-ref:
 
-Using `opsspace-test` to Run Tests
-----------------------------------
+Using ``opsspace-test``
+-----------------------
 
 .. autoanysrc:: phony
    :src: ../bin/opsspace-test

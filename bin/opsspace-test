@@ -1,5 +1,9 @@
 #! /bin/bash
 
+#
+# Author: Daniel Abercrombie <dabercro@mit.edu>
+#
+
 errorsfound=0
 
 if [ -z $package ] && [ ! -z $(find * -maxdepth 1 -name __init__.py) ]
@@ -222,21 +226,35 @@ exit $errorsfound
 
 =pod
 
-=head1 NAME
+The script ``opsspace-test`` will run a set of tests, as described below.
+It assumes a particular project directory structure that looks like the following:
 
-opsspace-test -- A script to run local tests
+  .
+  |-- setup.py
+  |-- packagename
+  |   |-- __init__.py
+  |   `-- ...
+  |-- test
+  |   |-- requirements.txt  (optional)
+  |   |-- pylint.cfg        (optional)
+  |   |-- test_*
+  |   `-- ...
+  `-- docs
+      |-- requirements.txt  (optional)
+      |-- conf.py
+      `-- ...
 
-=head1 DESCRIPTION
+``opsspace-test`` must be run in the root directory of such a project.  
 
 The script can be run with two different ways of configuring behavior.
 The first way is to specify which tests are run.
 The other way is to set certain environment variables.
 
-=head2 Test Names
+=head1 Test Names
 
 A subset of tests can be run.
 This is done by selecting from the tests below and adding them as arguments to this script.
-If no arguments are given, all of the following tests are run:
+If no arguments are given, all of the following tests are run.
 
   - **docs** - This test does nothing if the Python version is 2.6.
     This is because Python 2.6 is not supported in Sphinx.
@@ -262,19 +280,15 @@ If no arguments are given, all of the following tests are run:
 The final exit code of the ``opsspace-test`` is how many of the tests above fail.
 This means that it is easy to catch failing tests with Travis-CI, Jenkins, etc.
 
-=head2 Environment Variables
+=head1 Environment Variables
 
-Behavior is also modified by setting the following environment variables:
+Behavior is also modified by setting the following environment variables.
 
   - **package**: This should be the directory that the python source files are inside.
     This is used by the ``style`` test to determine what to run PyLint on.
     It is also used for renaming coverage results.
     If not set, it is determined by searching for an ``__init__.py`` file.
   - **nodoc**: If set, the ``docs`` test is skipped, even if the Python version is appropriate.
-
-=head1 AUTHOR
-
-Daniel Abercrombie <dabercro@mit.edu>
 
 =cut
 
