@@ -267,7 +267,12 @@ If no arguments are given, all of the following tests are run.
     Before running those, it also installs any ``test/requirements.txt`` file that exists locally.
     If you need different requirements for Python 2.6, you can also create a file ``test/requirements26.txt``, and so on.
     The number of tests that fail are counted and reported at the end of the ``opsspace-test`` run.
-  - **style** - This runs PyLint over the local Python package.
+    If the ``coverage`` package is listed in the used requirements file and the test is a python script,
+    ``coverage`` is used to run the test script.
+    At the end of the **unit** portion of the test, a coverage table will be printed.
+    ``copy-coverage-html`` can be used to create and place the coverage information to be displayed on a web page.
+  - **style** - This runs PyLint over the local Python package if ``pylint``
+    is listed in the requirements file used in the **unit** test.
     This package name is determined as described under the **package** environment variable below.
     Usually, the correct package is found though.
     This PyLint check uses a default configuration that is found at the end of the ``opsspace-test`` script itself.
