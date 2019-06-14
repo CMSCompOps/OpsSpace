@@ -1,15 +1,8 @@
 #! /bin/bash
 
-if [ ! -d test ]
-then
-    echo 'Needs to called in root of package (outside "test" directory).'
-    exit 11
-fi
-
 errorsfound=0
 
-
-if [ -z $package ]
+if [ -z $package ] && [ ! -z $(find * -maxdepth 1 -name __init__.py) ]
 then
     package=$(dirname $(find * -maxdepth 1 -name __init__.py))
 fi
@@ -175,7 +168,17 @@ fi
 for action in $actions
 do
 
+    if [ "$action" != "help" ] && [ ! -d test ]
+    then
+        echo 'Needs to called in root of package (outside "test" directory).'
+        exit 11
+    fi
+
     case $action in
+        "help")
+            perldoc -Tt $0
+            exit 0
+            ;;
         "docs")
             _doc_test
             ;;
@@ -190,6 +193,7 @@ do
             ;;
         *)
             echo "Don't recognize action '$action'"
+            echo "Try '$0 help'"
             ;;
     esac
 
@@ -215,6 +219,64 @@ echo "$errorsfound $errstr found"
 tput sgr0 2> /dev/null                    # Reset color
 
 exit $errorsfound
+
+=pod
+
+=head1 NAME
+
+opsspace-test -- A script to run local tests
+
+=head1 DESCRIPTION
+
+The script can be run with two different ways of configuring behavior.
+The first way is to specify which tests are run.
+The other way is to set certain environment variables.
+
+=head2 Test Names
+
+A subset of tests can be run.
+This is done by selecting from the tests below and adding them as arguments to this script.
+If no arguments are given, all of the following tests are run:
+
+  - **docs** - This test does nothing if the Python version is 2.6.
+    This is because Python 2.6 is not supported in Sphinx.
+    This test is also skipped if the **nodoc** environment variable is set.
+    Otherwise, this script looks in the local ``docs`` directory and installs any ``requirements.txt`` file found.
+    (This is a good place to keep packages that are used to build documentation.)
+    Then ``sphinx-build`` is run over the local ``docs`` directory.
+    Any warning are considered errors, so this test will fail on documentation warnings.
+  - **unit** - This runs over all of the executables that match the name ``test/test_*``.
+    Before running those, it also installs any ``test/requirements.txt`` file that exists locally.
+    If you need different requirements for Python 2.6, you can also create a file ``test/requirements26.txt``, and so on.
+    The number of tests that fail are counted and reported at the end of the ``opsspace-test`` run.
+  - **style** - This runs PyLint over the local Python package.
+    This package name is determined as described under the **package** environment variable below.
+    Usually, the correct package is found though.
+    This PyLint check uses a default configuration that is found at the end of the ``opsspace-test`` script itself.
+    If you wish to use a different PyLint configuration file, create a local ``test/pylint.cfg`` in your repository and
+    ``opsspace-test`` will use that instead.
+  - **twine** - This test does nothing if the Python version is 2.6.
+    Otherwise, if a local ``setup.py`` file exists, this test will create a tarball for uploading to PyPI.
+    It will then run ``twine check`` over the tarball.
+
+The final exit code of the ``opsspace-test`` is how many of the tests above fail.
+This means that it is easy to catch failing tests with Travis-CI, Jenkins, etc.
+
+=head2 Environment Variables
+
+Behavior is also modified by setting the following environment variables:
+
+  - **package**: This should be the directory that the python source files are inside.
+    This is used by the ``style`` test to determine what to run PyLint on.
+    It is also used for renaming coverage results.
+    If not set, it is determined by searching for an ``__init__.py`` file.
+  - **nodoc**: If set, the ``docs`` test is skipped, even if the Python version is appropriate.
+
+=head1 AUTHOR
+
+Daniel Abercrombie <dabercro@mit.edu>
+
+=cut
 
 PyLint Config
 -------------

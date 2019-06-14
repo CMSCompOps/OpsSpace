@@ -11,6 +11,7 @@ Contents:
    setup
    developer
    toolbox
+   tests
 
 Indices and tables
 ==================
