@@ -341,6 +341,7 @@ def get_protected():
     """
     :returns: the protected directory LFNs.
     :rtype: list
+    :raises SuspiciousConditions: If the protected LFN list can't be downloaded.
     """
 
     url = 'cmst2.web.cern.ch'
@@ -353,7 +354,9 @@ def get_protected():
         protected = result['protected']
     except Exception:
         LOG.error('Cannot read Protected LFNs. Have to stop...')
-        exit(1)
+        raise SuspiciousConditions(
+            '\nNo directories are protected.\n'
+            'Check https://cmst2.web.cern.ch/cmst2/unified/listProtectedLFN.txt')
 
     conn.close()
 
