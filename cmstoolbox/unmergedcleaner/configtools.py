@@ -14,6 +14,7 @@ import ssl
 import datetime
 import os
 import json
+import sys
 
 try:
     import httplib
@@ -53,7 +54,7 @@ def pfn_from_phedex(site_name, lfn):
         print('Failed to get LFNs from Phedex...')
         print('Had tried %s.' % site_name)
         conn.close()
-        exit(1)
+        sys.exit(1)
 
     location = result['phedex']['mapping'][0]['pfn']
     conn.close()
