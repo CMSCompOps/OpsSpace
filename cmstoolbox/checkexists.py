@@ -1,3 +1,5 @@
+#pylint: disable=bad-format-character
+
 """
 This module checks if a file exists using xrdfs on the system
 """
