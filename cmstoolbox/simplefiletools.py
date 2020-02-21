@@ -5,6 +5,7 @@ Contains methods for manipulating txt files and sourcing bash scripts.
 """
 
 import os
+import sys
 import subprocess
 import logging
 
@@ -37,7 +38,7 @@ def load_env(configs):
                 logging.warning('%s does not exist.', config)
     else:
         logging.critical('You passed an invalid argument type as config')
-        exit()
+        sys.exit()
 
 
 def append_to_file(file_name, lines):
