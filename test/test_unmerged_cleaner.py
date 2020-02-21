@@ -80,6 +80,10 @@ class TestUnmergedFunctions(unittest.TestCase):
                              False, 'bi_search found a string when it should not.')
 
     def test_get_protected(self):
+        if os.environ.get('TRAVIS'):
+            # Can't run this test on Travis-CI due to certificate
+            return
+
         protected = listdeletable.get_protected()
         self.assertTrue(isinstance(protected, list), 'Protected list is not a list.')
         self.assertNotEqual(len(protected), 0, 'Protected list is empty.')
