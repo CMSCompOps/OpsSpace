@@ -73,10 +73,7 @@ import logging
 from bisect import bisect_left
 from optparse import OptionParser
 
-try:
-    import httplib
-except ImportError:
-    import http.client as httplib
+from ..webtools import get_json
 
 from . import configtools
 
@@ -345,21 +342,13 @@ def get_protected():
     :raises SuspiciousConditions: If the protected LFN list can't be downloaded.
     """
 
-    url = 'cmst2.web.cern.ch'
-    conn = httplib.HTTPSConnection(url)
+    response = get_json('cmsweb.cern.ch', '/wmstatsserver/data/protectedlfns',
+                        use_cert=True)
 
-    try:
-        conn.request('GET', '/cmst2/unified/listProtectedLFN.txt')
-        res = conn.getresponse()
-        result = json.loads(res.read())
-        protected = result['protected']
-    except Exception:
-        LOG.error('Cannot read Protected LFNs. Have to stop...')
-        raise SuspiciousConditions(
-            '\nNo directories are protected.\n'
-            'Check https://cmst2.web.cern.ch/cmst2/unified/listProtectedLFN.txt')
+    protected = response.get('result')
 
-    conn.close()
+    if protected is None:
+        raise SuspiciousConditions('Could not protected list')
 
     return protected
 
