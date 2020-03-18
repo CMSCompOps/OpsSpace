@@ -1,3 +1,4 @@
+# pylint: disable=global-statement
 """
 Module the caches and holds the Site Readiness status
 
@@ -8,27 +9,34 @@ Module the caches and holds the Site Readiness status
 :author: Daniel Abercrombie <dabercro@mit.edu>
 """
 
-import datetime
-from .dashboard import GLOBAL_CACHE
+import time
 
+import requests
 
-def i_site_readiness(date=None):
+RESULT = None
+TIMESTAMP = None
+
+def i_site_readiness():
     """Iterates over site readiness for the user
 
-    :param datetime.date date: date
     :returns: iterator tuple with site, readiness, and drain status
     :rtype: generator
     """
 
-    if date:
-        if isinstance(date, (datetime.date, datetime.datetime)):
-            info = GLOBAL_CACHE.get('ssb_237_{0:%d%m%y}'.format(date))
-    else:
-        info = GLOBAL_CACHE.get('ssb_237')
+    global RESULT
+    global TIMESTAMP
 
+    timeout = 1800   # Download every half hour
 
-    for site_info in info:
-        yield site_info['VOName'], site_info['COLORNAME'], site_info['Status']
+    if not TIMESTAMP or time.time() > TIMESTAMP + timeout:
+        req = requests.get('https://test-cmssst.web.cern.ch/ssb_metric/ProdStatus.txt')
+        RESULT = req.text
+        TIMESTAMP = time.time()
+
+    for line in RESULT.split('\n'):
+        if line and  line[0] != '#':
+            _, _, site, status, color, _ = line.split()
+            yield site, color, status
 
 
 def site_list():
@@ -47,10 +55,9 @@ def site_list():
     return output
 
 
-def site_readiness(site_name, date=None):
+def site_readiness(site_name):
     """Returns the readiness status for a given site
 
-    :param datetime.date date: date
     :param str site_name: Name of the site
     :returns: Readiness status. Possibilities and their meanings are:
               - 'green': Ready
@@ -59,7 +66,7 @@ def site_readiness(site_name, date=None):
               - 'none': Site not found
     :rtype: str
     """
-    for site, output, _ in i_site_readiness(date):
+    for site, output, _ in i_site_readiness():
         if site == site_name:
             return output
 

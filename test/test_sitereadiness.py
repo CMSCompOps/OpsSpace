@@ -24,6 +24,9 @@ class TestSiteReadiness(unittest.TestCase):
         self.assertEqual(sr.site_drain_status('not_a_site'), 'none',
                          'Bad return on fake site')
 
+    def test_site_present(self):
+        self.assertTrue('T2_US_MIT' in sr.site_list())
+
 
 if __name__ == '__main__':
     unittest.main()
