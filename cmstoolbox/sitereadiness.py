@@ -30,7 +30,6 @@ def i_site_readiness():
 
     if not TIMESTAMP or time.time() > TIMESTAMP + timeout:
         req = requests.get('https://test-cmssst.web.cern.ch/ssb_metric/ProdStatus.txt')
-        print 'made request'
         RESULT = req.text
         TIMESTAMP = time.time()
 
