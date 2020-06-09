@@ -26,6 +26,9 @@ except ImportError:
     import http.client as httplib # pylint: disable=import-error
 
 
+USER_AGENT = None
+
+
 def get_json(host, request, params='', body='', headers=None,
              port=None, retries=3, **kwargs):
     """
@@ -92,6 +95,9 @@ def get_json(host, request, params='', body='', headers=None,
     full_request = '%s?%s' % (request, urlencode(params)) if params else request
 
     header = headers or {'Accept': 'application/json'}
+
+    if USER_AGENT and 'User-Agent' not in header:
+        header['User-Agent'] = USER_AGENT
 
     if kwargs.get('cookie_file'):
         sso_request_url = 'https://%s:%i%s' % (host, use_port, full_request)
