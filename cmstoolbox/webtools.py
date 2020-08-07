@@ -15,12 +15,18 @@ import stat
 import json
 import logging
 import ssl
-import urllib
+try:
+    from urllib import urlencode
+except ImportError:
+    from urllib.parse import urlencode # pylint: disable=import-error
 import subprocess
 try:
     import httplib
 except ImportError:
     import http.client as httplib # pylint: disable=import-error
+
+
+USER_AGENT = None
 
 
 def get_json(host, request, params='', body='', headers=None,
@@ -86,9 +92,12 @@ def get_json(host, request, params='', body='', headers=None,
         conn = httplib.HTTPConnection(host, use_port)
 
     method = "POST" if kwargs.get('use_post', bool(body)) else "GET"
-    full_request = '%s?%s' % (request, urllib.urlencode(params)) if params else request
+    full_request = '%s?%s' % (request, urlencode(params)) if params else request
 
     header = headers or {'Accept': 'application/json'}
+
+    if USER_AGENT and 'User-Agent' not in header:
+        header['User-Agent'] = USER_AGENT
 
     if kwargs.get('cookie_file'):
         sso_request_url = 'https://%s:%i%s' % (host, use_port, full_request)

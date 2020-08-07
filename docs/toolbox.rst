@@ -25,14 +25,6 @@ Fetching JSON Files
 .. automodule:: cmstoolbox.webtools
    :members:
 
-.. _dashboard-info-ref:
-
-Cached Dashboard Information
-----------------------------
-
-.. automodule:: cmstoolbox.dashboard
-   :members:
-
 .. _site-info-ref:
 
 Site Info

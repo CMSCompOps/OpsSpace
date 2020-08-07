@@ -64,6 +64,7 @@ from __future__ import print_function
 
 import json
 import os
+import sys
 import time
 import datetime
 import subprocess
@@ -72,10 +73,7 @@ import logging
 from bisect import bisect_left
 from optparse import OptionParser
 
-try:
-    import httplib
-except ImportError:
-    import http.client as httplib
+from ..webtools import get_json
 
 from . import configtools
 
@@ -127,7 +125,7 @@ def set_config(path=None, key=None):
 
     if config is None:
         if path:
-            from . import _config as config
+            from . import _config as config # pylint: disable = import-outside-toplevel
 
             with open(path, 'r') as infile:
                 fileconfig = json.load(infile)
@@ -140,7 +138,7 @@ def set_config(path=None, key=None):
 
         else:
             try:
-                import config
+                import config               # pylint: disable = import-outside-toplevel
 
             except ImportError:
                 print('Generating default configuration...')
@@ -149,7 +147,7 @@ def set_config(path=None, key=None):
                 print('\nConfiguration created at config.py.')
                 print('Please correct the default values to match your site')
                 print('and run this script again.')
-                exit()
+                sys.exit()
 
 
 class SuspiciousConditions(Exception):
@@ -341,21 +339,16 @@ def get_protected():
     """
     :returns: the protected directory LFNs.
     :rtype: list
+    :raises SuspiciousConditions: If the protected LFN list can't be downloaded.
     """
 
-    url = 'cmst2.web.cern.ch'
-    conn = httplib.HTTPSConnection(url)
+    response = get_json('cmsweb.cern.ch', '/wmstatsserver/data/protectedlfns',
+                        use_cert=True)
 
-    try:
-        conn.request('GET', '/cmst2/unified/listProtectedLFN.txt')
-        res = conn.getresponse()
-        result = json.loads(res.read())
-        protected = result['protected']
-    except Exception:
-        LOG.error('Cannot read Protected LFNs. Have to stop...')
-        exit(1)
+    protected = response.get('result')
 
-    conn.close()
+    if protected is None:
+        raise SuspiciousConditions('Could not protected list')
 
     return protected
 
@@ -421,7 +414,7 @@ def do_delete():
 
     if not os.path.isfile(config.DELETION_FILE):
         LOG.error('Deletion file %s has not been created yet.', config.DELETION_FILE)
-        exit()
+        sys.exit()
 
     if config.WHICH_LIST != 'directories':
         LOG.info('-' * 40)
@@ -440,7 +433,7 @@ def do_delete():
                 LOG.error('ListDetetable.do_delete().')
                 LOG.error('Your deletions file is at %s', config.DELETION_FILE)
                 LOG.error('Refusing to continue.')
-                exit()
+                sys.exit()
 
             if config.WHICH_LIST == 'directories':
 
@@ -606,9 +599,9 @@ def main():
     set_config()
 
     # Perform some checks of configuration file
-    if not config.UNMERGED_DIR_LOCATION.endswith('/store/unmerged'):
+    if not config.UNMERGED_DIR_LOCATION.endswith('/unmerged'):
         raise SuspiciousConditions(
-            '\n\'/store/unmerged\' not at the end of your PFN path: %s\n'
+            '\n\'/unmerged\' not at the end of your PFN path: %s\n'
             'This tool replaces the \'/store/unmerged\' part of the LFN with your PFN path.\n'
             '(So it will expect \'/store/unmerged/protected/dir\' at \'%s\')\n'
             'If that is intended, please modify the beginning of this script\'s main() function.'

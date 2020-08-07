@@ -483,38 +483,7 @@ The most basic example of this file would have the following contents::
 
     language: python
     python: 2.7
-    install: git clone https://github.com/CMSCompOps/OpsSpace.git
-    script: OpsSpace/test/package_test.sh
+    install: pip install cmstoolbox  # Or include it as a dependency in your local setup.py
+    script: opsspace-test
 
-CMS Comp Ops has agreed to support Python 2.7, but you can also run tests using Python 2.6 by replacing
-the version line with::
-
-    python:
-      - 2.6
-      - 2.7
-
-The default test is run on Ubuntu 12.04.
-There are some python newer packages that cannot be installed through ``pip`` on this old release.
-To run the test on Ubuntu 14.04 (which is considered stable for now), add the following lines to ``.travis.yml``::
-
-    sudo: required
-    dist: trusty
-
-To confirm that your package is being documented correctly (i.e. Sphinx can import everything correctly), you should have the settings::
-
-    dist: trusty
-    sudo: required
-    python: 2.7
-    env: CHECKDOC=true
-
-Even if you don't run the documentation check, any failed documentation builds will break
-all other repository's tests, so someone will probably offer to help you fix it.
-
-If you have shell scripts in your repository, you should also install shellcheck during the build test.
-See :ref:`shell-style-ref` for more details.
-Place the following lines anywhere in your ``.travis.yml`` file to do that::
-
-    addons:
-      apt:
-        sources: debian-sid
-        packages: shellcheck
+See :ref:`opsspace-test-ref` for more details.

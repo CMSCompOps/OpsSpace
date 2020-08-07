@@ -8,6 +8,7 @@ A module that checks the SAM status of a site
           Daniel Abercrombie <dabercro@mit.edu>
 """
 
+import sys
 import logging
 
 from .webtools import get_json
@@ -48,7 +49,7 @@ def is_sam_good(site, time_span=24, success=0.85):
 
     if (not site.startswith('T2_')) and (not site.startswith('T1_')):
         logging.error("Need valid site name. Given %s", site)
-        exit(0)
+        sys.exit(0)
 
     time_span_str = 'last%s' % time_span
     gen_json = get_json('wlcg-sam-cms.cern.ch', '/dashboard/request.py/latestresultssmry-json',
