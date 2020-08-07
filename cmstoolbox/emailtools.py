@@ -62,7 +62,7 @@ def send_email(sender, recipients, subject, message_text,
 
     elif method == 'sendmail':
         proc = subprocess.Popen(['sendmail', '-t'], stdin=subprocess.PIPE)
-        proc.communicate(input=bytearray(msg.as_string(),"utf-8"))
+        proc.communicate(input=bytearray(msg.as_string(), "utf-8"))
 
     else:
         logging.error('That is not a valid email method option: method = %s', method)
