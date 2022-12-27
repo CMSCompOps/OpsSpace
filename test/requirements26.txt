@@ -1,4 +1,4 @@
 astroid<1.3
 pylint<1.4
 testfixtures<6
-setuptools==36.8.0
+setuptools==65.5.1
